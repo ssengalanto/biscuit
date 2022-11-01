@@ -1,0 +1,18 @@
+version: "3"
+
+dotenv: [ '.env' ]
+
+includes:
+  app:
+    taskfile: ./tasks/App.yml
+
+vars:
+  PACKAGES:
+    sh: go list ./...
+
+tasks:
+  init:
+    desc: Install required dependencies (macOS).
+    cmds:
+      - brew install go-task/tap/go-task
+      - brew install golangci-lint
