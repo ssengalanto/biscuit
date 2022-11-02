@@ -5,6 +5,8 @@
 # This is the best config for golangci-lint based on my experience and opinion.
 # It is very strict, but not extremely strict.
 # Feel free to adopt and change it for your needs.
+#
+# Modified by Ssen Galanto.
 
 run:
   # Timeout for analysis, e.g. 30s, 5m.
@@ -199,8 +201,8 @@ linters:
     - promlinter # checks Prometheus metrics naming via promlint
     - reassign # checks that package variables are not reassigned
     - revive # fast, configurable, extensible, flexible, and beautiful linter for Go, drop-in replacement of golint
-    - rowserrcheck # checks whether Err of rows is checked successfully
-    - sqlclosecheck # checks that sql.Rows and sql.Stmt are closed
+    # rowserrcheck # checks whether Err of rows is checked successfully, disabled because of generics
+    # sqlclosecheck # checks that sql.Rows and sql.Stmt are closed, disabled because of generics
     - stylecheck # is a replacement for golint
     - tenv # detects using os.Setenv instead of t.Setenv since Go1.17
     - testableexamples # checks if examples are testable (have an expected output)
@@ -209,7 +211,7 @@ linters:
     - unconvert # removes unnecessary type conversions
     - unparam # reports unused function parameters
     - usestdlibvars # detects the possibility to use variables/constants from the Go standard library
-    - wastedassign # finds wasted assignment statements
+    # wastedassign # finds wasted assignment statements, disabled because of generics
     - whitespace # detects leading and trailing whitespace
 
     ## you may want to enable
@@ -282,3 +284,4 @@ issues:
         - gosec
         - noctx
         - wrapcheck
+
