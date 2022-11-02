@@ -16,3 +16,5 @@ tasks:
     cmds:
       - brew install go-task/tap/go-task
       - brew install golangci-lint
+      - brew install pre-commit
+      - pre-commit install
