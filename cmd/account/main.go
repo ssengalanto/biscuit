@@ -4,14 +4,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
+	server := &http.Server{
+		Addr:              ":8081",
+		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd //unnecessary
+		Handler:           mux,
+	}
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Potato Project! 🚀")
+		fmt.Fprintln(w, "Potato Project!! 🚀")
 	})
 
-	log.Fatal(http.ListenAndServe(":8081", mux))
+	log.Fatal(server.ListenAndServe())
 }
