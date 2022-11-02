@@ -4,7 +4,7 @@ dotenv: [ '.env' ]
 
 includes:
   app:
-    taskfile: ./tasks/App.yml
+    taskfile: ./tasks/App.yaml
 
 vars:
   PACKAGES:
