@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.0-alpine
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./volumes/postgres/:/var/lib/postgresql/data/
+
+  redis:
+    container_name: redis
+    image: redislabs/rejson:latest
+    restart: unless-stopped
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+
+  redisinsight:
+    container_name: redis-insight
+    image: redislabs/redisinsight:latest
+    restart: unless-stopped
+    ports:
+      - ${REDIS_INSIGHT_PORT}:${REDIS_INSIGHT_PORT}
+
+  account:
+    container_name: account-service
+    image: ${APP_NAME}-account
+    build:
+      context: .
+      target: development
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - ${ACCOUNT_SERVICE_PORT}:${ACCOUNT_SERVICE_PORT}
+    deploy:
+      mode: replicated
+      replicas: 1
