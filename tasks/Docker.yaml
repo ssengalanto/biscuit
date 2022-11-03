@@ -1,0 +1,65 @@
+version: "3"
+
+tasks:
+  compose-up:
+    desc: Runs the application using docker compose configuration file.
+    cmds:
+      - docker compose up
+
+  compose-down:
+    desc: Stops and removes the containers provisioned by docker compose configuration file.
+    cmds:
+      - docker compose down
+
+  run:
+    desc: Runs a docker container.
+    summary: |
+      Runs a docker container.
+
+      Arguments:
+      BIN = service name
+      PORT = container port
+
+      Example:
+      `task docker:run BIN=<service-name> PORT=<port>`
+    cmds:
+      - docker run -i -t --rm -p={{.PORT}}:{{.PORT}} --name={{.APP_NAME}}-{{.BIN}} {{.APP_NAME}}-{{.BIN}}
+
+  stop:
+    desc: Stops a running docker container.
+    summary: |
+      Stops a running docker container.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task docker:stop BIN=<service-name>`
+    cmds:
+      - docker stop {{.APP_NAME}}-{{.BIN}}
+
+  remove:
+    desc: Stops and then removes a docker container.
+    summary: |
+      Stops and then removes a docker container.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task docker:remove BIN=<service-name>`
+    cmds:
+      - docker rm {{.APP_NAME}}-{{.BIN}}
+
+  build:
+    desc: Build a docker image.
+    summary: |
+      Build a docker image.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task docker:build BIN=<service-name>`
+    cmds:
+      - docker build -f ./cmd/{{.BIN}}/Dockerfile --no-cache --build-arg BIN={{.BIN}} -t {{.APP_NAME}}-{{.BIN}} .
