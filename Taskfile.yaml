@@ -5,6 +5,8 @@ dotenv: [ '.env' ]
 includes:
   app:
     taskfile: ./tasks/App.yaml
+  docker:
+    taskfile: ./tasks/Docker.yaml
 
 vars:
   PACKAGES:
@@ -18,3 +20,16 @@ tasks:
       - brew install golangci-lint
       - brew install pre-commit
       - pre-commit install
+
+  run:
+    desc: Run the application.
+    cmds:
+      - task docker:compose-up
+
+  run:account:
+    desc: Run the account service.
+    summary: |
+      Run the account service in a docker container on port {{.ACCOUNT_SERVICE_PORT}}.
+    cmds:
+      - task docker:build BIN=account
+      - task docker:run BIN=account PORT={{.ACCOUNT_SERVICE_PORT}}
