@@ -1,0 +1,70 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Base migrate command, to add flags use "--".
+    summary: |
+      Base migrate command, to add flags use "--".
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task migrate:run BIN=<service-name> -- -verbose up 1`
+    cmds:
+      - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN {{.CLI_ARGS}}
+
+  version:
+    desc: Checks the current migration version of the database.
+    summary: |
+      Checks the current migration version of the database.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task migrate:version BIN=<service-name>`
+    cmds:
+      - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN version
+
+  new:
+    desc: Create a new database migration, use "-- <migration-name>" to provide the migration file name.
+    summary: |
+      Create a new database migration, use "-- <migration-name>" to provide the migration file name.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task migrate:new BIN=<service-name> -- <migration-name> `
+    cmds:
+      - echo 'Creating new database migration/s...'
+      - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN create -ext sql -dir ./cmd/{{.BIN}}/migrations/postgres -seq {{.CLI_ARGS}}
+
+  up:
+    desc: Run new database migrations, use "-- <upshift>" to specify N up migrations.
+    summary: |
+      Run new database migrations, use "-- <upshift>" to specify N up migrations.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task migrate:up BIN=<service-name> --<upshift>`
+    cmds:
+      - echo 'Running new database migration/s...'
+      - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN -verbose up {{.CLI_ARGS}}
+
+  down:
+    desc: Revert database migrations, use "-- <downshift>" to specify N down migrations.
+    summary: |
+      Revert database migrations, use "-- <downshift>" to specify N down migrations.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task migrate:down BIN=<service-name> --<downshift>`
+    cmds:
+      - echo 'Reverting database migration/s...'
+      - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN -verbose down {{.CLI_ARGS}}
