@@ -7,17 +7,26 @@ includes:
     taskfile: ./tasks/App.yaml
   docker:
     taskfile: ./tasks/Docker.yaml
+  pg:
+    taskfile: ./tasks/Postgres.yaml
 
 vars:
   PACKAGES:
     sh: go list ./...
 
 tasks:
+  default:
+    desc: List all the available tasks.
+    cmds:
+      - task --list
+    silent: true
+
   init:
     desc: Install required dependencies (macOS).
     cmds:
       - brew install go-task/tap/go-task
       - brew install golangci-lint
+      - brew install golang-migrate
       - brew install pre-commit
       - pre-commit install
 
