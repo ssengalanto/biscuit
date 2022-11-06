@@ -10,7 +10,7 @@ tasks:
       BIN = service name
 
       Example:
-      `task migrate:run BIN=<service-name> -- -verbose up 1`
+      `task pg:run BIN=<service-name> -- -verbose up 1`
     cmds:
       - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN {{.CLI_ARGS}}
 
@@ -23,7 +23,7 @@ tasks:
       BIN = service name
 
       Example:
-      `task migrate:version BIN=<service-name>`
+      `task pg:version BIN=<service-name>`
     cmds:
       - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN version
 
@@ -36,7 +36,7 @@ tasks:
       BIN = service name
 
       Example:
-      `task migrate:new BIN=<service-name> -- <migration-name> `
+      `task pg:new BIN=<service-name> -- <migration-name> `
     cmds:
       - echo 'Creating new database migration/s...'
       - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN create -ext sql -dir ./cmd/{{.BIN}}/migrations/postgres -seq {{.CLI_ARGS}}
@@ -50,7 +50,7 @@ tasks:
       BIN = service name
 
       Example:
-      `task migrate:up BIN=<service-name> --<upshift>`
+      `task pg:up BIN=<service-name> -- <upshift>`
     cmds:
       - echo 'Running new database migration/s...'
       - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN -verbose up {{.CLI_ARGS}}
@@ -64,7 +64,7 @@ tasks:
       BIN = service name
 
       Example:
-      `task migrate:down BIN=<service-name> --<downshift>`
+      `task pg:down BIN=<service-name> --<downshift>`
     cmds:
       - echo 'Reverting database migration/s...'
       - migrate -path ./cmd/{{.BIN}}/migrations/postgres -database $DB_DSN -verbose down {{.CLI_ARGS}}
