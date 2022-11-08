@@ -42,8 +42,8 @@ func (e *Entity) LoginStamp() {
 // UpdateEmail checks the validity of the email address
 // and updates the account entity email field value.
 func (e *Entity) UpdateEmail(email string) error {
-	newEmail := Email(email)
-	if ok, err := newEmail.IsValid(); !ok {
+	newEmail, err := e.Email.Update(email)
+	if err != nil {
 		return err
 	}
 
@@ -54,8 +54,8 @@ func (e *Entity) UpdateEmail(email string) error {
 // UpdatePassword checks the validity of the password
 // and updates the account entity password field value.
 func (e *Entity) UpdatePassword(password string) error {
-	newPassword := Password(password)
-	if ok, err := newPassword.IsValid(); !ok {
+	newPassword, err := e.Password.Update(password)
+	if err != nil {
 		return err
 	}
 
