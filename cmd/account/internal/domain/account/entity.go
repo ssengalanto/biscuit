@@ -35,7 +35,8 @@ func (e *Entity) Deactivate() {
 	e.Active = false
 }
 
-func (e *Entity) LoginStamp() {
+// LoginTimestamp records the date time when the user logs in.
+func (e *Entity) LoginTimestamp() {
 	e.LastLoginAt = time.Now()
 }
 
