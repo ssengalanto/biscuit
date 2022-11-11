@@ -31,7 +31,7 @@ func TestVar(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := validator.Var(tc.payload, "required")
+			err := validator.Var("test", tc.payload, "required")
 			tc.assert(t, err)
 		})
 	}
