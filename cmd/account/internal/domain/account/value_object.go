@@ -4,6 +4,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
+// Email value object.
 type Email string
 
 // IsValid checks the validity of the email address.
@@ -26,11 +27,12 @@ func (e Email) Update(email string) (Email, error) {
 	return newEmail, nil
 }
 
-// String converts type Email to type string.
+// String converts Email to type string.
 func (e Email) String() string {
 	return string(e)
 }
 
+// Password value object.
 type Password string
 
 // IsValid checks the validity of the password.
@@ -53,7 +55,7 @@ func (p Password) Update(password string) (Password, error) {
 	return newPassword, nil
 }
 
-// String converts type Password to type string.
+// String converts Password to type string.
 func (p Password) String() string {
 	return string(p)
 }

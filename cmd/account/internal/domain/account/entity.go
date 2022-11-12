@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+// Entity - Account Entity.
 type Entity struct {
 	ID          uuid.UUID
 	Email       Email
@@ -21,6 +22,7 @@ func New() Entity {
 	}
 }
 
+// IsActive returns a boolean if the account is active or not.
 func (e *Entity) IsActive() bool {
 	return e.Active
 }
