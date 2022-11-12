@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestEmailIsValid(t *testing.T) {
+func TestEmail_IsValid(t *testing.T) {
 	testCases := []struct {
 		name    string
 		payload string
@@ -43,7 +43,7 @@ func TestEmailIsValid(t *testing.T) {
 	}
 }
 
-func TestEmailUpdate(t *testing.T) {
+func TestEmail_Update(t *testing.T) {
 	testCases := []struct {
 		name    string
 		current string
@@ -80,13 +80,13 @@ func TestEmailUpdate(t *testing.T) {
 	}
 }
 
-func TestEmailString(t *testing.T) {
+func TestEmail_String(t *testing.T) {
 	email := account.Email("johndoe@example.com").String()
 	kind := reflect.TypeOf(email).String()
 	require.Equal(t, "string", kind, "type should be `string`")
 }
 
-func TestPasswordIsValid(t *testing.T) {
+func TestPassword_IsValid(t *testing.T) {
 	testCases := []struct {
 		name    string
 		payload string
@@ -120,7 +120,7 @@ func TestPasswordIsValid(t *testing.T) {
 	}
 }
 
-func TestPasswordUpdate(t *testing.T) {
+func TestPassword_Update(t *testing.T) {
 	testCases := []struct {
 		name    string
 		current string
@@ -157,7 +157,7 @@ func TestPasswordUpdate(t *testing.T) {
 	}
 }
 
-func TestPasswordString(t *testing.T) {
+func TestPassword_String(t *testing.T) {
 	password := account.Password("abcde12345").String()
 	kind := reflect.TypeOf(password).String()
 	require.Equal(t, "string", kind, "type should be `string`")

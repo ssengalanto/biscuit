@@ -14,13 +14,13 @@ func TestNew(t *testing.T) {
 	require.NotNil(t, err, "error shouldn't be nil")
 }
 
-func TestError(t *testing.T) {
+func TestError_Error(t *testing.T) {
 	msg := "test error"
 	err := apperr.New(msg)
 	require.EqualError(t, err, msg, "error should have the same error message")
 }
 
-func TestWrap(t *testing.T) {
+func TestError_Wrap(t *testing.T) {
 	err := apperr.Wrap(fmt.Errorf("test error: %w", apperr.ErrInternal))
 	require.NotNil(t, err, "error shouldn't be nil")
 	require.True(t, errors.Is(err, apperr.ErrInternal), "error is not internal")
