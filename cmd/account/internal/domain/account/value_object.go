@@ -1,10 +1,18 @@
 package account
 
+import (
+	"github.com/ssengalanto/potato-project/pkg/validator"
+)
+
 type Email string
 
 // IsValid checks the validity of the email address.
 func (e Email) IsValid() (bool, error) {
-	// TODO: add validation logic
+	err := validator.Var("Email", e, "email,required")
+	if err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
 
@@ -27,7 +35,11 @@ type Password string
 
 // IsValid checks the validity of the password.
 func (p Password) IsValid() (bool, error) {
-	// TODO: add validation logic
+	err := validator.Var("Password", p, "min=10,required")
+	if err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
 
