@@ -15,16 +15,16 @@ func TestVar(t *testing.T) {
 		assert  func(t *testing.T, err error)
 	}{
 		{
-			"validation passed",
-			"with value",
-			func(t *testing.T, err error) {
+			name:    "validation passed",
+			payload: "with value",
+			assert: func(t *testing.T, err error) {
 				require.Nil(t, err, fmt.Sprintf("validation should pass: %s", err))
 			},
 		},
 		{
-			"validation failed",
-			"",
-			func(t *testing.T, err error) {
+			name:    "validation failed",
+			payload: "",
+			assert: func(t *testing.T, err error) {
 				require.NotNil(t, err, fmt.Sprintf("validation should fail: %s", err))
 			},
 		},
@@ -50,23 +50,23 @@ func TestStruct(t *testing.T) {
 		assert  func(t *testing.T, err error)
 	}{
 		{
-			"validation passed",
-			user{
+			name: "validation passed",
+			payload: user{
 				FirstName: "John",
 				LastName:  "Doe",
 				Email:     "johndoe@example.com",
 			},
-			func(t *testing.T, err error) {
+			assert: func(t *testing.T, err error) {
 				require.Nil(t, err, fmt.Sprintf("validation should pass: %s", err))
 			}},
 		{
-			"validation failed",
-			user{
+			name: "validation failed",
+			payload: user{
 				FirstName: "John",
 				LastName:  "",
 				Email:     "johndoe.com",
 			},
-			func(t *testing.T, err error) {
+			assert: func(t *testing.T, err error) {
 				require.NotNil(t, err, fmt.Sprintf("validation should fail: %s", err))
 			}},
 	}
