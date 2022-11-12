@@ -85,3 +85,80 @@ func TestEmailString(t *testing.T) {
 	kind := reflect.TypeOf(email).String()
 	require.Equal(t, "string", kind, "type should be `string`")
 }
+
+func TestPasswordIsValid(t *testing.T) {
+	testCases := []struct {
+		name    string
+		payload string
+		assert  func(t *testing.T, result bool, err error)
+	}{
+		{
+			name:    "valid password",
+			payload: "abcde12345",
+			assert: func(t *testing.T, result bool, err error) {
+				errMsg := fmt.Sprintf("password should be valid: %s", err)
+				require.True(t, result, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "invalid password",
+			payload: "a0",
+			assert: func(t *testing.T, result bool, err error) {
+				errMsg := fmt.Sprintf("password should be valid: %s", err)
+				require.False(t, result, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			password := account.Password(tc.payload)
+			ok, err := password.IsValid()
+			tc.assert(t, ok, err)
+		})
+	}
+}
+
+func TestPasswordUpdate(t *testing.T) {
+	testCases := []struct {
+		name    string
+		current string
+		update  string
+		assert  func(t *testing.T, expected account.Password, actual account.Password, err error)
+	}{
+		{
+			name:    "change password success",
+			current: "abcde12345",
+			update:  "54321edcba",
+			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
+				errMsg := fmt.Sprintf("password change should succeed: %s", err)
+				require.Equal(t, expected, actual, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "change password failed",
+			current: "abcde12345",
+			update:  "a0",
+			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
+				errMsg := fmt.Sprintf("password change should fail: %s", err)
+				require.NotEqual(t, expected, actual, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			password := account.Password(tc.current)
+			newPassword, err := password.Update(tc.update)
+			tc.assert(t, account.Password(tc.update), newPassword, err)
+		})
+	}
+}
+
+func TestPasswordString(t *testing.T) {
+	password := account.Password("abcde12345").String()
+	kind := reflect.TypeOf(password).String()
+	require.Equal(t, "string", kind, "type should be `string`")
+}
