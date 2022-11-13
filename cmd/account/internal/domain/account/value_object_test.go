@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/stretchr/testify/require"
 )
@@ -17,7 +18,7 @@ func TestEmail_IsValid(t *testing.T) {
 	}{
 		{
 			name:    "valid email",
-			payload: "johndoe@example.com",
+			payload: gofakeit.Email(),
 			assert: func(t *testing.T, result bool, err error) {
 				errMsg := fmt.Sprintf("email should be valid: %s", err)
 				require.True(t, result, errMsg)
@@ -52,8 +53,8 @@ func TestEmail_Update(t *testing.T) {
 	}{
 		{
 			name:    "change email success",
-			current: "johndoe@example.com",
-			update:  "janedoe@example.com",
+			current: gofakeit.Email(),
+			update:  gofakeit.Email(),
 			assert: func(t *testing.T, expected account.Email, actual account.Email, err error) {
 				errMsg := fmt.Sprintf("email change should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
@@ -62,7 +63,7 @@ func TestEmail_Update(t *testing.T) {
 		},
 		{
 			name:    "change email failed",
-			current: "johndoe@example.com",
+			current: gofakeit.Email(),
 			update:  "invalid-email",
 			assert: func(t *testing.T, expected account.Email, actual account.Email, err error) {
 				errMsg := fmt.Sprintf("email change should fail: %s", err)
@@ -81,9 +82,17 @@ func TestEmail_Update(t *testing.T) {
 }
 
 func TestEmail_String(t *testing.T) {
-	email := account.Email("johndoe@example.com").String()
+	email := account.Email(gofakeit.Email()).String()
 	kind := reflect.TypeOf(email).String()
 	require.Equal(t, "string", kind, "type should be `string`")
+}
+
+func createValidPassword() string {
+	return gofakeit.Password(true, true, true, true, false, 10)
+}
+
+func createInvalidPassword() string {
+	return gofakeit.Password(true, true, true, true, false, 5)
 }
 
 func TestPassword_IsValid(t *testing.T) {
@@ -94,7 +103,7 @@ func TestPassword_IsValid(t *testing.T) {
 	}{
 		{
 			name:    "valid password",
-			payload: "abcde12345",
+			payload: createValidPassword(),
 			assert: func(t *testing.T, result bool, err error) {
 				errMsg := fmt.Sprintf("password should be valid: %s", err)
 				require.True(t, result, errMsg)
@@ -103,7 +112,7 @@ func TestPassword_IsValid(t *testing.T) {
 		},
 		{
 			name:    "invalid password",
-			payload: "a0",
+			payload: createInvalidPassword(),
 			assert: func(t *testing.T, result bool, err error) {
 				errMsg := fmt.Sprintf("password should be valid: %s", err)
 				require.False(t, result, errMsg)
@@ -129,8 +138,8 @@ func TestPassword_Update(t *testing.T) {
 	}{
 		{
 			name:    "change password success",
-			current: "abcde12345",
-			update:  "54321edcba",
+			current: createValidPassword(),
+			update:  createValidPassword(),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
 				errMsg := fmt.Sprintf("password change should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
@@ -139,8 +148,8 @@ func TestPassword_Update(t *testing.T) {
 		},
 		{
 			name:    "change password failed",
-			current: "abcde12345",
-			update:  "a0",
+			current: createValidPassword(),
+			update:  createInvalidPassword(),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
 				errMsg := fmt.Sprintf("password change should fail: %s", err)
 				require.NotEqual(t, expected, actual, errMsg)
@@ -158,7 +167,7 @@ func TestPassword_Update(t *testing.T) {
 }
 
 func TestPassword_String(t *testing.T) {
-	password := account.Password("abcde12345").String()
+	password := account.Password(createValidPassword()).String()
 	kind := reflect.TypeOf(password).String()
 	require.Equal(t, "string", kind, "type should be `string`")
 }

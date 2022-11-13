@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/stretchr/testify/require"
 )
@@ -44,7 +45,7 @@ func TestEntity_UpdateEmail(t *testing.T) {
 	}{
 		{
 			name:    "update email success",
-			payload: "johndoe@example.com",
+			payload: gofakeit.Email(),
 			assert: func(t *testing.T, expected account.Email, actual account.Email, err error) {
 				errMsg := fmt.Sprintf("update email should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
@@ -78,7 +79,7 @@ func TestEntity_UpdatePassword(t *testing.T) {
 	}{
 		{
 			name:    "update password success",
-			payload: "abcde12345",
+			payload: gofakeit.Password(true, true, true, true, false, 10),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
 				errMsg := fmt.Sprintf("update password should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
@@ -87,7 +88,7 @@ func TestEntity_UpdatePassword(t *testing.T) {
 		},
 		{
 			name:    "update password failed",
-			payload: "0a",
+			payload: gofakeit.Password(true, true, true, true, false, 5),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
 				errMsg := fmt.Sprintf("update password should fail: %s", err)
 				require.NotEqual(t, expected, actual, errMsg)

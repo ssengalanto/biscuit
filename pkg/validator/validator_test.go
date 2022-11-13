@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/ssengalanto/potato-project/pkg/validator"
 	"github.com/stretchr/testify/require"
 )
@@ -52,9 +53,9 @@ func TestStruct(t *testing.T) {
 		{
 			name: "validation passed",
 			payload: user{
-				FirstName: "John",
-				LastName:  "Doe",
-				Email:     "johndoe@example.com",
+				FirstName: gofakeit.FirstName(),
+				LastName:  gofakeit.LastName(),
+				Email:     gofakeit.Email(),
 			},
 			assert: func(t *testing.T, err error) {
 				require.Nil(t, err, fmt.Sprintf("validation should pass: %s", err))
@@ -62,9 +63,9 @@ func TestStruct(t *testing.T) {
 		{
 			name: "validation failed",
 			payload: user{
-				FirstName: "John",
+				FirstName: gofakeit.FirstName(),
 				LastName:  "",
-				Email:     "johndoe.com",
+				Email:     "invalid",
 			},
 			assert: func(t *testing.T, err error) {
 				require.NotNil(t, err, fmt.Sprintf("validation should fail: %s", err))
