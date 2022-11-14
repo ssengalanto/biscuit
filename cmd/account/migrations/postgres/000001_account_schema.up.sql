@@ -1,4 +1,4 @@
-CREATE TABLE "accounts" (
+CREATE TABLE "account" (
     "id" uuid PRIMARY KEY NOT NULL,
     "email" varchar UNIQUE NOT NULL,
     "password" varchar NOT NULL CHECK (char_length(password) <= 10),
