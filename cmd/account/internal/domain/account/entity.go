@@ -4,15 +4,17 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
 // Entity - Account Entity.
 type Entity struct {
-	ID          uuid.UUID
-	Email       Email
-	Password    Password
-	Active      bool
-	LastLoginAt time.Time
+	ID          uuid.UUID      `json:"id"`
+	Email       Email          `json:"email"`
+	Password    Password       `json:"password"`
+	Active      bool           `json:"active"`
+	LastLoginAt time.Time      `json:"lastLoginAt"`
+	Person      *person.Entity `json:"person"`
 }
 
 // New creates a new account entity.

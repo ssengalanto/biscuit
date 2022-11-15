@@ -29,7 +29,7 @@ func TestEmail_IsValid(t *testing.T) {
 			name:    "invalid email",
 			payload: "invalid-email",
 			assert: func(t *testing.T, result bool, err error) {
-				errMsg := fmt.Sprintf("email should be valid: %s", err)
+				errMsg := fmt.Sprintf("email should be invalid: %s", err)
 				require.False(t, result, errMsg)
 				require.NotNil(t, err, errMsg)
 			},
