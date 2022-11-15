@@ -3,14 +3,14 @@ CREATE TABLE "address" (
     "person_id" uuid REFERENCES person(id) UNIQUE NOT NULL,
     "place_id" varchar NOT NULL,
     "address_line1" json NOT NULL,
-    "address_line2" json NOT NULL,
+    "address_line2" json NULL,
     "city" json NOT NULL,
     "state" json NOT NULL,
     "country" json NOT NULL,
     "postal_code" json NOT NULL,
     "formatted_address" varchar NOT NULL,
     "lat" decimal NOT NULL,
-    "lang" decimal NOT NULL,
+    "lng" decimal NOT NULL,
     "created_at" timestamp NOT NULL DEFAULT NOW(),
     "updated_at" timestamp NOT NULL DEFAULT NOW()
 );
