@@ -19,12 +19,12 @@ func TestEntity_Update(t *testing.T) {
 
 	testCases := []struct {
 		name    string
-		payload address.UpdateAddressInput
-		assert  func(t *testing.T, expected address.UpdateAddressInput, actual address.UpdateAddressInput, err error)
+		payload address.UpdateInput
+		assert  func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error)
 	}{
 		{
 			name: "update address success",
-			payload: address.UpdateAddressInput{
+			payload: address.UpdateInput{
 				Components: address.Components{
 					PlaceID: gofakeit.UUID(),
 					AddressLine1: address.Names{
@@ -58,7 +58,7 @@ func TestEntity_Update(t *testing.T) {
 					Lng: gofakeit.Longitude(),
 				},
 			},
-			assert: func(t *testing.T, expected address.UpdateAddressInput, actual address.UpdateAddressInput, err error) {
+			assert: func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error) {
 				errMsg := fmt.Sprintf("update address should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
 				require.Nil(t, err, errMsg)
@@ -66,13 +66,13 @@ func TestEntity_Update(t *testing.T) {
 		},
 		{
 			name: "update address failed",
-			payload: address.UpdateAddressInput{
+			payload: address.UpdateInput{
 				Components: address.Components{
 					PlaceID: gofakeit.UUID(),
 				},
 				Geometry: address.Geometry{},
 			},
-			assert: func(t *testing.T, expected address.UpdateAddressInput, actual address.UpdateAddressInput, err error) {
+			assert: func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error) {
 				errMsg := fmt.Sprintf("update address should fail: %s", err)
 				require.NotEqual(t, expected, actual, errMsg)
 				require.NotNil(t, err, errMsg)
@@ -84,7 +84,7 @@ func TestEntity_Update(t *testing.T) {
 			entity := address.New()
 			err := entity.Update(tc.payload)
 			tc.assert(t,
-				address.UpdateAddressInput{
+				address.UpdateInput{
 					Components: entity.Components,
 					Geometry:   entity.Geometry,
 				}, tc.payload, err)
