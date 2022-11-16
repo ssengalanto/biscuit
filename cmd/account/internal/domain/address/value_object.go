@@ -26,6 +26,16 @@ func (c Components) IsValid() (bool, error) {
 	return true, nil
 }
 
+// Update checks the validity of the address components and updates its value.
+func (c Components) Update(input Components) (Components, error) {
+	_, err := input.IsValid()
+	if err != nil {
+		return Components{}, err
+	}
+
+	return input, nil
+}
+
 // Geometry - address lat lng value object.
 type Geometry struct {
 	Lat float64 `json:"lat" validate:"required"`
@@ -40,4 +50,14 @@ func (g Geometry) IsValid() (bool, error) {
 	}
 
 	return true, nil
+}
+
+// Update checks the validity of the address geometry and updates its value.
+func (g Geometry) Update(input Geometry) (Geometry, error) {
+	_, err := input.IsValid()
+	if err != nil {
+		return Geometry{}, err
+	}
+
+	return input, nil
 }
