@@ -17,9 +17,32 @@ type Entity struct {
 	Geometry   Geometry   `json:"geometry"`
 }
 
+type UpdateAddressInput struct {
+	Components Components
+	Geometry   Geometry
+}
+
 // New creates a new address entity.
 func New() Entity {
 	return Entity{
 		ID: uuid.New(),
 	}
+}
+
+// Update checks the validity of the update address input
+// and updates the address entity components and geometry fields.
+func (e *Entity) Update(input UpdateAddressInput) error {
+	components, err := e.Components.Update(input.Components)
+	if err != nil {
+		return err
+	}
+
+	geometry, err := e.Geometry.Update(input.Geometry)
+	if err != nil {
+		return err
+	}
+
+	e.Components = components
+	e.Geometry = geometry
+	return nil
 }
