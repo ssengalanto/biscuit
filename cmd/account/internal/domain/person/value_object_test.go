@@ -55,3 +55,57 @@ func TestDetails_IsValid(t *testing.T) {
 		})
 	}
 }
+
+func createPersonDetails() person.Details {
+	return person.Details{
+		FirstName:   gofakeit.FirstName(),
+		LastName:    gofakeit.LastName(),
+		Email:       gofakeit.Email(),
+		Phone:       gofakeit.Phone(),
+		DateOfBirth: gofakeit.Date(),
+	}
+}
+
+func TestDetails_Update(t *testing.T) {
+	testCases := []struct {
+		name    string
+		current person.Details
+		update  person.Details
+		assert  func(t *testing.T, expected person.Details, actual person.Details, err error)
+	}{
+		{
+			name:    "update person details success",
+			current: createPersonDetails(),
+			update:  createPersonDetails(),
+			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
+				errMsg := fmt.Sprintf("update person details should succeed: %s", err)
+				require.Equal(t, expected, actual, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "update person details failed",
+			current: createPersonDetails(),
+			update: person.Details{
+				FirstName:   gofakeit.FirstName(),
+				LastName:    gofakeit.LastName(),
+				Email:       "invalid-email",
+				Phone:       gofakeit.Phone(),
+				DateOfBirth: gofakeit.Date(),
+			},
+			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
+				errMsg := fmt.Sprintf("update person details should fail: %s", err)
+				require.NotEqual(t, expected, actual, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			details := tc.current
+			newDetails, err := details.Update(tc.update)
+			tc.assert(t,
+				newDetails, tc.update, err)
+		})
+	}
+}
