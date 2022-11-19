@@ -24,3 +24,12 @@ func (d Details) IsValid() (bool, error) {
 
 	return true, nil
 }
+
+func (d Details) Update(input Details) (Details, error) {
+	_, err := input.IsValid()
+	if err != nil {
+		return Details{}, err
+	}
+
+	return input, nil
+}
