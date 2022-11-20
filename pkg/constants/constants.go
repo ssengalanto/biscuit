@@ -1,7 +1,9 @@
+//nolint:gosec // unnecessary rules for this package
 package constants
 
 import "time"
 
+// Constants for application invariants.
 const (
 	MaxHeaderBytes      = 1 << 20
 	IdleTimeout         = time.Minute
@@ -11,4 +13,17 @@ const (
 	Dev                 = "development"
 	Test                = "test"
 	Prod                = "production"
+)
+
+// Constants for environment variable keys.
+const (
+	AppName            = "APP_NAME"
+	AccountServicePort = "ACCOUNT_SERVICE_PORT"
+	PostgresUser       = "POSTGRES_USER"
+	PostgresPassword   = "POSTGRES_PASSWORD"
+	PostgresDB         = "POSTGRES_DB"
+	PostgresPort       = "POSTGRES_PORT"
+	PostgresDSN        = "POSTGRES_DSN"
+	RedisPort          = "REDIS_PORT"
+	RedisInsightPort   = "REDIS_INSIGHT_PORT"
 )
