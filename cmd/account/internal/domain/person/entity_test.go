@@ -103,3 +103,37 @@ func TestEntity_UpdateDetails(t *testing.T) {
 		})
 	}
 }
+
+func TestEntity_UpdateAvatar(t *testing.T) {
+	testCases := []struct {
+		name    string
+		payload string
+		assert  func(t *testing.T, expected person.Avatar, actual person.Avatar, err error)
+	}{
+		{
+			name:    "update avatar success",
+			payload: gofakeit.URL(),
+			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
+				errMsg := fmt.Sprintf("update avatar should succeed: %s", err)
+				require.Equal(t, expected, actual, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "update avatar failed",
+			payload: "invalid-avatar",
+			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
+				errMsg := fmt.Sprintf("update avatar should fail: %s", err)
+				require.NotEqual(t, expected, actual, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			entity := person.New()
+			err := entity.UpdateAvatar(tc.payload)
+			tc.assert(t, entity.Avatar, person.Avatar(tc.payload), err)
+		})
+	}
+}
