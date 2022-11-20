@@ -33,3 +33,31 @@ func (d Details) Update(input Details) (Details, error) {
 
 	return input, nil
 }
+
+// Avatar value object.
+type Avatar string
+
+// IsValid checks the validity of the avatar url.
+func (a Avatar) IsValid() (bool, error) {
+	err := validator.Var("Avatar", a, "url,required")
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+// Update checks the validity of the avatar url and updates its value.
+func (a Avatar) Update(s string) (Avatar, error) {
+	avatar := Avatar(s)
+	if ok, err := avatar.IsValid(); !ok {
+		return "", err
+	}
+
+	return avatar, nil
+}
+
+// String converts Avatar to type string.
+func (a Avatar) String() string {
+	return string(a)
+}

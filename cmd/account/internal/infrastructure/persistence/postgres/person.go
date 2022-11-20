@@ -33,6 +33,6 @@ func (p Person) ToEntity() person.Entity {
 			Phone:       p.Phone,
 			DateOfBirth: p.DateOfBirth,
 		},
-		Avatar: p.Avatar,
+		Avatar: person.Avatar(p.Avatar),
 	}
 }

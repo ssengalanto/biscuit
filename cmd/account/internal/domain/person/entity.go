@@ -12,7 +12,7 @@ type Entity struct {
 	ID        uuid.UUID       `json:"id"`
 	AccountID uuid.UUID       `json:"accountId"`
 	Details   Details         `json:"details"`
-	Avatar    string          `json:"avatar"`
+	Avatar    Avatar          `json:"avatar"`
 	Address   *address.Entity `json:"address"`
 }
 
@@ -61,5 +61,15 @@ func (e *Entity) UpdateDetails(input UpdateDetailsInput) error {
 	}
 
 	e.Details = newDetails
+	return nil
+}
+
+func (e *Entity) UpdateAvatar(s string) error {
+	avatar, err := e.Avatar.Update(s)
+	if err != nil {
+		return err
+	}
+
+	e.Avatar = avatar
 	return nil
 }

@@ -43,7 +43,7 @@ func TestEntity_UpdateDetails(t *testing.T) {
 					Phone:       gofakeit.Phone(),
 					DateOfBirth: gofakeit.Date(),
 				},
-				Avatar: gofakeit.URL(),
+				Avatar: person.Avatar(gofakeit.URL()),
 			},
 			details: person.UpdateDetailsInput{
 				FirstName:   &update.FirstName,
@@ -70,7 +70,7 @@ func TestEntity_UpdateDetails(t *testing.T) {
 					Phone:       gofakeit.Phone(),
 					DateOfBirth: gofakeit.Date(),
 				},
-				Avatar: gofakeit.URL(),
+				Avatar: person.Avatar(gofakeit.URL()),
 			},
 			details: person.UpdateDetailsInput{
 				FirstName:   &update.FirstName,
