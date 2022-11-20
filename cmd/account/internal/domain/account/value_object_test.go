@@ -74,9 +74,9 @@ func TestEmail_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			email := account.Email(tc.current)
-			newEmail, err := email.Update(tc.update)
-			tc.assert(t, account.Email(tc.update), newEmail, err)
+			e := account.Email(tc.current)
+			ne, err := e.Update(tc.update)
+			tc.assert(t, account.Email(tc.update), ne, err)
 		})
 	}
 }
@@ -159,9 +159,9 @@ func TestPassword_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			password := account.Password(tc.current)
-			newPassword, err := password.Update(tc.update)
-			tc.assert(t, account.Password(tc.update), newPassword, err)
+			pw := account.Password(tc.current)
+			npw, err := pw.Update(tc.update)
+			tc.assert(t, account.Password(tc.update), npw, err)
 		})
 	}
 }

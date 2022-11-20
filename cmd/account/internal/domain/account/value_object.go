@@ -18,13 +18,13 @@ func (e Email) IsValid() (bool, error) {
 }
 
 // Update checks the validity of the email and updates its value.
-func (e Email) Update(email string) (Email, error) {
-	newEmail := Email(email)
-	if ok, err := newEmail.IsValid(); !ok {
+func (e Email) Update(s string) (Email, error) {
+	email := Email(s)
+	if ok, err := email.IsValid(); !ok {
 		return "", err
 	}
 
-	return newEmail, nil
+	return email, nil
 }
 
 // String converts Email to type string.
@@ -46,13 +46,13 @@ func (p Password) IsValid() (bool, error) {
 }
 
 // Update checks the validity of the password and updates its value.
-func (p Password) Update(password string) (Password, error) {
-	newPassword := Password(password)
-	if ok, err := newPassword.IsValid(); !ok {
+func (p Password) Update(s string) (Password, error) {
+	password := Password(s)
+	if ok, err := password.IsValid(); !ok {
 		return "", err
 	}
 
-	return newPassword, nil
+	return password, nil
 }
 
 // String converts Password to type string.

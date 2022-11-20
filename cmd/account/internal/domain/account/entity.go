@@ -46,24 +46,24 @@ func (e *Entity) LoginTimestamp() {
 
 // UpdateEmail checks the validity of the email address
 // and updates the account entity email field value.
-func (e *Entity) UpdateEmail(email string) error {
-	newEmail, err := e.Email.Update(email)
+func (e *Entity) UpdateEmail(s string) error {
+	email, err := e.Email.Update(s)
 	if err != nil {
 		return err
 	}
 
-	e.Email = newEmail
+	e.Email = email
 	return nil
 }
 
 // UpdatePassword checks the validity of the password
 // and updates the account entity password field value.
-func (e *Entity) UpdatePassword(password string) error {
-	newPassword, err := e.Password.Update(password)
+func (e *Entity) UpdatePassword(s string) error {
+	password, err := e.Password.Update(s)
 	if err != nil {
 		return err
 	}
 
-	e.Password = newPassword
+	e.Password = password
 	return nil
 }
