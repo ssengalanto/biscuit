@@ -2,6 +2,7 @@ package person_test
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -108,4 +109,81 @@ func TestDetails_Update(t *testing.T) {
 				newDetails, tc.update, err)
 		})
 	}
+}
+
+func TestAvatar_IsValid(t *testing.T) {
+	testCases := []struct {
+		name    string
+		payload string
+		assert  func(t *testing.T, result bool, err error)
+	}{
+		{
+			name:    "valid avatar",
+			payload: gofakeit.URL(),
+			assert: func(t *testing.T, result bool, err error) {
+				errMsg := fmt.Sprintf("avatar should be valid: %s", err)
+				require.True(t, result, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "invalid avatar",
+			payload: "invalid-avatar",
+			assert: func(t *testing.T, result bool, err error) {
+				errMsg := fmt.Sprintf("avatar should be invalid: %s", err)
+				require.False(t, result, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			avatar := person.Avatar(tc.payload)
+			ok, err := avatar.IsValid()
+			tc.assert(t, ok, err)
+		})
+	}
+}
+
+func TestAvatar_Update(t *testing.T) {
+	testCases := []struct {
+		name    string
+		current string
+		update  string
+		assert  func(t *testing.T, expected person.Avatar, actual person.Avatar, err error)
+	}{
+		{
+			name:    "change avatar success",
+			current: gofakeit.URL(),
+			update:  gofakeit.URL(),
+			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
+				errMsg := fmt.Sprintf("avatar change should succeed: %s", err)
+				require.Equal(t, expected, actual, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:    "change avatar failed",
+			current: gofakeit.URL(),
+			update:  "invalid-avatar",
+			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
+				errMsg := fmt.Sprintf("avatar change should fail: %s", err)
+				require.NotEqual(t, expected, actual, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			avatar := person.Avatar(tc.current)
+			newAvatar, err := avatar.Update(tc.update)
+			tc.assert(t, person.Avatar(tc.update), newAvatar, err)
+		})
+	}
+}
+
+func TestAvatar_String(t *testing.T) {
+	avatar := person.Avatar(gofakeit.URL()).String()
+	kind := reflect.TypeOf(avatar).String()
+	require.Equal(t, "string", kind, "type should be `string`")
 }
