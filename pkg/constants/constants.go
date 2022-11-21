@@ -18,6 +18,7 @@ const (
 // Constants for environment variable keys.
 const (
 	AppName            = "APP_NAME"
+	AppEnv             = "APP_ENV"
 	AccountServicePort = "ACCOUNT_SERVICE_PORT"
 	PostgresUser       = "POSTGRES_USER"
 	PostgresPassword   = "POSTGRES_PASSWORD"
