@@ -1,8 +1,9 @@
 package logger
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/config"
-	"github.com/ssengalanto/potato-project/pkg/constants"
+	"fmt"
+	"strings"
+
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -14,26 +15,14 @@ type Logger struct {
 }
 
 // New creates a new Logger instance.
-func New() (Logger, error) {
-	var zapCfg zap.Config
-
-	env := getAppEnv()
-	if env == constants.Prod {
-		zapCfg = zap.NewProductionConfig()
-	} else {
-		zapCfg = zap.NewDevelopmentConfig()
-	}
-
-	zapCfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	zapCfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-
-	zapLogger, err := zapCfg.Build()
+func New(env string) (*Logger, error) {
+	logger, err := buildZapLogger(env)
 	if err != nil {
-		return Logger{}, ErrLoggerInitializationFailed
+		return nil, err
 	}
 
-	return Logger{
-		log: zapLogger,
+	return &Logger{
+		log: logger,
 	}, nil
 }
 
@@ -83,14 +72,34 @@ func mapToZapFields(fields map[string]any) []zap.Field {
 	return zapFields
 }
 
-// getAppEnv gets the application environment from .env.
-func getAppEnv() string {
-	cfg, err := config.GetInstance()
-	if err != nil {
-		return ""
-	}
+// buildZapLogger builds a new zap.Logger for specific environment with predefined configuration.
+func buildZapLogger(env string) (*zap.Logger, error) {
+	var logger *zap.Logger
+	var err error
 
-	return cfg.GetString(constants.AppEnv)
+	buildProviders := getBuildProviders()
+	lastIdx := len(buildProviders) - 1
+	for i, provider := range buildProviders {
+		matched := provider.env() == strings.ToLower(env)
+		outOfScope := i == lastIdx && !matched
+
+		if outOfScope {
+			return nil,
+				fmt.Errorf("%w: invalid env with value of `%s`, must be one of the ff: `development`, `testing`, `production`",
+					ErrLoggerInitializationFailed, env)
+		}
+
+		if !matched {
+			continue
+		}
+
+		logger, err = provider.build()
+		if err != nil {
+			return nil, ErrLoggerInitializationFailed
+		}
+		break
+	}
+	return logger, nil
 }
 
 // NewTestInstance creates a new Logger instance for testing.
