@@ -1,5 +1,7 @@
 package interfaces
 
+type Fields map[string]any
+
 type Logger interface {
 	Info(msg string, fields Fields)
 	Error(msg string, fields Fields)
@@ -8,5 +10,3 @@ type Logger interface {
 	Fatal(msg string, fields Fields)
 	Panic(msg string, fields Fields)
 }
-
-type Fields map[string]any
