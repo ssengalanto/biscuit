@@ -15,6 +15,11 @@ const (
 	Prod                = "production"
 )
 
+// Constants for packages.
+const (
+	ZapLogType = "zap"
+)
+
 // Constants for environment variable keys.
 const (
 	AppName            = "APP_NAME"
@@ -27,4 +32,5 @@ const (
 	PostgresDSN        = "POSTGRES_DSN"
 	RedisPort          = "REDIS_PORT"
 	RedisInsightPort   = "REDIS_INSIGHT_PORT"
+	LogType            = "LOG_TYPE"
 )
