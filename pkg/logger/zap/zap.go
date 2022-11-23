@@ -1,4 +1,4 @@
-package logger
+package zap
 
 import (
 	"fmt"
@@ -11,55 +11,55 @@ import (
 )
 
 type Logger struct {
-	log *zap.Logger
+	zap *zap.Logger
 }
 
 // New creates a new Logger instance.
 func New(env string) (*Logger, error) {
-	logger, err := buildZapLogger(env)
+	log, err := buildZapLogger(env)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Logger{
-		log: logger,
+		zap: log,
 	}, nil
 }
 
 // Info logs a message at info level.
 func (l *Logger) Info(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Info(msg, zapFields...)
+	l.zap.Info(msg, zapFields...)
 }
 
 // Error logs a message at error level.
 func (l *Logger) Error(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Error(msg, zapFields...)
+	l.zap.Error(msg, zapFields...)
 }
 
 // Debug logs a message at debug level.
 func (l *Logger) Debug(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Debug(msg, zapFields...)
+	l.zap.Debug(msg, zapFields...)
 }
 
 // Warn logs a message at warn level.
 func (l *Logger) Warn(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Warn(msg, zapFields...)
+	l.zap.Warn(msg, zapFields...)
 }
 
 // Fatal logs a message at fatal level.
 func (l *Logger) Fatal(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Fatal(msg, zapFields...)
+	l.zap.Fatal(msg, zapFields...)
 }
 
 // Panic logs a message at panic level.
 func (l *Logger) Panic(msg string, fields interfaces.Fields) {
 	zapFields := mapToZapFields(fields)
-	l.log.Panic(msg, zapFields...)
+	l.zap.Panic(msg, zapFields...)
 }
 
 // mapToZapFields maps the logger fields to zap fields.
@@ -74,7 +74,7 @@ func mapToZapFields(fields map[string]any) []zap.Field {
 
 // buildZapLogger builds a new zap.Logger for specific environment with predefined configuration.
 func buildZapLogger(env string) (*zap.Logger, error) {
-	var logger *zap.Logger
+	var log *zap.Logger
 	var err error
 
 	buildProviders := getBuildProviders()
@@ -86,20 +86,20 @@ func buildZapLogger(env string) (*zap.Logger, error) {
 		if outOfScope {
 			return nil,
 				fmt.Errorf("%w: invalid env with value of `%s`, must be one of the ff: `development`, `testing`, `production`",
-					ErrLoggerInitializationFailed, env)
+					ErrZapInitializationFailed, env)
 		}
 
 		if !matched {
 			continue
 		}
 
-		logger, err = provider.build()
+		log, err = provider.build()
 		if err != nil {
-			return nil, ErrLoggerInitializationFailed
+			return nil, ErrZapInitializationFailed
 		}
 		break
 	}
-	return logger, nil
+	return log, nil
 }
 
 // NewTestInstance creates a new Logger instance for testing.
@@ -109,6 +109,6 @@ func NewTestInstance(level zapcore.Level) (Logger, *observer.ObservedLogs) {
 	observedLogger := zap.New(observedZapCore)
 
 	return Logger{
-		log: observedLogger,
+		zap: observedLogger,
 	}, observedLogs
 }

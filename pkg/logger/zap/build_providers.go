@@ -1,4 +1,4 @@
-package logger
+package zap
 
 import (
 	"github.com/ssengalanto/potato-project/pkg/constants"
