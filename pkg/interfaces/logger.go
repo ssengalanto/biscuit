@@ -2,6 +2,7 @@ package interfaces
 
 type Fields map[string]any
 
+// Logger is an interface consisting of the core logger methods.
 type Logger interface {
 	Info(msg string, fields Fields)
 	Error(msg string, fields Fields)
