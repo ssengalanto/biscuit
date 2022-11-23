@@ -2,12 +2,25 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/ssengalanto/potato-project/pkg/config"
+	"github.com/ssengalanto/potato-project/pkg/constants"
+	"github.com/ssengalanto/potato-project/pkg/logger"
 )
 
 func main() {
+	cfg, err := config.GetInstance()
+	if err != nil {
+		panic("config error")
+	}
+
+	log, err := logger.New(cfg.GetString(constants.AppEnv), cfg.GetString(constants.LogType))
+	if err != nil {
+		panic("log error")
+	}
+
 	mux := http.NewServeMux()
 
 	server := &http.Server{
@@ -18,7 +31,11 @@ func main() {
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Potato Project!! 🚀")
+		log.Info("working", nil)
 	})
 
-	log.Fatal(server.ListenAndServe())
+	err = server.ListenAndServe()
+	if err != nil {
+		log.Fatal("server shuts down", nil)
+	}
 }
