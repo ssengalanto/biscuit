@@ -17,7 +17,8 @@ const (
 
 // Constants for packages.
 const (
-	ZapLogType = "zap"
+	ZapLogType      = "zap"
+	ViperConfigType = "viper"
 )
 
 // Constants for environment variable keys.
@@ -33,4 +34,5 @@ const (
 	RedisPort          = "REDIS_PORT"
 	RedisInsightPort   = "REDIS_INSIGHT_PORT"
 	LogType            = "LOG_TYPE"
+	ConfigType         = "CONFIG_TYPE"
 )
