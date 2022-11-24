@@ -16,6 +16,9 @@
 
 # env
 .env
+.env.development
+.env.test
+.env.production
 
 # docker volumes
 volumes/
