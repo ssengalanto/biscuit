@@ -1,26 +1,57 @@
 package config_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/ssengalanto/potato-project/pkg/config"
 	"github.com/ssengalanto/potato-project/pkg/constants"
+	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetInstance(t *testing.T) {
-	c1, err := config.GetInstance()
-	require.NotNil(t, c1)
-	require.Nil(t, err)
-
-	c2, _ := config.GetInstance()
-	require.Equal(t, &c1, &c2, "should return the same instance")
-}
-
-func TestConfig_Get(t *testing.T) {
-	c, err := config.GetInstance()
-	require.Nil(t, err)
-
-	v := c.Get(constants.AppName)
-	require.Equal(t, v, "potato-project")
+func TestNew(t *testing.T) {
+	testCases := []struct {
+		name       string
+		env        string
+		configType string
+		assert     func(t *testing.T, result interfaces.Config, err error)
+	}{
+		{
+			name:       "valid env",
+			env:        constants.Dev,
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				errMsg := fmt.Sprintf("creating new instance should succeed: %s", err)
+				require.NotNil(t, result, errMsg)
+				require.Nil(t, err, errMsg)
+			},
+		},
+		{
+			name:       "invalid env",
+			env:        "invalid",
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				errMsg := fmt.Sprintf("creating new instance should fail: %s", err)
+				require.Nil(t, result, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+		{
+			name:       "invalid config type",
+			env:        constants.Dev,
+			configType: "invalid",
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				errMsg := fmt.Sprintf("creating new instance should fail: %s", err)
+				require.Nil(t, result, errMsg)
+				require.NotNil(t, err, errMsg)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cfg, err := config.New(tc.env, tc.configType)
+			tc.assert(t, cfg, err)
+		})
+	}
 }
