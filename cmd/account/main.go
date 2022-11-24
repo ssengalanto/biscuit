@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.GetInstance()
+	cfg, err := config.New(constants.Dev, constants.ViperConfigType)
 	if err != nil {
 		panic("config error")
 	}
