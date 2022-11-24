@@ -95,7 +95,8 @@ func buildZapLogger(env string) (*zap.Logger, error) {
 
 		log, err = provider.build()
 		if err != nil {
-			return nil, ErrZapInitializationFailed
+			return nil, fmt.Errorf("%w: %s",
+				ErrZapInitializationFailed, err)
 		}
 		break
 	}

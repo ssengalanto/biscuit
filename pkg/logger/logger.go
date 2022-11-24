@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 )
 
@@ -21,6 +22,10 @@ func New(env, logType string) (interfaces.Logger, error) {
 func buildLogger(env, logType string) (interfaces.Logger, error) {
 	var logger interfaces.Logger
 	var err error
+
+	if logType == "" {
+		logType = constants.ZapLogType
+	}
 
 	buildProviders := getBuildProviders()
 	lastIdx := len(buildProviders) - 1
@@ -40,7 +45,7 @@ func buildLogger(env, logType string) (interfaces.Logger, error) {
 
 		logger, err = provider.build(env)
 		if err != nil {
-			return nil, ErrLoggerInitializationFailed
+			return nil, err
 		}
 		break
 	}
