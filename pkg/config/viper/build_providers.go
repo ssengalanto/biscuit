@@ -71,6 +71,9 @@ func createViperInstance(env string) (*viper.Viper, error) {
 
 	v := viper.New()
 
+	// build path
+	v.AddConfigPath(".")
+	// local path
 	v.AddConfigPath(strings.SplitAfter(wd, pkg)[0])
 	v.SetConfigName(fmt.Sprintf(".env.%s", env))
 	v.SetConfigType("env")
