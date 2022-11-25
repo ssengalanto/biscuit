@@ -24,7 +24,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	server := &http.Server{
-		Addr:              ":8081",
+		Addr:              fmt.Sprintf(":%s", cfg.GetString(constants.AccountServicePort)),
 		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd //unnecessary
 		Handler:           mux,
 	}
@@ -36,6 +36,6 @@ func main() {
 
 	err = server.ListenAndServe()
 	if err != nil {
-		log.Fatal("server shuts down", nil)
+		log.Fatal("server shuts down", map[string]any{"err": err})
 	}
 }
