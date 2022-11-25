@@ -11,12 +11,12 @@ func NewConnection(dsn string) (*pgxpool.Pool, error) {
 	ctx := context.Background()
 	dbpool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
-		return nil, err
+		return nil, ErrConnectionFailed
 	}
 
 	err = dbpool.Ping(ctx)
 	if err != nil {
-		return nil, err
+		return nil, ErrConnectionFailed
 	}
 
 	return dbpool, nil
