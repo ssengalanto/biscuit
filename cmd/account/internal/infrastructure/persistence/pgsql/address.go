@@ -1,4 +1,4 @@
-package postgres
+package pgsql
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 )
 
-// Address postgres model.
+// Address pgsql model.
 type Address struct {
 	ID               uuid.UUID     `json:"id"`
 	PersonID         uuid.UUID     `json:"personId"`

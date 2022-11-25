@@ -1,4 +1,4 @@
-package postgres
+package pgsql
 
 import (
 	"time"
@@ -7,7 +7,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
-// Person postgres model.
+// Person pgsql model.
 type Person struct {
 	ID          uuid.UUID `json:"id"`
 	AccountID   uuid.UUID `json:"accountId"`

@@ -8,7 +8,7 @@ includes:
   docker:
     taskfile: ./tasks/Docker.yaml
   pg:
-    taskfile: ./tasks/Postgres.yaml
+    taskfile: ./tasks/Pgsql.yaml
 
 vars:
   PACKAGES:

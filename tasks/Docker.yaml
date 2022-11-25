@@ -1,10 +1,20 @@
 version: "3"
 
 tasks:
-  compose-up:
+  compose-dev:
     desc: Runs the application using docker compose configuration file.
     cmds:
-      - docker compose up
+      - docker compose --env-file .env.development up
+
+  compose-test:
+    desc: Runs the application using docker compose configuration file.
+    cmds:
+      - docker compose --env-file .env.test up
+
+  compose-prod:
+    desc: Runs the application using docker compose configuration file.
+    cmds:
+      - docker compose --env-file .env.production up
 
   compose-down:
     desc: Stops and removes the containers provisioned by docker compose configuration file.
