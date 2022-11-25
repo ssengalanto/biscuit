@@ -20,7 +20,7 @@ func (d development) env() string {
 func (d development) build() (*zap.Logger, error) {
 	cfg := createDevelopmentConfig()
 
-	logger, err := cfg.Build()
+	logger, err := cfg.Build(zap.AddCallerSkip(1))
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func (t testing) env() string {
 func (t testing) build() (*zap.Logger, error) {
 	cfg := createDevelopmentConfig()
 
-	logger, err := cfg.Build()
+	logger, err := cfg.Build(zap.AddCallerSkip(1))
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (p production) env() string {
 func (p production) build() (*zap.Logger, error) {
 	cfg := createProductionConfig()
 
-	logger, err := cfg.Build()
+	logger, err := cfg.Build(zap.AddCallerSkip(1))
 	if err != nil {
 		return nil, err
 	}
