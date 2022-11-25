@@ -2,40 +2,47 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"time"
 
 	"github.com/ssengalanto/potato-project/pkg/config"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/logger"
+	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
 
 func main() {
 	cfg, err := config.New(constants.Dev, constants.ViperConfigType)
 	if err != nil {
-		panic("config error")
+		log.Fatal(err)
 	}
 
-	log, err := logger.New(cfg.GetString(constants.AppEnv), cfg.GetString(constants.LogType))
+	struclog, err := logger.New(cfg.GetString(constants.AppEnv), cfg.GetString(constants.LogType))
 	if err != nil {
-		panic("log error")
+		log.Fatal(err)
 	}
+
+	db, err := pgsql.NewConnection(cfg.GetString(constants.PgsqlDSN))
+	if err != nil {
+		struclog.Fatal("connection failed", map[string]any{"err": err})
+	}
+	defer db.Close()
 
 	mux := http.NewServeMux()
 
 	server := &http.Server{
 		Addr:              fmt.Sprintf(":%s", cfg.GetString(constants.AccountServicePort)),
-		ReadHeaderTimeout: 3 * time.Second, //nolint:gomnd //unnecessary
+		ReadHeaderTimeout: constants.ReadTimeout,
 		Handler:           mux,
 	}
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Potato Project!! 🚀")
-		log.Info("working", nil)
+		struclog.Info("working", nil)
 	})
 
 	err = server.ListenAndServe()
 	if err != nil {
-		log.Fatal("server shuts down", map[string]any{"err": err})
+		struclog.Fatal("server shuts down:", map[string]any{"err": err})
 	}
 }

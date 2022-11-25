@@ -1,4 +1,3 @@
-//nolint:gosec // unnecessary rules for this package
 package constants
 
 import "time"
