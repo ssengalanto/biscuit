@@ -1,6 +1,8 @@
+DROP TABLE IF EXISTS address;
+
 CREATE TABLE "address" (
-    "id" uuid PRIMARY KEY NOT NULL,
-    "person_id" uuid REFERENCES person(id) UNIQUE NOT NULL,
+    "id" uuid NOT NULL,
+    "person_id" uuid NOT NULL,
     "place_id" varchar NOT NULL,
     "address_line1" json NOT NULL,
     "address_line2" json NULL,
@@ -12,7 +14,9 @@ CREATE TABLE "address" (
     "lat" decimal NOT NULL,
     "lng" decimal NOT NULL,
     "created_at" timestamp NOT NULL DEFAULT NOW(),
-    "updated_at" timestamp NOT NULL DEFAULT NOW()
+    "updated_at" timestamp NOT NULL DEFAULT NOW(),
+    CONSTRAINT address_pkey PRIMARY KEY (id),
+    CONSTRAINT address_person_id_fkey FOREIGN KEY(person_id) REFERENCES person(id) ON DELETE CASCADE
 );
 
 comment on column address.person_id is 'Many-to-one relationship with person table.';
