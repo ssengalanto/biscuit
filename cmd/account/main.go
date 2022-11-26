@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/ssengalanto/potato-project/pkg/config"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/logger"
