@@ -3,21 +3,21 @@ package pgsql
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jmoiron/sqlx"
 )
 
 // NewConnection initializes a new postgres database connection pool.
-func NewConnection(dsn string) (*pgxpool.Pool, error) {
+func NewConnection(dsn string) (*sqlx.DB, error) {
 	ctx := context.Background()
-	dbpool, err := pgxpool.New(ctx, dsn)
+	db, err := sqlx.ConnectContext(ctx, "pgx", dsn)
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}
 
-	err = dbpool.Ping(ctx)
+	err = db.PingContext(ctx)
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}
 
-	return dbpool, nil
+	return db, nil
 }
