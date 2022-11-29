@@ -9,13 +9,13 @@ import (
 
 // Account pgsql model.
 type Account struct {
-	ID          uuid.UUID `json:"id"`
-	Email       string    `json:"email"`
-	Password    string    `json:"password"`
-	Active      bool      `json:"active"`
-	LastLoginAt time.Time `json:"lastLoginAt"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	ID          uuid.UUID `json:"id" db:"id"`
+	Email       string    `json:"email" db:"email"`
+	Password    string    `json:"password" db:"password"`
+	Active      bool      `json:"active" db:"active"`
+	LastLoginAt time.Time `json:"lastLoginAt" db:"last_login_at"`
+	CreatedAt   time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt   time.Time `json:"updatedAt" db:"updated_at"`
 }
 
 // ToEntity transforms the account model to account entity.
