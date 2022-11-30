@@ -18,6 +18,8 @@ const (
 const (
 	ZapLogType      = "zap"
 	ViperConfigType = "viper"
+	PgsqlDriver     = "pgx"
+	SlqMockDriver   = "sqlmock"
 )
 
 // Constants for environment variable keys.
