@@ -21,17 +21,23 @@ func (a *AccountRepository) Save(ctx context.Context, entity account.Entity) (ac
 	acc := Account{}
 
 	tx := a.db.MustBeginTx(ctx, nil)
+	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	row := tx.QueryRowxContext(
+	stmt, err := tx.PreparexContext(ctx, AccountQueries["save"])
+	if err != nil {
+		return account.Entity{}, err
+	}
+
+	row := stmt.QueryRowxContext(
 		ctx,
-		saveAccountQuery,
 		entity.ID,
 		entity.Email,
 		entity.Password,
 		entity.Active,
 		entity.LastLoginAt,
 	)
-	err := row.StructScan(&acc)
+
+	err = row.StructScan(&acc)
 	if err != nil {
 		return acc.ToEntity(), err
 	}
@@ -42,6 +48,11 @@ func (a *AccountRepository) Save(ctx context.Context, entity account.Entity) (ac
 	}
 
 	return acc.ToEntity(), nil
+}
+
+// AccountQueries is a map holds all queries for account table.
+var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
+	"save": saveAccountQuery,
 }
 
 const saveAccountQuery = `
