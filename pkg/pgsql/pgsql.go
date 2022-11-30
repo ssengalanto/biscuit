@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/ssengalanto/potato-project/pkg/constants"
 )
 
 // NewConnection initializes a new postgres database connection pool.
 func NewConnection(dsn string) (*sqlx.DB, error) {
 	ctx := context.Background()
-	db, err := sqlx.ConnectContext(ctx, "pgx", dsn)
+	db, err := sqlx.ConnectContext(ctx, constants.PgsqlDriver, dsn)
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}
