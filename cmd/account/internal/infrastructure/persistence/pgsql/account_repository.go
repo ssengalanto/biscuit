@@ -70,10 +70,30 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 	return acc.ToEntity(), nil
 }
 
+// FindByEmail get an account record with specific email in the database.
+func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
+	acc := Account{}
+
+	stmt, err := a.db.PreparexContext(ctx, AccountQueries["findByEmail"])
+	if err != nil {
+		return account.Entity{}, err
+	}
+
+	row := stmt.QueryRowxContext(ctx, email)
+
+	err = row.StructScan(&acc)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	return acc.ToEntity(), nil
+}
+
 // AccountQueries is a map holds all queries for account table.
 var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
-	"save":     saveAccountQuery,
-	"findByID": findByIDQuery,
+	"save":        saveAccountQuery,
+	"findByID":    findByIDQuery,
+	"findByEmail": findByEmailQuery,
 }
 
 const saveAccountQuery = `
@@ -85,3 +105,8 @@ const findByIDQuery = `
 	SELECT id, email, password, active, last_login_at
 	FROM account
 	WHERE id = $1`
+
+const findByEmailQuery = `
+	SELECT id, email, password, active, last_login_at
+	FROM account
+	WHERE email = $1`
