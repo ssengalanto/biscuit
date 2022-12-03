@@ -133,6 +133,30 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 	require.Equal(t, result, entity)
 }
 
+func TestAccountRepository_DeleteByID(t *testing.T) {
+	entity := newAccountEntity()
+
+	db, dbmock, err := mock.NewSqlDb()
+	require.NoError(t, err)
+	defer db.Close()
+
+	repo := pgsql.NewAccountRepository(db)
+
+	query, ok := pgsql.AccountQueries["deleteByID"]
+	require.True(t, ok)
+
+	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
+		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+
+	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
+
+	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
+
+	result, err := repo.DeleteByID(context.Background(), entity.ID)
+	require.NoError(t, err)
+	require.Equal(t, result, entity)
+}
+
 func newAccountEntity() account.Entity {
 	return account.Entity{
 		ID:          uuid.New(),
