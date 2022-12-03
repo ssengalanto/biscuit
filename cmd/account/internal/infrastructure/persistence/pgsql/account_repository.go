@@ -17,6 +17,29 @@ func NewAccountRepository(db *sqlx.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }
 
+// Exists checks if an account record with specific ID exists in the database.
+func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, error) {
+	var count int
+
+	stmt, err := a.db.PreparexContext(ctx, AccountQueries["exists"])
+	if err != nil {
+		return false, err
+	}
+
+	row := stmt.QueryRowxContext(ctx, id)
+
+	err = row.Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	if count == 1 {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 // Create inserts a new account record in the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
@@ -144,12 +167,18 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 
 // AccountQueries is a map holds all queries for account table.
 var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
+	"exists":      accountExistsQuery,
 	"create":      createAccountQuery,
 	"findByID":    findByIDQuery,
 	"findByEmail": findByEmailQuery,
 	"updateByID":  updateByIDQuery,
 	"deleteByID":  deleteByIDQuery,
 }
+
+const accountExistsQuery = `
+	SELECT COUNT(1)
+	FROM account
+	WHERE id = $1`
 
 const createAccountQuery = `
 	INSERT INTO account (id, email, password, active, last_login_at)
