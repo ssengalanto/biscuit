@@ -23,7 +23,7 @@ func TestNewAccountRepository(t *testing.T) {
 	require.NotNil(t, repo)
 }
 
-func TestAccountRepository_Save(t *testing.T) {
+func TestAccountRepository_Create(t *testing.T) {
 	entity := newAccountEntity()
 
 	db, dbmock, err := mock.NewSqlDb()
@@ -32,7 +32,7 @@ func TestAccountRepository_Save(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["save"]
+	query, ok := pgsql.AccountQueries["create"]
 	require.True(t, ok)
 
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
@@ -48,7 +48,7 @@ func TestAccountRepository_Save(t *testing.T) {
 		entity.LastLoginAt).WillReturnRows(rows)
 	dbmock.ExpectCommit()
 
-	result, err := repo.Save(context.Background(), entity)
+	result, err := repo.Create(context.Background(), entity)
 	require.NoError(t, err)
 	require.Equal(t, result, entity)
 }

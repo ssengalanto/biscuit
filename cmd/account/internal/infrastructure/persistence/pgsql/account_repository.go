@@ -17,14 +17,14 @@ func NewAccountRepository(db *sqlx.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }
 
-// Save insert a new account record in the database.
-func (a *AccountRepository) Save(ctx context.Context, entity account.Entity) (account.Entity, error) {
+// Create inserts a new account record in the database.
+func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
 
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	stmt, err := tx.PreparexContext(ctx, AccountQueries["save"])
+	stmt, err := tx.PreparexContext(ctx, AccountQueries["create"])
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -51,7 +51,7 @@ func (a *AccountRepository) Save(ctx context.Context, entity account.Entity) (ac
 	return acc.ToEntity(), nil
 }
 
-// FindByID get an account record with specific ID in the database.
+// FindByID gets an account record with specific ID in the database.
 func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
@@ -70,7 +70,7 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 	return acc.ToEntity(), nil
 }
 
-// FindByEmail get an account record with specific email in the database.
+// FindByEmail gets an account record with specific email in the database.
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
 	acc := Account{}
 
@@ -144,14 +144,14 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 
 // AccountQueries is a map holds all queries for account table.
 var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
-	"save":        saveAccountQuery,
+	"create":      createAccountQuery,
 	"findByID":    findByIDQuery,
 	"findByEmail": findByEmailQuery,
 	"updateByID":  updateByIDQuery,
 	"deleteByID":  deleteByIDQuery,
 }
 
-const saveAccountQuery = `
+const createAccountQuery = `
 	INSERT INTO account (id, email, password, active, last_login_at)
 	VALUES ($1, $2, $3, $4, $5)
 	RETURNING *`
