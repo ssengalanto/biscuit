@@ -89,8 +89,8 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 	return acc.ToEntity(), nil
 }
 
-// UpdateById updates an account record with specific id in the database.
-func (a *AccountRepository) UpdateById(ctx context.Context, entity account.Entity) (account.Entity, error) {
+// UpdateByID updates an account record with specific id in the database.
+func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
 
 	tx := a.db.MustBeginTx(ctx, nil)

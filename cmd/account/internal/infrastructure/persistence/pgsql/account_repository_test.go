@@ -53,7 +53,7 @@ func TestAccountRepository_Save(t *testing.T) {
 	require.Equal(t, result, entity)
 }
 
-func TestAccountRepository_FindById(t *testing.T) {
+func TestAccountRepository_FindByID(t *testing.T) {
 	entity := newAccountEntity()
 
 	db, dbmock, err := mock.NewSqlDb()
@@ -101,7 +101,7 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 	require.Equal(t, result, entity)
 }
 
-func TestAccountRepository_UpdateById(t *testing.T) {
+func TestAccountRepository_UpdateByID(t *testing.T) {
 	entity := newAccountEntity()
 	update := newAccountEntity()
 	update.ID = entity.ID
@@ -128,7 +128,7 @@ func TestAccountRepository_UpdateById(t *testing.T) {
 		update.LastLoginAt).WillReturnRows(rows)
 	dbmock.ExpectCommit()
 
-	result, err := repo.UpdateById(context.Background(), update)
+	result, err := repo.UpdateByID(context.Background(), update)
 	require.NoError(t, err)
 	require.Equal(t, result, entity)
 }
