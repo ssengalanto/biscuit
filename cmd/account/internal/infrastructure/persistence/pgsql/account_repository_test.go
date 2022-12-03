@@ -23,6 +23,29 @@ func TestNewAccountRepository(t *testing.T) {
 	require.NotNil(t, repo)
 }
 
+func TestAccountRepository_Exists(t *testing.T) {
+	entity := newAccountEntity()
+
+	db, dbmock, err := mock.NewSqlDb()
+	require.NoError(t, err)
+	defer db.Close()
+
+	repo := pgsql.NewAccountRepository(db)
+
+	query, ok := pgsql.AccountQueries["exists"]
+	require.True(t, ok)
+
+	rows := sqlmock.NewRows([]string{"count"}).AddRow(1)
+
+	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
+
+	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
+
+	result, err := repo.Exists(context.Background(), entity.ID)
+	require.NoError(t, err)
+	require.True(t, result)
+}
+
 func TestAccountRepository_Create(t *testing.T) {
 	entity := newAccountEntity()
 
