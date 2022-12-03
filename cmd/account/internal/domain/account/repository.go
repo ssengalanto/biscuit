@@ -1,12 +1,14 @@
 package account
 
-import "context"
+import (
+	"context"
+	"github.com/google/uuid"
+)
 
 type Repository interface {
-	Save(ctx context.Context, entity Entity) (Entity, error)
-	FindByID(ctx context.Context, id string) (Entity, error)
+	Create(ctx context.Context, entity Entity) (Entity, error)
+	FindByID(ctx context.Context, id uuid.UUID) (Entity, error)
 	FindByEmail(ctx context.Context, email string) (Entity, error)
-	DeactivateAccount(ctx context.Context, id string) (Entity, error)
-	ActivateAccount(ctx context.Context, id string) (Entity, error)
-	DeleteById(ctx context.Context, id string) (Entity, error)
+	UpdateByID(ctx context.Context, entity Entity) (Entity, error)
+	DeleteByID(ctx context.Context, id uuid.UUID) (Entity, error)
 }
