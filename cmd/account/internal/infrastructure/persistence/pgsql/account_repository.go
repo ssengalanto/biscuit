@@ -123,12 +123,32 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 	return acc.ToEntity(), nil
 }
 
+// DeleteByID deletes an account record with specific ID in the database.
+func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
+	acc := Account{}
+
+	stmt, err := a.db.PreparexContext(ctx, AccountQueries["deleteByID"])
+	if err != nil {
+		return account.Entity{}, err
+	}
+
+	row := stmt.QueryRowxContext(ctx, id)
+
+	err = row.StructScan(&acc)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	return acc.ToEntity(), nil
+}
+
 // AccountQueries is a map holds all queries for account table.
 var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	"save":        saveAccountQuery,
 	"findByID":    findByIDQuery,
 	"findByEmail": findByEmailQuery,
 	"updateByID":  updateByIDQuery,
+	"deleteByID":  deleteByIDQuery,
 }
 
 const saveAccountQuery = `
@@ -150,5 +170,10 @@ const updateByIDQuery = `
 	UPDATE account
 	SET email = $2, password = $3, active = $4, last_login_at = $5, updated_at = NOW()
 	FROM account
+	WHERE id = $1
+	RETURNING *`
+
+const deleteByIDQuery = `
+	DELETE FROM account
 	WHERE id = $1
 	RETURNING *`
