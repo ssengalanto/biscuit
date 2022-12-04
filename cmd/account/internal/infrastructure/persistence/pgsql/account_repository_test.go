@@ -24,26 +24,50 @@ func TestNewAccountRepository(t *testing.T) {
 }
 
 func TestAccountRepository_Exists(t *testing.T) {
-	entity := newAccountEntity()
+	testCases := []struct {
+		name    string
+		payload uuid.UUID
+		rows    *sqlmock.Rows
+		assert  func(t *testing.T, result bool, err error)
+	}{
+		{
+			name:    "record exists",
+			payload: uuid.New(),
+			rows:    sqlmock.NewRows([]string{"count"}).AddRow(1),
+			assert: func(t *testing.T, result bool, err error) {
+				require.NoError(t, err)
+				require.True(t, result)
+			},
+		},
+		{
+			name:    "record doesn't exists",
+			payload: uuid.New(),
+			rows:    sqlmock.NewRows([]string{"count"}).AddRow(0),
+			assert: func(t *testing.T, result bool, err error) {
+				require.NoError(t, err)
+				require.False(t, result)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			db, dbmock, err := mock.NewSqlDb()
+			require.NoError(t, err)
+			defer db.Close()
 
-	db, dbmock, err := mock.NewSqlDb()
-	require.NoError(t, err)
-	defer db.Close()
+			repo := pgsql.NewAccountRepository(db)
 
-	repo := pgsql.NewAccountRepository(db)
+			query, ok := pgsql.AccountQueries["exists"]
+			require.True(t, ok)
 
-	query, ok := pgsql.AccountQueries["exists"]
-	require.True(t, ok)
+			stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 
-	rows := sqlmock.NewRows([]string{"count"}).AddRow(1)
+			stmt.ExpectQuery().WithArgs(tc.payload).WillReturnRows(tc.rows)
 
-	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-
-	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
-
-	result, err := repo.Exists(context.Background(), entity.ID)
-	require.NoError(t, err)
-	require.True(t, result)
+			result, err := repo.Exists(context.Background(), tc.payload)
+			tc.assert(t, result, err)
+		})
+	}
 }
 
 func TestAccountRepository_Create(t *testing.T) {
