@@ -2,6 +2,7 @@ package pgsql
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -21,7 +22,8 @@ func NewAccountRepository(db *sqlx.DB) *AccountRepository {
 func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, error) {
 	var count int
 
-	stmt, err := a.db.PreparexContext(ctx, AccountQueries["exists"])
+	query := MustBeValidAccountQuery(AccountQueryExists)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return false, err
 	}
@@ -47,7 +49,8 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	stmt, err := tx.PreparexContext(ctx, AccountQueries["create"])
+	query := MustBeValidAccountQuery(AccountQueryCreate)
+	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -78,7 +81,8 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
-	stmt, err := a.db.PreparexContext(ctx, AccountQueries["findByID"])
+	query := MustBeValidAccountQuery(AccountQueryFindByID)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -97,7 +101,8 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
 	acc := Account{}
 
-	stmt, err := a.db.PreparexContext(ctx, AccountQueries["findByEmail"])
+	query := MustBeValidAccountQuery(AccountQueryFindByEmail)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -119,7 +124,8 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	stmt, err := tx.PreparexContext(ctx, AccountQueries["updateByID"])
+	query := MustBeValidAccountQuery(AccountQueryUpdateByID)
+	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -150,7 +156,8 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
-	stmt, err := a.db.PreparexContext(ctx, AccountQueries["deleteByID"])
+	query := MustBeValidAccountQuery(AccountQueryDeleteByID)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -165,14 +172,24 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 	return acc.ToEntity(), nil
 }
 
+// List of valid keys for accountQueries map.
+const (
+	AccountQueryExists      = "exists"
+	AccountQueryCreate      = "create"
+	AccountQueryFindByID    = "findById"
+	AccountQueryFindByEmail = "findByEmail"
+	AccountQueryUpdateByID  = "updateByID"
+	AccountQueryDeleteByID  = "deleteByID"
+)
+
 // AccountQueries is a map holds all queries for account table.
-var AccountQueries = map[string]string{ //nolint:gochecknoglobals //intended
-	"exists":      accountExistsQuery,
-	"create":      createAccountQuery,
-	"findByID":    findByIDQuery,
-	"findByEmail": findByEmailQuery,
-	"updateByID":  updateByIDQuery,
-	"deleteByID":  deleteByIDQuery,
+var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
+	AccountQueryExists:      accountExistsQuery,
+	AccountQueryCreate:      createAccountQuery,
+	AccountQueryFindByID:    findByIDQuery,
+	AccountQueryFindByEmail: findByEmailQuery,
+	AccountQueryUpdateByID:  updateByIDQuery,
+	AccountQueryDeleteByID:  deleteByIDQuery,
 }
 
 const accountExistsQuery = `
@@ -206,3 +223,15 @@ const deleteByIDQuery = `
 	DELETE FROM account
 	WHERE id = $1
 	RETURNING *`
+
+// MustBeValidAccountQuery accepts a string parameter that will be used
+// as a key to accountQueries map. If the key doesn't exist it will
+// throw a panic, otherwise it will return the query.
+func MustBeValidAccountQuery(s string) string {
+	query, ok := accountQueries[s]
+	if !ok {
+		panic(fmt.Errorf("%w: `%s` doesn't exists in account queries", ErrInvalidQuery, s))
+	}
+
+	return query
+}
