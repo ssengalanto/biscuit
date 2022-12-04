@@ -2,6 +2,7 @@ package pgsql_test
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -57,11 +58,8 @@ func TestAccountRepository_Exists(t *testing.T) {
 
 			repo := pgsql.NewAccountRepository(db)
 
-			query, ok := pgsql.AccountQueries["exists"]
-			require.True(t, ok)
-
+			query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryExists)
 			stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-
 			stmt.ExpectQuery().WithArgs(tc.payload).WillReturnRows(tc.rows)
 
 			result, err := repo.Exists(context.Background(), tc.payload)
@@ -79,13 +77,12 @@ func TestAccountRepository_Create(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["create"]
-	require.True(t, ok)
-
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
 	dbmock.ExpectBegin()
+
+	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryCreate)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
 		entity.ID,
@@ -109,14 +106,11 @@ func TestAccountRepository_FindByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["findByID"]
-	require.True(t, ok)
-
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
+	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryFindByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-
 	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
 
 	result, err := repo.FindByID(context.Background(), entity.ID)
@@ -133,14 +127,11 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["findByEmail"]
-	require.True(t, ok)
-
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
+	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryFindByEmail)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-
 	stmt.ExpectQuery().WithArgs(entity.Email.String()).WillReturnRows(rows)
 
 	result, err := repo.FindByEmail(context.Background(), entity.Email.String())
@@ -159,13 +150,11 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["updateByID"]
-	require.True(t, ok)
-
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
 	dbmock.ExpectBegin()
+	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryUpdateByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
 		update.ID,
@@ -189,19 +178,47 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	query, ok := pgsql.AccountQueries["deleteByID"]
-	require.True(t, ok)
-
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
+	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryDeleteByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-
 	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
 
 	result, err := repo.DeleteByID(context.Background(), entity.ID)
 	require.NoError(t, err)
 	require.Equal(t, result, entity)
+}
+
+func TestMustBeValidAccountQuery(t *testing.T) {
+	testCases := []struct {
+		name   string
+		assert func(t *testing.T)
+	}{
+		{
+			name: "valid query",
+			assert: func(t *testing.T) {
+				require.NotPanics(t, func() {
+					pgsql.MustBeValidAccountQuery(pgsql.AccountQueryExists)
+				})
+			},
+		},
+		{
+			name: "invalid query",
+			assert: func(t *testing.T) {
+				s := "invalid"
+				errMsg := fmt.Sprintf("%s: `%s` doesn't exists in account queries", pgsql.ErrInvalidQuery.Error(), s)
+				require.PanicsWithError(t, errMsg, func() {
+					pgsql.MustBeValidAccountQuery(s)
+				})
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			tc.assert(t)
+		})
+	}
 }
 
 func newAccountEntity() account.Entity {
