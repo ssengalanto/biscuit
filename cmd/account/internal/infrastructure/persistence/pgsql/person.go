@@ -9,16 +9,16 @@ import (
 
 // Person pgsql model.
 type Person struct {
-	ID          uuid.UUID `json:"id"`
-	AccountID   uuid.UUID `json:"accountId"`
-	FirstName   string    `json:"firstName"`
-	LastName    string    `json:"lastName"`
-	Email       string    `json:"email"`
-	Phone       string    `json:"phone"`
-	DateOfBirth time.Time `json:"dateOfBirth"`
-	Avatar      string    `json:"avatar"`
-	CreatedAt   time.Time `json:"createdAt"`
-	UpdatedAt   time.Time `json:"updatedAt"`
+	ID          uuid.UUID `json:"id" db:"id"`
+	AccountID   uuid.UUID `json:"accountId" db:"account_id"`
+	FirstName   string    `json:"firstName" db:"first_name"`
+	LastName    string    `json:"lastName" db:"last_name"`
+	Email       string    `json:"email" db:"email"`
+	Phone       string    `json:"phone" db:"phone"`
+	DateOfBirth time.Time `json:"dateOfBirth" db:"date_of_birth"`
+	Avatar      string    `json:"avatar" db:"avatar"`
+	CreatedAt   time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt   time.Time `json:"updatedAt" db:"updated_at"`
 }
 
 // ToEntity transforms the person model to account entity.
