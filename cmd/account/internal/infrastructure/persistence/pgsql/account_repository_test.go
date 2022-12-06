@@ -2,7 +2,6 @@ package pgsql_test
 
 import (
 	"context"
-	"fmt"
 	"regexp"
 	"testing"
 
@@ -58,7 +57,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 
 			repo := pgsql.NewAccountRepository(db)
 
-			query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryExists)
+			query := pgsql.MustBeValidAccountQuery(pgsql.QueryExists)
 			stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 			stmt.ExpectQuery().WithArgs(tc.payload).WillReturnRows(tc.rows)
 
@@ -82,7 +81,7 @@ func TestAccountRepository_Create(t *testing.T) {
 
 	dbmock.ExpectBegin()
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryCreate)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
 		entity.ID,
@@ -109,7 +108,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryFindByID)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryFindByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
 
@@ -130,7 +129,7 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryFindByEmail)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryFindByEmail)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(entity.Email.String()).WillReturnRows(rows)
 
@@ -154,7 +153,7 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
 	dbmock.ExpectBegin()
-	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryUpdateByID)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
 		update.ID,
@@ -181,44 +180,13 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.AccountQueryDeleteByID)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
 
 	result, err := repo.DeleteByID(context.Background(), entity.ID)
 	require.NoError(t, err)
 	require.Equal(t, result, entity)
-}
-
-func TestMustBeValidAccountQuery(t *testing.T) {
-	testCases := []struct {
-		name   string
-		assert func(t *testing.T)
-	}{
-		{
-			name: "valid query",
-			assert: func(t *testing.T) {
-				require.NotPanics(t, func() {
-					pgsql.MustBeValidAccountQuery(pgsql.AccountQueryExists)
-				})
-			},
-		},
-		{
-			name: "invalid query",
-			assert: func(t *testing.T) {
-				s := "invalid"
-				errMsg := fmt.Sprintf("%s: `%s` doesn't exists in account queries", pgsql.ErrInvalidQuery.Error(), s)
-				require.PanicsWithError(t, errMsg, func() {
-					pgsql.MustBeValidAccountQuery(s)
-				})
-			},
-		},
-	}
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			tc.assert(t)
-		})
-	}
 }
 
 func newAccountEntity() account.Entity {

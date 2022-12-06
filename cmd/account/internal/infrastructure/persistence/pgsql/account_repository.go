@@ -2,7 +2,6 @@ package pgsql
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -22,7 +21,7 @@ func NewAccountRepository(db *sqlx.DB) *AccountRepository {
 func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, error) {
 	var count int
 
-	query := MustBeValidAccountQuery(AccountQueryExists)
+	query := MustBeValidAccountQuery(QueryExists)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return false, err
@@ -44,15 +43,15 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 
 // Create inserts a new account record in the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	acc := Account{}
+	acc := account.Entity{}
 
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	query := MustBeValidAccountQuery(AccountQueryCreate)
+	query := MustBeValidAccountQuery(QueryCreateAccount)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return account.Entity{}, err
+		return acc, err
 	}
 
 	row := stmt.QueryRowxContext(
@@ -66,22 +65,22 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 
 	err = row.StructScan(&acc)
 	if err != nil {
-		return acc.ToEntity(), err
+		return acc, err
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return acc.ToEntity(), err
+		return acc, err
 	}
 
-	return acc.ToEntity(), nil
+	return acc, nil
 }
 
 // FindByID gets an account record with specific ID in the database.
 func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
-	query := MustBeValidAccountQuery(AccountQueryFindByID)
+	query := MustBeValidAccountQuery(QueryFindByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
@@ -101,7 +100,7 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
 	acc := Account{}
 
-	query := MustBeValidAccountQuery(AccountQueryFindByEmail)
+	query := MustBeValidAccountQuery(QueryFindByEmail)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
@@ -124,7 +123,7 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	query := MustBeValidAccountQuery(AccountQueryUpdateByID)
+	query := MustBeValidAccountQuery(QueryUpdateByID)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
@@ -156,7 +155,7 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
-	query := MustBeValidAccountQuery(AccountQueryDeleteByID)
+	query := MustBeValidAccountQuery(QueryDeleteByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
@@ -170,68 +169,4 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 	}
 
 	return acc.ToEntity(), nil
-}
-
-// List of valid keys for accountQueries map.
-const (
-	AccountQueryExists      = "exists"
-	AccountQueryCreate      = "create"
-	AccountQueryFindByID    = "findById"
-	AccountQueryFindByEmail = "findByEmail"
-	AccountQueryUpdateByID  = "updateByID"
-	AccountQueryDeleteByID  = "deleteByID"
-)
-
-// AccountQueries is a map holds all queries for account table.
-var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
-	AccountQueryExists:      accountExistsQuery,
-	AccountQueryCreate:      createAccountQuery,
-	AccountQueryFindByID:    findByIDQuery,
-	AccountQueryFindByEmail: findByEmailQuery,
-	AccountQueryUpdateByID:  updateByIDQuery,
-	AccountQueryDeleteByID:  deleteByIDQuery,
-}
-
-const accountExistsQuery = `
-	SELECT COUNT(1)
-	FROM account
-	WHERE id = $1`
-
-const createAccountQuery = `
-	INSERT INTO account (id, email, password, active, last_login_at)
-	VALUES ($1, $2, $3, $4, $5)
-	RETURNING *`
-
-const findByIDQuery = `
-	SELECT id, email, password, active, last_login_at
-	FROM account
-	WHERE id = $1`
-
-const findByEmailQuery = `
-	SELECT id, email, password, active, last_login_at
-	FROM account
-	WHERE email = $1`
-
-const updateByIDQuery = `
-	UPDATE account
-	SET email = $2, password = $3, active = $4, last_login_at = $5, updated_at = NOW()
-	FROM account
-	WHERE id = $1
-	RETURNING *`
-
-const deleteByIDQuery = `
-	DELETE FROM account
-	WHERE id = $1
-	RETURNING *`
-
-// MustBeValidAccountQuery accepts a string parameter that will be used
-// as a key to accountQueries map. If the key doesn't exist it will
-// throw a panic, otherwise it will return the query.
-func MustBeValidAccountQuery(s string) string {
-	query, ok := accountQueries[s]
-	if !ok {
-		panic(fmt.Errorf("%w: `%s` doesn't exists in account queries", ErrInvalidQuery, s))
-	}
-
-	return query
 }
