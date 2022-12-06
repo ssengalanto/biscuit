@@ -79,8 +79,6 @@ func TestAccountRepository_Create(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	dbmock.ExpectBegin()
-
 	query := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
@@ -89,7 +87,6 @@ func TestAccountRepository_Create(t *testing.T) {
 		entity.Password,
 		entity.Active,
 		entity.LastLoginAt).WillReturnRows(rows)
-	dbmock.ExpectCommit()
 
 	result, err := repo.Create(context.Background(), entity)
 	require.NoError(t, err)
@@ -152,7 +149,6 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	dbmock.ExpectBegin()
 	query := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
@@ -161,7 +157,6 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 		update.Password,
 		update.Active,
 		update.LastLoginAt).WillReturnRows(rows)
-	dbmock.ExpectCommit()
 
 	result, err := repo.UpdateByID(context.Background(), update)
 	require.NoError(t, err)

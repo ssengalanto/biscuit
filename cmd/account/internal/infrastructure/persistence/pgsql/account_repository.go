@@ -43,15 +43,12 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 
 // Create inserts a new account record in the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	acc := account.Entity{}
-
-	tx := a.db.MustBeginTx(ctx, nil)
-	defer tx.Rollback() //nolint:errcheck //unnecessary
+	acc := Account{}
 
 	query := MustBeValidAccountQuery(QueryCreateAccount)
-	stmt, err := tx.PreparexContext(ctx, query)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
-		return acc, err
+		return acc.ToEntity(), err
 	}
 
 	row := stmt.QueryRowxContext(
@@ -65,15 +62,10 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 
 	err = row.StructScan(&acc)
 	if err != nil {
-		return acc, err
+		return acc.ToEntity(), err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return acc, err
-	}
-
-	return acc, nil
+	return acc.ToEntity(), nil
 }
 
 // FindByID gets an account record with specific ID in the database.
@@ -120,11 +112,8 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
 
-	tx := a.db.MustBeginTx(ctx, nil)
-	defer tx.Rollback() //nolint:errcheck //unnecessary
-
 	query := MustBeValidAccountQuery(QueryUpdateByID)
-	stmt, err := tx.PreparexContext(ctx, query)
+	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
 	}
@@ -139,11 +128,6 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 	)
 
 	err = row.StructScan(&acc)
-	if err != nil {
-		return acc.ToEntity(), err
-	}
-
-	err = tx.Commit()
 	if err != nil {
 		return acc.ToEntity(), err
 	}
