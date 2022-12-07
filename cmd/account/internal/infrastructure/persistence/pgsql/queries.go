@@ -17,6 +17,7 @@ const (
 var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	QueryExists:        accountExistsQuery,
 	QueryCreateAccount: createAccountQuery,
+	QueryCreatePerson:  createPersonQuery,
 	QueryFindByID:      findByIDQuery,
 	QueryFindByEmail:   findByEmailQuery,
 	QueryUpdateByID:    updateByIDQuery,
@@ -31,7 +32,14 @@ const accountExistsQuery = `
 
 const createAccountQuery = `
 	INSERT INTO account (id, email, password, active, last_login_at)
-	VALUES ($1, $2, $3, $4, $5);
+	VALUES ($1, $2, $3, $4, $5)
+	RETURNING id, email, password, active, last_login_at;
+	`
+
+const createPersonQuery = `
+	INSERT INTO person (id, account_id, first_name, last_name, email, phone, date_of_birth, avatar)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+	RETURNING id, account_id, first_name, last_name, email, phone, date_of_birth, avatar;
 	`
 
 const findByIDQuery = `
