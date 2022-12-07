@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
 type AccountRepository struct {
@@ -41,31 +42,30 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 	return false, nil
 }
 
-// Create inserts a new account record in the database.
+// Create begins a new transaction to process and insert a new Account record together with its associated
+// Person and Address records. If transaction fails it will roll back all the changes it made,
+// otherwise it will commit the changes to the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	acc := Account{}
+	e := account.Entity{}
 
-	query := MustBeValidAccountQuery(QueryCreateAccount)
-	stmt, err := a.db.PreparexContext(ctx, query)
+	tx := a.db.MustBeginTx(ctx, nil)
+	defer tx.Rollback() //nolint:errcheck //unnecessary
+
+	acc, err := createAccount(ctx, tx, entity)
 	if err != nil {
-		return acc.ToEntity(), err
+		return e, err
 	}
 
-	row := stmt.QueryRowxContext(
-		ctx,
-		entity.ID,
-		entity.Email,
-		entity.Password,
-		entity.Active,
-		entity.LastLoginAt,
-	)
-
-	err = row.StructScan(&acc)
+	p, err := createPerson(ctx, tx, *entity.Person)
 	if err != nil {
-		return acc.ToEntity(), err
+		return e, err
 	}
 
-	return acc.ToEntity(), nil
+	tx.Commit() //nolint:errcheck //unnecessary
+
+	e = acc
+	e.Person = &p
+	return e, nil
 }
 
 // FindByID gets an account record with specific ID in the database.
@@ -153,4 +153,61 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 	}
 
 	return acc.ToEntity(), nil
+}
+
+// createAccount inserts a new Account record in the database.
+func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
+	acc := Account{}
+
+	query := MustBeValidAccountQuery(QueryCreateAccount)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(
+		ctx,
+		entity.ID,
+		entity.Email,
+		entity.Password,
+		entity.Active,
+		entity.LastLoginAt,
+	)
+
+	err = row.StructScan(&acc)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	return acc.ToEntity(), nil
+}
+
+// createPerson inserts a new Person record associated with account in the database.
+func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
+	p := Person{}
+
+	query := MustBeValidAccountQuery(QueryCreatePerson)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(
+		ctx,
+		entity.ID,
+		entity.AccountID,
+		entity.Details.FirstName,
+		entity.Details.LastName,
+		entity.Details.Email,
+		entity.Details.Phone,
+		entity.Details.DateOfBirth,
+		entity.Avatar,
+	)
+
+	err = row.StructScan(&p)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	return p.ToEntity(), nil
 }
