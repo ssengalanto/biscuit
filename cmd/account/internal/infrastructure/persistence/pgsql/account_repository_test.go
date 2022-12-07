@@ -9,6 +9,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/mock"
 	"github.com/stretchr/testify/require"
@@ -76,21 +77,50 @@ func TestAccountRepository_Create(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
-		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+	dbmock.ExpectBegin()
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
-	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-	stmt.ExpectQuery().WithArgs(
+	accountRows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
+		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+	createAccountQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
+	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAccountQuery))
+	accountStmt.ExpectQuery().WithArgs(
 		entity.ID,
 		entity.Email,
 		entity.Password,
 		entity.Active,
-		entity.LastLoginAt).WillReturnRows(rows)
+		entity.LastLoginAt).WillReturnRows(accountRows)
+
+	personRows := sqlmock.NewRows(
+		[]string{"id", "account_id", "first_name", "last_name", "email", "phone", "date_of_birth", "avatar"},
+	).
+		AddRow(
+			entity.Person.ID,
+			entity.Person.AccountID,
+			entity.Person.Details.FirstName,
+			entity.Person.Details.LastName,
+			entity.Person.Details.Email,
+			entity.Person.Details.Phone,
+			entity.Person.Details.DateOfBirth,
+			entity.Person.Avatar,
+		)
+	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreatePerson)
+	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
+	personStmt.ExpectQuery().WithArgs(
+		entity.Person.ID,
+		entity.Person.AccountID,
+		entity.Person.Details.FirstName,
+		entity.Person.Details.LastName,
+		entity.Person.Details.Email,
+		entity.Person.Details.Phone,
+		entity.Person.Details.DateOfBirth,
+		entity.Person.Avatar,
+	).WillReturnRows(personRows)
+
+	dbmock.ExpectCommit()
 
 	result, err := repo.Create(context.Background(), entity)
 	require.NoError(t, err)
-	require.Equal(t, result, entity)
+	require.Equal(t, entity, result)
 }
 
 func TestAccountRepository_FindByID(t *testing.T) {
@@ -185,11 +215,27 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 }
 
 func newAccountEntity() account.Entity {
+	accountID := uuid.New()
+	personID := uuid.New()
+
 	return account.Entity{
-		ID:          uuid.New(),
+		ID:          accountID,
 		Email:       account.Email(gofakeit.Email()),
 		Password:    account.Password(gofakeit.Password(true, true, true, true, false, 10)),
 		Active:      gofakeit.Bool(),
 		LastLoginAt: gofakeit.Date(),
+		Person: &person.Entity{
+			ID:        personID,
+			AccountID: accountID,
+			Details: person.Details{
+				FirstName:   gofakeit.FirstName(),
+				LastName:    gofakeit.LastName(),
+				Email:       gofakeit.Email(),
+				Phone:       gofakeit.Phone(),
+				DateOfBirth: gofakeit.Date(),
+			},
+			Avatar:  person.Avatar(gofakeit.URL()),
+			Address: nil,
+		},
 	}
 }
