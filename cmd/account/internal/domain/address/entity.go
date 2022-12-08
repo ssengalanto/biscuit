@@ -1,12 +1,23 @@
 package address
 
 import (
+	"encoding/json"
+
 	"github.com/google/uuid"
 )
 
 type Names struct {
 	ShortName string `json:"shortName"`
 	LongName  string `json:"longName"`
+}
+
+func (n Names) MustEncodeJSON() string {
+	data, err := json.Marshal(n)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(data)
 }
 
 // Entity - Address Entity.
