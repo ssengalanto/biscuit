@@ -117,9 +117,60 @@ func TestAccountRepository_Create(t *testing.T) {
 		entity.Person.Avatar,
 	).WillReturnRows(personRows)
 
+	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAddress)
+	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
+
+	for _, addr := range *entity.Person.Address {
+		addressRows := sqlmock.NewRows(
+			[]string{
+				"id",
+				"person_id",
+				"place_id",
+				"address_line1",
+				"address_line2",
+				"city",
+				"state",
+				"country",
+				"postal_code",
+				"formatted_address",
+				"lat",
+				"lng",
+			},
+		).
+			AddRow(
+				addr.ID,
+				addr.PersonID,
+				addr.Components.PlaceID,
+				addr.Components.AddressLine1.MustEncodeJSON(),
+				addr.Components.AddressLine2.MustEncodeJSON(),
+				addr.Components.City.MustEncodeJSON(),
+				addr.Components.State.MustEncodeJSON(),
+				addr.Components.Country.MustEncodeJSON(),
+				addr.Components.PostalCode.MustEncodeJSON(),
+				addr.Components.FormattedAddress,
+				addr.Geometry.Lat,
+				addr.Geometry.Lng,
+			)
+		addressStmt.ExpectQuery().WithArgs(
+			addr.ID,
+			addr.PersonID,
+			addr.Components.PlaceID,
+			addr.Components.AddressLine1.MustEncodeJSON(),
+			addr.Components.AddressLine2.MustEncodeJSON(),
+			addr.Components.City.MustEncodeJSON(),
+			addr.Components.State.MustEncodeJSON(),
+			addr.Components.Country.MustEncodeJSON(),
+			addr.Components.PostalCode.MustEncodeJSON(),
+			addr.Components.FormattedAddress,
+			addr.Geometry.Lat,
+			addr.Geometry.Lng,
+		).WillReturnRows(addressRows)
+	}
+
 	dbmock.ExpectCommit()
 
 	result, err := repo.Create(context.Background(), entity)
+
 	require.NoError(t, err)
 	require.Equal(t, entity, result)
 }
@@ -218,7 +269,6 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 func newAccountEntity() account.Entity {
 	accountID := uuid.New()
 	personID := uuid.New()
-	addr := gofakeit.Address()
 
 	return account.Entity{
 		ID:          accountID,
@@ -237,42 +287,51 @@ func newAccountEntity() account.Entity {
 				DateOfBirth: gofakeit.Date(),
 			},
 			Avatar: person.Avatar(gofakeit.URL()),
-			Address: &address.Entity{
-				ID:       uuid.New(),
-				PersonID: personID,
-				Components: address.Components{
-					PlaceID: gofakeit.UUID(),
-					AddressLine1: address.Names{
-						ShortName: addr.Street,
-						LongName:  addr.Street,
-					},
-					AddressLine2: address.Names{
-						ShortName: addr.Street,
-						LongName:  addr.Street,
-					},
-					City: address.Names{
-						ShortName: addr.City,
-						LongName:  addr.City,
-					},
-					State: address.Names{
-						ShortName: addr.State,
-						LongName:  addr.State,
-					},
-					Country: address.Names{
-						ShortName: addr.Country,
-						LongName:  addr.Country,
-					},
-					PostalCode: address.Names{
-						ShortName: addr.Zip,
-						LongName:  addr.Zip,
-					},
-					FormattedAddress: addr.Address,
-				},
-				Geometry: address.Geometry{
-					Lat: gofakeit.Latitude(),
-					Lng: gofakeit.Longitude(),
-				},
+			Address: &[]address.Entity{
+				newAddressEntity(personID),
+				newAddressEntity(personID),
 			},
+		},
+	}
+}
+
+func newAddressEntity(personID uuid.UUID) address.Entity {
+	addr := gofakeit.Address()
+
+	return address.Entity{
+		ID:       uuid.New(),
+		PersonID: personID,
+		Components: address.Components{
+			PlaceID: gofakeit.UUID(),
+			AddressLine1: address.Names{
+				ShortName: addr.Street,
+				LongName:  addr.Street,
+			},
+			AddressLine2: address.Names{
+				ShortName: addr.Street,
+				LongName:  addr.Street,
+			},
+			City: address.Names{
+				ShortName: addr.City,
+				LongName:  addr.City,
+			},
+			State: address.Names{
+				ShortName: addr.State,
+				LongName:  addr.State,
+			},
+			Country: address.Names{
+				ShortName: addr.Country,
+				LongName:  addr.Country,
+			},
+			PostalCode: address.Names{
+				ShortName: addr.Zip,
+				LongName:  addr.Zip,
+			},
+			FormattedAddress: addr.Address,
+		},
+		Geometry: address.Geometry{
+			Lat: gofakeit.Latitude(),
+			Lng: gofakeit.Longitude(),
 		},
 	}
 }

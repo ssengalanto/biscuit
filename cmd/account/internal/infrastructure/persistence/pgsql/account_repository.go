@@ -221,7 +221,7 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 
 // createAddress inserts a new Address record associated with Person in the database.
 func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
-	addrs := make([]address.Entity, 3)
+	var addrs []address.Entity
 
 	query := MustBeValidAccountQuery(QueryCreateAddress)
 	stmt, err := tx.PreparexContext(ctx, query)
@@ -231,6 +231,7 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 
 	for _, entity := range entities {
 		a := Address{}
+
 		row := stmt.QueryRowxContext(
 			ctx,
 			entity.ID,
