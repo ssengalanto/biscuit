@@ -9,11 +9,11 @@ import (
 
 // Entity - Person Entity.
 type Entity struct {
-	ID        uuid.UUID         `json:"id"`
-	AccountID uuid.UUID         `json:"accountId"`
-	Details   Details           `json:"details"`
-	Avatar    Avatar            `json:"avatar"`
-	Address   []*address.Entity `json:"address"`
+	ID        uuid.UUID       `json:"id"`
+	AccountID uuid.UUID       `json:"accountId"`
+	Details   Details         `json:"details"`
+	Avatar    Avatar          `json:"avatar"`
+	Address   *address.Entity `json:"address"`
 }
 
 // UpdateDetailsInput - input for updating peron Details.

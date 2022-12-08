@@ -45,9 +45,34 @@ const createPersonQuery = `
 	`
 
 const createAddressQuery = `
-	INSERT INTO address (id, person_id, place_id, address_line1, address_line2, city, state, country, postal_code, formatted_address, lat, lng)
+	INSERT INTO address (
+		id, 
+		person_id, 
+		place_id, 
+		address_line1, 
+		address_line2, 
+		city, 
+		state, 
+		country, 
+		postal_code, 
+		formatted_address, 
+		lat, 
+		lng
+	)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-	RETURNING id, person_id, place_id, address_line1, address_line2, city, state, country, postal_code, formatted_address, lat, lng;
+	RETURNING 
+		id, 
+		person_id, 
+		place_id, 
+		address_line1, 
+		address_line2, 
+		city, 
+		state, 
+		country, 
+		postal_code, 
+		formatted_address, 
+		lat, 
+		lng;
 	`
 
 const findByIDQuery = `

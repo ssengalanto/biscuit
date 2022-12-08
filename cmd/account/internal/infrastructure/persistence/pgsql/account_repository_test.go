@@ -9,6 +9,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/mock"
@@ -217,6 +218,7 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 func newAccountEntity() account.Entity {
 	accountID := uuid.New()
 	personID := uuid.New()
+	addr := gofakeit.Address()
 
 	return account.Entity{
 		ID:          accountID,
@@ -234,8 +236,43 @@ func newAccountEntity() account.Entity {
 				Phone:       gofakeit.Phone(),
 				DateOfBirth: gofakeit.Date(),
 			},
-			Avatar:  person.Avatar(gofakeit.URL()),
-			Address: nil,
+			Avatar: person.Avatar(gofakeit.URL()),
+			Address: &address.Entity{
+				ID:       uuid.New(),
+				PersonID: personID,
+				Components: address.Components{
+					PlaceID: gofakeit.UUID(),
+					AddressLine1: address.Names{
+						ShortName: addr.Street,
+						LongName:  addr.Street,
+					},
+					AddressLine2: address.Names{
+						ShortName: addr.Street,
+						LongName:  addr.Street,
+					},
+					City: address.Names{
+						ShortName: addr.City,
+						LongName:  addr.City,
+					},
+					State: address.Names{
+						ShortName: addr.State,
+						LongName:  addr.State,
+					},
+					Country: address.Names{
+						ShortName: addr.Country,
+						LongName:  addr.Country,
+					},
+					PostalCode: address.Names{
+						ShortName: addr.Zip,
+						LongName:  addr.Zip,
+					},
+					FormattedAddress: addr.Address,
+				},
+				Geometry: address.Geometry{
+					Lat: gofakeit.Latitude(),
+					Lng: gofakeit.Longitude(),
+				},
+			},
 		},
 	}
 }
