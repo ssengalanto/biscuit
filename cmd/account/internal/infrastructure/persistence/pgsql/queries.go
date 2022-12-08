@@ -7,6 +7,7 @@ const (
 	QueryExists        = "exists"
 	QueryCreateAccount = "createAccount"
 	QueryCreatePerson  = "createPerson"
+	QueryCreateAddress = "createAddress"
 	QueryFindByID      = "findById"
 	QueryFindByEmail   = "findByEmail"
 	QueryUpdateByID    = "updateByID"
@@ -18,6 +19,7 @@ var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	QueryExists:        accountExistsQuery,
 	QueryCreateAccount: createAccountQuery,
 	QueryCreatePerson:  createPersonQuery,
+	QueryCreateAddress: createAddressQuery,
 	QueryFindByID:      findByIDQuery,
 	QueryFindByEmail:   findByEmailQuery,
 	QueryUpdateByID:    updateByIDQuery,
@@ -40,6 +42,12 @@ const createPersonQuery = `
 	INSERT INTO person (id, account_id, first_name, last_name, email, phone, date_of_birth, avatar)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	RETURNING id, account_id, first_name, last_name, email, phone, date_of_birth, avatar;
+	`
+
+const createAddressQuery = `
+	INSERT INTO address (id, person_id, place_id, address_line1, address_line2, city, state, country, postal_code, formatted_address, lat, lng)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+	RETURNING id, person_id, place_id, address_line1, address_line2, city, state, country, postal_code, formatted_address, lat, lng;
 	`
 
 const findByIDQuery = `
