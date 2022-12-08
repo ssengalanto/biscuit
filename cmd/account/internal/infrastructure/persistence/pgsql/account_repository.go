@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
@@ -61,10 +62,16 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 		return e, err
 	}
 
+	addr, err := createAddress(ctx, tx, *entity.Person.Address)
+	if err != nil {
+		return e, err
+	}
+
 	tx.Commit() //nolint:errcheck //unnecessary
 
 	e = acc
 	e.Person = &p
+	e.Person.Address = &addr
 	return e, nil
 }
 
@@ -157,12 +164,12 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 
 // createAccount inserts a new Account record in the database.
 func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
-	acc := Account{}
+	a := Account{}
 
 	query := MustBeValidAccountQuery(QueryCreateAccount)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return acc.ToEntity(), err
+		return a.ToEntity(), err
 	}
 
 	row := stmt.QueryRowxContext(
@@ -174,15 +181,15 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (acc
 		entity.LastLoginAt,
 	)
 
-	err = row.StructScan(&acc)
+	err = row.StructScan(&a)
 	if err != nil {
-		return acc.ToEntity(), err
+		return a.ToEntity(), err
 	}
 
-	return acc.ToEntity(), nil
+	return a.ToEntity(), nil
 }
 
-// createPerson inserts a new Person record associated with account in the database.
+// createPerson inserts a new Person record associated with Account in the database.
 func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
 	p := Person{}
 
@@ -210,4 +217,38 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 	}
 
 	return p.ToEntity(), nil
+}
+
+// createAddress inserts a new Address record associated with Person in the database.
+func createAddress(ctx context.Context, tx *sqlx.Tx, entity address.Entity) (address.Entity, error) {
+	a := Address{}
+
+	query := MustBeValidAccountQuery(QueryCreateAddress)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return a.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(
+		ctx,
+		entity.ID,
+		entity.PersonID,
+		entity.Components.PlaceID,
+		entity.Components.AddressLine1.MustEncodeJSON(),
+		entity.Components.AddressLine2.MustEncodeJSON(),
+		entity.Components.City.MustEncodeJSON(),
+		entity.Components.State.MustEncodeJSON(),
+		entity.Components.Country.MustEncodeJSON(),
+		entity.Components.PostalCode.MustEncodeJSON(),
+		entity.Components.FormattedAddress,
+		entity.Geometry.Lat,
+		entity.Geometry.Lng,
+	)
+
+	err = row.StructScan(&a)
+	if err != nil {
+		return a.ToEntity(), err
+	}
+
+	return a.ToEntity(), nil
 }
