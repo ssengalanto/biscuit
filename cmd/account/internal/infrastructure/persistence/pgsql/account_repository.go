@@ -62,7 +62,7 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 		return e, err
 	}
 
-	addr, err := createAddress(ctx, tx, *entity.Person.Address)
+	addrs, err := createAddress(ctx, tx, *entity.Person.Address)
 	if err != nil {
 		return e, err
 	}
@@ -71,7 +71,7 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 
 	e = acc
 	e.Person = &p
-	e.Person.Address = &addr
+	e.Person.Address = &addrs
 	return e, nil
 }
 
@@ -220,35 +220,40 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 }
 
 // createAddress inserts a new Address record associated with Person in the database.
-func createAddress(ctx context.Context, tx *sqlx.Tx, entity address.Entity) (address.Entity, error) {
-	a := Address{}
+func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
+	addrs := make([]address.Entity, 3)
 
 	query := MustBeValidAccountQuery(QueryCreateAddress)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return a.ToEntity(), err
+		return addrs, err
 	}
 
-	row := stmt.QueryRowxContext(
-		ctx,
-		entity.ID,
-		entity.PersonID,
-		entity.Components.PlaceID,
-		entity.Components.AddressLine1.MustEncodeJSON(),
-		entity.Components.AddressLine2.MustEncodeJSON(),
-		entity.Components.City.MustEncodeJSON(),
-		entity.Components.State.MustEncodeJSON(),
-		entity.Components.Country.MustEncodeJSON(),
-		entity.Components.PostalCode.MustEncodeJSON(),
-		entity.Components.FormattedAddress,
-		entity.Geometry.Lat,
-		entity.Geometry.Lng,
-	)
+	for _, entity := range entities {
+		a := Address{}
+		row := stmt.QueryRowxContext(
+			ctx,
+			entity.ID,
+			entity.PersonID,
+			entity.Components.PlaceID,
+			entity.Components.AddressLine1.MustEncodeJSON(),
+			entity.Components.AddressLine2.MustEncodeJSON(),
+			entity.Components.City.MustEncodeJSON(),
+			entity.Components.State.MustEncodeJSON(),
+			entity.Components.Country.MustEncodeJSON(),
+			entity.Components.PostalCode.MustEncodeJSON(),
+			entity.Components.FormattedAddress,
+			entity.Geometry.Lat,
+			entity.Geometry.Lng,
+		)
 
-	err = row.StructScan(&a)
-	if err != nil {
-		return a.ToEntity(), err
+		err = row.StructScan(&a)
+		if err != nil {
+			return addrs, err
+		}
+
+		addrs = append(addrs, a.ToEntity())
 	}
 
-	return a.ToEntity(), nil
+	return addrs, nil
 }
