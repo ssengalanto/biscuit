@@ -4,26 +4,30 @@ import "fmt"
 
 // List of valid keys for accountQueries map.
 const (
-	QueryExists        = "exists"
-	QueryCreateAccount = "createAccount"
-	QueryCreatePerson  = "createPerson"
-	QueryCreateAddress = "createAddress"
-	QueryFindByID      = "findById"
-	QueryFindByEmail   = "findByEmail"
-	QueryUpdateByID    = "updateByID"
-	QueryDeleteByID    = "deleteByID"
+	QueryExists                = "exists"
+	QueryCreateAccount         = "createAccount"
+	QueryCreatePerson          = "createPerson"
+	QueryCreateAddress         = "createAddress"
+	QueryFindAccountByID       = "findAccountById"
+	QueryFindPersonByAccountID = "findPersonByAccountID"
+	QueryFindAddressByPersonID = "findAddressByPersonID"
+	QueryFindByEmail           = "findByEmail"
+	QueryUpdateByID            = "updateByID"
+	QueryDeleteByID            = "deleteByID"
 )
 
 // AccountQueries is a map holds all queries for account table.
 var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
-	QueryExists:        accountExistsQuery,
-	QueryCreateAccount: createAccountQuery,
-	QueryCreatePerson:  createPersonQuery,
-	QueryCreateAddress: createAddressQuery,
-	QueryFindByID:      findByIDQuery,
-	QueryFindByEmail:   findByEmailQuery,
-	QueryUpdateByID:    updateByIDQuery,
-	QueryDeleteByID:    deleteByIDQuery,
+	QueryExists:                accountExistsQuery,
+	QueryCreateAccount:         createAccountQuery,
+	QueryCreatePerson:          createPersonQuery,
+	QueryCreateAddress:         createAddressQuery,
+	QueryFindAccountByID:       findAccountByIDQuery,
+	QueryFindPersonByAccountID: findPersonByAccountIDQuery,
+	QueryFindAddressByPersonID: findAddressByPersonIDQuery,
+	QueryFindByEmail:           findByEmailQuery,
+	QueryUpdateByID:            updateByIDQuery,
+	QueryDeleteByID:            deleteByIDQuery,
 }
 
 const accountExistsQuery = `
@@ -75,10 +79,34 @@ const createAddressQuery = `
 		lng;
 	`
 
-const findByIDQuery = `
+const findAccountByIDQuery = `
 	SELECT id, email, password, active, last_login_at
 	FROM account
 	WHERE id = $1;
+	`
+
+const findPersonByAccountIDQuery = `
+	SELECT id, account_id, first_name, last_name, email, phone, date_of_birth, avatar
+	FROM person
+	WHERE account_id = $1;
+	`
+
+const findAddressByPersonIDQuery = `
+	SELECT 
+		id, 
+		person_id, 
+		place_id, 
+		address_line1, 
+		address_line2, 
+		city, 
+		state, 
+		country, 
+		postal_code, 
+		formatted_address, 
+		lat, 
+		lng
+	FROM address
+	WHERE person_id = $1;
 	`
 
 const findByEmailQuery = `
