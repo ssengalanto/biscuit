@@ -8,11 +8,11 @@ import (
 
 // Details - person details value object.
 type Details struct {
-	FirstName   string    `validate:"required"`
-	LastName    string    `validate:"required"`
-	Email       string    `validate:"email,required"`
-	Phone       string    `validate:"required"`
-	DateOfBirth time.Time `validate:"required"`
+	FirstName   string    `json:"firstName" validate:"required"`
+	LastName    string    `json:"lastName" validate:"required"`
+	Email       string    `json:"email" validate:"email,required"`
+	Phone       string    `json:"phone" validate:"required"`
+	DateOfBirth time.Time `json:"dateOfBirth" validate:"required"`
 }
 
 // IsValid checks the validity of the person details.
