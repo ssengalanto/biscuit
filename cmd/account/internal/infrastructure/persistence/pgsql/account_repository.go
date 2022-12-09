@@ -323,14 +323,14 @@ func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]ad
 
 	for rows.Next() {
 		addr := Address{}
-		err := rows.StructScan(&addr)
+		err = rows.StructScan(&addr)
 		if err != nil {
 			return nil, err
 		}
 
 		addrs = append(addrs, addr.ToEntity())
 	}
-	defer rows.Close() //nolint:errcheck //unnecessary
+	defer rows.Close()
 
 	return addrs, nil
 }
