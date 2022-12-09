@@ -19,7 +19,7 @@ func NewAccountRepository(db *sqlx.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }
 
-// Exists checks if an account record with specific ID exists in the database.
+// Exists checks if an account record with the specified ID exists in the database.
 func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, error) {
 	var count int
 
@@ -43,8 +43,8 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 	return false, nil
 }
 
-// Create begins a new transaction to process and insert a new Account record together with its associated
-// Person and Address records. If transaction fails it will roll back all the changes it made,
+// Create begins a new transaction to process and insert a new account record together with its associated
+// person and address records. If transaction fails it will roll back all the changes it made,
 // otherwise it will commit the changes to the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	e := account.Entity{}
@@ -69,33 +69,40 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	e = acc
-	e.Person = &p
-	e.Person.Address = &addrs
+	e = buildAccountEntity(acc, p, addrs)
 	return e, nil
 }
 
-// FindByID gets an account record with specific ID in the database.
+// FindByID gets an account record with the specified ID in the database
+// together with its associated person and address records.
 func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
-	acc := Account{}
+	entity := account.Entity{}
 
-	query := MustBeValidAccountQuery(QueryFindByID)
-	stmt, err := a.db.PreparexContext(ctx, query)
+	tx := a.db.MustBeginTx(ctx, nil)
+	defer tx.Rollback() //nolint:errcheck //unnecessary
+
+	acc, err := findAccountByID(ctx, tx, id)
 	if err != nil {
-		return account.Entity{}, err
+		return entity, err
 	}
 
-	row := stmt.QueryRowxContext(ctx, id)
-
-	err = row.StructScan(&acc)
+	p, err := findPersonByAccountID(ctx, tx, acc.ID)
 	if err != nil {
-		return acc.ToEntity(), err
+		return entity, err
 	}
 
-	return acc.ToEntity(), nil
+	addrs, err := findAddressByPersonID(ctx, tx, p.ID)
+	if err != nil {
+		return entity, err
+	}
+
+	tx.Commit() //nolint:errcheck //unnecessary
+
+	entity = buildAccountEntity(acc, p, addrs)
+	return entity, nil
 }
 
-// FindByEmail gets an account record with specific email in the database.
+// FindByEmail gets an account record with the specified email in the database.
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
 	acc := Account{}
 
@@ -115,7 +122,7 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 	return acc.ToEntity(), nil
 }
 
-// UpdateByID updates an account record with specific id in the database.
+// UpdateByID updates an account record with the specified ID in the database.
 func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
 
@@ -142,7 +149,7 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 	return acc.ToEntity(), nil
 }
 
-// DeleteByID deletes an account record with specific ID in the database.
+// DeleteByID deletes an account record with the specified ID in the database.
 func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
@@ -162,7 +169,7 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 	return acc.ToEntity(), nil
 }
 
-// createAccount inserts a new Account record in the database.
+// createAccount inserts a new account record in the database.
 func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
 	a := Account{}
 
@@ -189,7 +196,7 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (acc
 	return a.ToEntity(), nil
 }
 
-// createPerson inserts a new Person record associated with Account in the database.
+// createPerson inserts a new person record associated with account in the database.
 func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
 	p := Person{}
 
@@ -219,14 +226,14 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 	return p.ToEntity(), nil
 }
 
-// createAddress inserts a new Address record associated with Person in the database.
+// createAddress inserts a new address record associated with person in the database.
 func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
 	var addrs []address.Entity
 
 	query := MustBeValidAccountQuery(QueryCreateAddress)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return addrs, err
+		return nil, err
 	}
 
 	for _, entity := range entities {
@@ -250,11 +257,90 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 
 		err = row.StructScan(&a)
 		if err != nil {
-			return addrs, err
+			return nil, err
 		}
 
 		addrs = append(addrs, a.ToEntity())
 	}
 
 	return addrs, nil
+}
+
+// findAccountByID gets the account record with the specified ID in the database.
+func findAccountByID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (account.Entity, error) {
+	acc := Account{}
+
+	query := MustBeValidAccountQuery(QueryFindAccountByID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return account.Entity{}, err
+	}
+
+	row := stmt.QueryRowxContext(ctx, id)
+
+	err = row.StructScan(&acc)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	return acc.ToEntity(), nil
+}
+
+// findPersonByAccountID gets the person record associated with account in the database.
+func findPersonByAccountID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (person.Entity, error) {
+	p := Person{}
+
+	query := MustBeValidAccountQuery(QueryFindPersonByAccountID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(ctx, id)
+
+	err = row.StructScan(&p)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	return p.ToEntity(), nil
+}
+
+// findAddressByPersonID gets the list of address records associated with person in the database.
+func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]address.Entity, error) {
+	var addrs []address.Entity
+
+	query := MustBeValidAccountQuery(QueryFindAddressByPersonID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := stmt.QueryxContext(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		addr := Address{}
+		err := rows.StructScan(&addr)
+		if err != nil {
+			return nil, err
+		}
+
+		addrs = append(addrs, addr.ToEntity())
+	}
+	defer rows.Close() //nolint:errcheck //unnecessary
+
+	return addrs, nil
+}
+
+// buildAccountEntity takes account, person and address entities as parameters
+// and builds the account entity.
+func buildAccountEntity(account account.Entity, person person.Entity, address []address.Entity) account.Entity {
+	entity := account
+	entity.Person = &person
+	entity.Person.Address = &address
+
+	return entity
 }
