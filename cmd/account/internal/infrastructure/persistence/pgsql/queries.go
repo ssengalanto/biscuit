@@ -11,7 +11,7 @@ const (
 	QueryFindAccountByID       = "findAccountById"
 	QueryFindPersonByAccountID = "findPersonByAccountID"
 	QueryFindAddressByPersonID = "findAddressByPersonID"
-	QueryFindByEmail           = "findByEmail"
+	QueryFindAccountByEmail    = "findAccountByEmail"
 	QueryUpdateByID            = "updateByID"
 	QueryDeleteByID            = "deleteByID"
 )
@@ -25,7 +25,7 @@ var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	QueryFindAccountByID:       findAccountByIDQuery,
 	QueryFindPersonByAccountID: findPersonByAccountIDQuery,
 	QueryFindAddressByPersonID: findAddressByPersonIDQuery,
-	QueryFindByEmail:           findByEmailQuery,
+	QueryFindAccountByEmail:    findAccountByEmailQuery,
 	QueryUpdateByID:            updateByIDQuery,
 	QueryDeleteByID:            deleteByIDQuery,
 }
@@ -109,7 +109,7 @@ const findAddressByPersonIDQuery = `
 	WHERE person_id = $1;
 	`
 
-const findByEmailQuery = `
+const findAccountByEmailQuery = `
 	SELECT id, email, password, active, last_login_at
 	FROM account
 	WHERE email = $1;

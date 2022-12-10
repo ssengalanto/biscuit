@@ -104,22 +104,30 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 
 // FindByEmail gets an account record with the specified email in the database.
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
-	acc := Account{}
+	entity := account.Entity{}
 
-	query := MustBeValidAccountQuery(QueryFindByEmail)
-	stmt, err := a.db.PreparexContext(ctx, query)
+	tx := a.db.MustBeginTx(ctx, nil)
+	defer tx.Rollback() //nolint:errcheck //unnecessary
+
+	acc, err := findAccountByEmail(ctx, tx, email)
 	if err != nil {
-		return account.Entity{}, err
+		return entity, err
 	}
 
-	row := stmt.QueryRowxContext(ctx, email)
-
-	err = row.StructScan(&acc)
+	p, err := findPersonByAccountID(ctx, tx, acc.ID)
 	if err != nil {
-		return acc.ToEntity(), err
+		return entity, err
 	}
 
-	return acc.ToEntity(), nil
+	addrs, err := findAddressByPersonID(ctx, tx, p.ID)
+	if err != nil {
+		return entity, err
+	}
+
+	tx.Commit() //nolint:errcheck //unnecessary
+
+	entity = buildAccountEntity(acc, p, addrs)
+	return entity, nil
 }
 
 // UpdateByID updates an account record with the specified ID in the database.
@@ -273,7 +281,7 @@ func findAccountByID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (account.En
 	query := MustBeValidAccountQuery(QueryFindAccountByID)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return account.Entity{}, err
+		return acc.ToEntity(), err
 	}
 
 	row := stmt.QueryRowxContext(ctx, id)
@@ -333,6 +341,27 @@ func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]ad
 	defer rows.Close()
 
 	return addrs, nil
+}
+
+// findAccountByEmail gets the account record with the specified email address in the database.
+func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account.Entity, error) {
+	acc := Account{}
+
+	query := MustBeValidAccountQuery(QueryFindAccountByEmail)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(ctx, email)
+
+	err = row.StructScan(&acc)
+	if err != nil {
+		return acc.ToEntity(), err
+	}
+
+	return acc.ToEntity(), nil
+
 }
 
 // buildAccountEntity takes account, person and address entities as parameters
