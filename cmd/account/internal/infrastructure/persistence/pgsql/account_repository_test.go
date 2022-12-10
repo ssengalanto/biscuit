@@ -171,12 +171,24 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
-		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+	dbmock.ExpectBegin()
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.QueryFindByEmail)
-	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-	stmt.ExpectQuery().WithArgs(entity.Email.String()).WillReturnRows(rows)
+	accountRow := createAccountRow(entity)
+	findAccountByEmailQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAccountByEmail)
+	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(findAccountByEmailQuery))
+	accountStmt.ExpectQuery().WithArgs(entity.Email).WillReturnRows(accountRow)
+
+	personRow := createPersonRow(entity)
+	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindPersonByAccountID)
+	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
+	personStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(personRow)
+
+	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAddressByPersonID)
+	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
+	addressRows := createAddressRows(entity)
+	addressStmt.ExpectQuery().WithArgs(entity.Person.ID).WillReturnRows(addressRows)
+
+	dbmock.ExpectCommit()
 
 	result, err := repo.FindByEmail(context.Background(), entity.Email.String())
 	require.NoError(t, err)
