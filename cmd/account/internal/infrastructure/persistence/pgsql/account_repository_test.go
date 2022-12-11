@@ -209,7 +209,7 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateByID)
+	query := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAccountByID)
 	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
 	stmt.ExpectQuery().WithArgs(
 		update.ID,
@@ -232,12 +232,28 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
-		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+	dbmock.ExpectBegin()
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteByID)
-	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-	stmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(rows)
+	accountRow := createAccountRow(entity)
+	findAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAccountByID)
+	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(findAccountByIDQuery))
+	accountStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(accountRow)
+
+	personRow := createPersonRow(entity)
+	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindPersonByAccountID)
+	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
+	personStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(personRow)
+
+	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAddressByPersonID)
+	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
+	addressRows := createAddressRows(entity)
+	addressStmt.ExpectQuery().WithArgs(entity.Person.ID).WillReturnRows(addressRows)
+
+	dbmock.ExpectCommit()
+
+	deleteAccountByIdQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
+	deleteStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(deleteAccountByIdQuery))
+	deleteStmt.ExpectExec().WithArgs(entity.ID).WillReturnResult(sqlmock.NewResult(0, 3))
 
 	result, err := repo.DeleteByID(context.Background(), entity.ID)
 	require.NoError(t, err)
