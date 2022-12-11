@@ -134,7 +134,7 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	acc := Account{}
 
-	query := MustBeValidAccountQuery(QueryUpdateByID)
+	query := MustBeValidAccountQuery(QueryUpdateAccountByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
 		return account.Entity{}, err
@@ -159,22 +159,34 @@ func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entit
 
 // DeleteByID deletes an account record with the specified ID in the database.
 func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
-	acc := Account{}
+	empty := account.Entity{}
 
-	query := MustBeValidAccountQuery(QueryDeleteByID)
+	acc, err := a.FindByID(ctx, id)
+	if err != nil {
+		return empty, err
+	}
+
+	query := MustBeValidAccountQuery(QueryDeleteAccountByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
-		return account.Entity{}, err
+		return empty, err
 	}
 
-	row := stmt.QueryRowxContext(ctx, id)
-
-	err = row.StructScan(&acc)
+	result, err := stmt.ExecContext(ctx, id)
 	if err != nil {
-		return acc.ToEntity(), err
+		return empty, err
 	}
 
-	return acc.ToEntity(), nil
+	n, err := result.RowsAffected()
+	if err != nil {
+		return empty, err
+	}
+
+	if n == 0 {
+		return empty, ErrDeletionFailed
+	}
+
+	return acc, nil
 }
 
 // createAccount inserts a new account record in the database.
@@ -361,7 +373,6 @@ func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account
 	}
 
 	return acc.ToEntity(), nil
-
 }
 
 // buildAccountEntity takes account, person and address entities as parameters
