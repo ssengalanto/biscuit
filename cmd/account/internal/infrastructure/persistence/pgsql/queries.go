@@ -12,8 +12,10 @@ const (
 	QueryFindPersonByAccountID = "findPersonByAccountID"
 	QueryFindAddressByPersonID = "findAddressByPersonID"
 	QueryFindAccountByEmail    = "findAccountByEmail"
-	QueryUpdateByID            = "updateByID"
-	QueryDeleteByID            = "deleteByID"
+	QueryUpdateAccountByID     = "updateAccountByID"
+	QueryUpdatePersonByID      = "updatePersonByID"
+	QueryUpdateAddressByID     = "updateAddressByID"
+	QueryDeleteAccountByID     = "deleteAccountByID"
 )
 
 // AccountQueries is a map holds all queries for account table.
@@ -26,8 +28,10 @@ var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	QueryFindPersonByAccountID: findPersonByAccountIDQuery,
 	QueryFindAddressByPersonID: findAddressByPersonIDQuery,
 	QueryFindAccountByEmail:    findAccountByEmailQuery,
-	QueryUpdateByID:            updateByIDQuery,
-	QueryDeleteByID:            deleteByIDQuery,
+	QueryUpdateAccountByID:     updateAccountByIDQuery,
+	QueryUpdatePersonByID:      updatePersonByIDQuery,
+	QueryUpdateAddressByID:     updateAddressByIDQuery,
+	QueryDeleteAccountByID:     deleteAccountByIDQuery,
 }
 
 const accountExistsQuery = `
@@ -115,18 +119,52 @@ const findAccountByEmailQuery = `
 	WHERE email = $1;
 	`
 
-const updateByIDQuery = `
+const updateAccountByIDQuery = `
 	UPDATE account
 	SET email = $2, password = $3, active = $4, last_login_at = $5, updated_at = NOW()
-	FROM account
 	WHERE id = $1
-	RETURNING *;
+	RETURNING id, email, password, active, last_login_at;
 	`
 
-const deleteByIDQuery = `
-	DELETE FROM account
+const updatePersonByIDQuery = `
+	UPDATE person
+	SET first_name = $2, last_name = $3, email = $4, phone = $5, date_of_birth = $6, avatar = $7, updated_at = NOW()
 	WHERE id = $1
-	RETURNING *;
+	RETURNING id, account_id, first_name, last_name, email, phone, date_of_birth, avatar;
+	`
+
+const updateAddressByIDQuery = `
+	UPDATE address
+	SET 
+		place_id = $2,
+		address_line1 = $3,
+		address_line2 = $4,
+		city = $5,
+		state = $6,
+		country = $7,
+		postal_code = $8,
+		formatted_address = $9,
+		lat = $10,
+		lng = $11,
+		updated_at = NOW()
+	WHERE id = $1
+	RETURNING 
+		id, 
+		person_id, 
+		place_id, 
+		address_line1, 
+		address_line2, 
+		city, 
+		state, 
+		country, 
+		postal_code, 
+		formatted_address, 
+		lat, 
+		lng;
+	`
+
+const deleteAccountByIDQuery = `
+	DELETE FROM account WHERE id = $1
 	`
 
 // MustBeValidAccountQuery accepts a string parameter that will be used
