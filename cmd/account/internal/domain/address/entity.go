@@ -29,14 +29,17 @@ type Entity struct {
 }
 
 type UpdateInput struct {
+	ID         uuid.UUID
 	Components Components
 	Geometry   Geometry
 }
 
 // New creates a new address entity.
-func New() Entity {
-	return Entity{
-		ID: uuid.New(),
+func New() []Entity {
+	return []Entity{
+		{
+			ID: uuid.New(),
+		},
 	}
 }
 

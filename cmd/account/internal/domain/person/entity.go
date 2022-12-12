@@ -27,8 +27,10 @@ type UpdateDetailsInput struct {
 
 // New creates a new person entity.
 func New() Entity {
+	addrs := address.New()
 	return Entity{
-		ID: uuid.New(),
+		ID:      uuid.New(),
+		Address: &addrs,
 	}
 }
 

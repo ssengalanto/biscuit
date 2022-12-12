@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
@@ -19,8 +20,10 @@ type Entity struct {
 
 // New creates a new account entity.
 func New() Entity {
+	p := person.New()
 	return Entity{
-		ID: uuid.New(),
+		ID:     uuid.New(),
+		Person: &p,
 	}
 }
 
@@ -66,4 +69,59 @@ func (e *Entity) UpdatePassword(s string) error {
 
 	e.Password = password
 	return nil
+}
+
+// UpdatePersonAvatar takes a string parameter that should contain a valid avatar URL.
+// If validation failed it will return an error,
+// otherwise it will update the corresponding field in the person entity.
+func (e *Entity) UpdatePersonAvatar(avatar string) error {
+	err := e.Person.UpdateAvatar(avatar)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdatePersonDetails takes a struct parameter that contains the person details
+// to be used for the update. If validation failed it will return an error
+// otherwise it will update the corresponding fields in person entity.
+func (e *Entity) UpdatePersonDetails(input person.UpdateDetailsInput) error {
+	err := e.Person.UpdateDetails(input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UpdateAddress takes a slice of struct parameter that contains the address components
+// to be used for the update. If validation failed it will return an error
+// otherwise it will update the corresponding fields in address entity.
+func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
+	addrs := *e.Person.Address
+
+	for _, input := range inputs {
+		idx := indexOf(input.ID, addrs)
+
+		if idx == -1 {
+			continue
+		}
+
+		err := addrs[idx].Update(input)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func indexOf(id uuid.UUID, data []address.Entity) int {
+	for k, v := range data {
+		if id == v.ID {
+			return k
+		}
+	}
+	return -1
 }
