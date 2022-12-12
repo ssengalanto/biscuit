@@ -195,10 +195,8 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 	require.Equal(t, result, entity)
 }
 
-func TestAccountRepository_UpdateByID(t *testing.T) {
+func TestAccountRepository_Update(t *testing.T) {
 	entity := newAccountEntity()
-	update := newAccountEntity()
-	update.ID = entity.ID
 
 	db, dbmock, err := mock.NewSqlDb()
 	require.NoError(t, err)
@@ -206,21 +204,57 @@ func TestAccountRepository_UpdateByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	rows := sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
-		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
+	dbmock.ExpectBegin()
 
-	query := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAccountByID)
-	stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
-	stmt.ExpectQuery().WithArgs(
-		update.ID,
-		update.Email,
-		update.Password,
-		update.Active,
-		update.LastLoginAt).WillReturnRows(rows)
+	accountRow := createAccountRow(entity)
+	createAccountQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAccountByID)
+	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAccountQuery))
+	accountStmt.ExpectQuery().WithArgs(
+		entity.ID,
+		entity.Email,
+		entity.Password,
+		entity.Active,
+		entity.LastLoginAt).WillReturnRows(accountRow)
 
-	result, err := repo.UpdateByID(context.Background(), update)
+	personRow := createPersonRow(entity)
+	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdatePersonByID)
+	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
+	personStmt.ExpectQuery().WithArgs(
+		entity.Person.ID,
+		entity.Person.Details.FirstName,
+		entity.Person.Details.LastName,
+		entity.Person.Details.Email,
+		entity.Person.Details.Phone,
+		entity.Person.Details.DateOfBirth,
+		entity.Person.Avatar,
+	).WillReturnRows(personRow)
+
+	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAddressByID)
+	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
+
+	for _, addr := range *entity.Person.Address {
+		addressRows := createAddressRow(addr)
+		addressStmt.ExpectQuery().WithArgs(
+			addr.ID,
+			addr.Components.PlaceID,
+			addr.Components.AddressLine1.MustEncodeJSON(),
+			addr.Components.AddressLine2.MustEncodeJSON(),
+			addr.Components.City.MustEncodeJSON(),
+			addr.Components.State.MustEncodeJSON(),
+			addr.Components.Country.MustEncodeJSON(),
+			addr.Components.PostalCode.MustEncodeJSON(),
+			addr.Components.FormattedAddress,
+			addr.Geometry.Lat,
+			addr.Geometry.Lng,
+		).WillReturnRows(addressRows)
+	}
+
+	dbmock.ExpectCommit()
+
+	result, err := repo.Update(context.Background(), entity)
+
 	require.NoError(t, err)
-	require.Equal(t, result, entity)
+	require.Equal(t, entity, result)
 }
 
 func TestAccountRepository_DeleteByID(t *testing.T) {
