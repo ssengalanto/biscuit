@@ -130,31 +130,32 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 	return entity, nil
 }
 
-// UpdateByID updates an account record with the specified ID in the database.
-func (a *AccountRepository) UpdateByID(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	acc := Account{}
+// Update updates an account record in the database.
+func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) (account.Entity, error) {
+	e := account.Entity{}
 
-	query := MustBeValidAccountQuery(QueryUpdateAccountByID)
-	stmt, err := a.db.PreparexContext(ctx, query)
+	tx := a.db.MustBeginTx(ctx, nil)
+	defer tx.Rollback() //nolint:errcheck //unnecessary
+
+	acc, err := updateAccount(ctx, tx, entity)
 	if err != nil {
-		return account.Entity{}, err
+		return e, err
 	}
 
-	row := stmt.QueryRowxContext(
-		ctx,
-		entity.ID,
-		entity.Email,
-		entity.Password,
-		entity.Active,
-		entity.LastLoginAt,
-	)
-
-	err = row.StructScan(&acc)
+	p, err := updatePerson(ctx, tx, *entity.Person)
 	if err != nil {
-		return acc.ToEntity(), err
+		return e, err
 	}
 
-	return acc.ToEntity(), nil
+	addrs, err := updateAddress(ctx, tx, *entity.Person.Address)
+	if err != nil {
+		return e, err
+	}
+
+	tx.Commit() //nolint:errcheck //unnecessary
+
+	e = buildAccountEntity(acc, p, addrs)
+	return e, nil
 }
 
 // DeleteByID deletes an account record with the specified ID in the database.
@@ -373,6 +374,101 @@ func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account
 	}
 
 	return acc.ToEntity(), nil
+}
+
+// updateAccount updates an account record in the database.
+func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
+	a := Account{}
+
+	query := MustBeValidAccountQuery(QueryUpdateAccountByID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return a.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(
+		ctx,
+		entity.ID,
+		entity.Email,
+		entity.Password,
+		entity.Active,
+		entity.LastLoginAt,
+	)
+
+	err = row.StructScan(&a)
+	if err != nil {
+		return a.ToEntity(), err
+	}
+
+	return a.ToEntity(), nil
+}
+
+// updatePerson updates a person record associated with account in the database.
+func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
+	p := Person{}
+
+	query := MustBeValidAccountQuery(QueryUpdatePersonByID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	row := stmt.QueryRowxContext(
+		ctx,
+		entity.ID,
+		entity.Details.FirstName,
+		entity.Details.LastName,
+		entity.Details.Email,
+		entity.Details.Phone,
+		entity.Details.DateOfBirth,
+		entity.Avatar,
+	)
+
+	err = row.StructScan(&p)
+	if err != nil {
+		return p.ToEntity(), err
+	}
+
+	return p.ToEntity(), nil
+}
+
+// updateAddress updates an address record associated with person in the database.
+func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
+	var addrs []address.Entity
+
+	query := MustBeValidAccountQuery(QueryUpdateAddressByID)
+	stmt, err := tx.PreparexContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, entity := range entities {
+		a := Address{}
+
+		row := stmt.QueryRowxContext(
+			ctx,
+			entity.ID,
+			entity.Components.PlaceID,
+			entity.Components.AddressLine1.MustEncodeJSON(),
+			entity.Components.AddressLine2.MustEncodeJSON(),
+			entity.Components.City.MustEncodeJSON(),
+			entity.Components.State.MustEncodeJSON(),
+			entity.Components.Country.MustEncodeJSON(),
+			entity.Components.PostalCode.MustEncodeJSON(),
+			entity.Components.FormattedAddress,
+			entity.Geometry.Lat,
+			entity.Geometry.Lng,
+		)
+
+		err = row.StructScan(&a)
+		if err != nil {
+			return nil, err
+		}
+
+		addrs = append(addrs, a.ToEntity())
+	}
+
+	return addrs, nil
 }
 
 // buildAccountEntity takes account, person and address entities as parameters
