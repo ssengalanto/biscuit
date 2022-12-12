@@ -285,8 +285,8 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 
 	dbmock.ExpectCommit()
 
-	deleteAccountByIdQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
-	deleteStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(deleteAccountByIdQuery))
+	deleteAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
+	deleteStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(deleteAccountByIDQuery))
 	deleteStmt.ExpectExec().WithArgs(entity.ID).WillReturnResult(sqlmock.NewResult(0, 3))
 
 	result, err := repo.DeleteByID(context.Background(), entity.ID)
