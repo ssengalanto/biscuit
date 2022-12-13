@@ -10,29 +10,30 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	entity := account.New()
+	entity := newAccountEntity()
 	require.NotNilf(t, entity, "entity should not be nil")
 }
 
 func TestEntity_IsActive(t *testing.T) {
-	entity := account.New()
+	entity := newAccountEntity()
+	entity.Active = false
 	require.False(t, entity.IsActive(), "Entity.Active should be false")
 }
 
 func TestEntity_Activate(t *testing.T) {
-	entity := account.New()
+	entity := newAccountEntity()
 	entity.Activate()
 	require.True(t, entity.IsActive(), "Entity.Active should be true")
 }
 
 func TestEntity_Deactivate(t *testing.T) {
-	entity := account.New()
+	entity := newAccountEntity()
 	entity.Deactivate()
 	require.False(t, entity.IsActive(), "Entity.Active should be false")
 }
 
 func TestEntity_LoginTimestamp(t *testing.T) {
-	entity := account.New()
+	entity := newAccountEntity()
 	entity.LoginTimestamp()
 	require.False(t, entity.LastLoginAt.IsZero(), "Entity.LastLoginAt should not have zero value")
 }
@@ -64,7 +65,7 @@ func TestEntity_UpdateEmail(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			entity := account.New()
+			entity := newAccountEntity()
 			err := entity.UpdateEmail(tc.payload)
 			tc.assert(t, entity.Email, account.Email(tc.payload), err)
 		})
@@ -98,9 +99,13 @@ func TestEntity_UpdatePassword(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			entity := account.New()
+			entity := newAccountEntity()
 			err := entity.UpdatePassword(tc.payload)
 			tc.assert(t, entity.Password, account.Password(tc.payload), err)
 		})
 	}
+}
+
+func newAccountEntity() account.Entity {
+	return account.New(gofakeit.Email(), gofakeit.Password(true, true, true, true, false, 10), gofakeit.Bool())
 }

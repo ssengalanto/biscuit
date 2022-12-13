@@ -6,24 +6,26 @@ import (
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
 // Entity - Account Entity.
 type Entity struct {
-	ID          uuid.UUID      `json:"id"`
-	Email       Email          `json:"email"`
-	Password    Password       `json:"password"`
-	Active      bool           `json:"active"`
+	ID          uuid.UUID      `json:"id" validate:"uuid,required"`
+	Email       Email          `json:"email" validate:"required"`
+	Password    Password       `json:"password" validate:"required"`
+	Active      bool           `json:"active" validate:"required"`
 	LastLoginAt time.Time      `json:"lastLoginAt"`
 	Person      *person.Entity `json:"person"`
 }
 
 // New creates a new account entity.
-func New() Entity {
-	p := person.New()
+func New(email, password string, active bool) Entity {
 	return Entity{
-		ID:     uuid.New(),
-		Person: &p,
+		ID:       uuid.New(),
+		Email:    Email(email),
+		Password: Password(password),
+		Active:   active,
 	}
 }
 
@@ -115,6 +117,25 @@ func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
 	}
 
 	return nil
+}
+
+func (e *Entity) IsValid() error {
+	err := validator.Struct(e)
+	if err != nil {
+		return err
+	}
+
+	_, err = e.Email.IsValid()
+	if err != nil {
+		return err
+	}
+
+	_, err = e.Password.IsValid()
+	if err != nil {
+		return err
+	}
+
+	return err
 }
 
 func indexOf(id uuid.UUID, data []address.Entity) int {
