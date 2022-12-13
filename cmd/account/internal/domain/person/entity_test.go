@@ -11,7 +11,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	entity := person.New()
+	entity := newPersonEntity()
 	require.NotNilf(t, entity, "entity should not be nil")
 }
 
@@ -131,9 +131,20 @@ func TestEntity_UpdateAvatar(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			entity := person.New()
+			entity := newPersonEntity()
 			err := entity.UpdateAvatar(tc.payload)
 			tc.assert(t, entity.Avatar, person.Avatar(tc.payload), err)
 		})
 	}
+}
+
+func newPersonEntity() person.Entity {
+	return person.New(
+		uuid.New(),
+		gofakeit.FirstName(),
+		gofakeit.LastName(),
+		gofakeit.Email(),
+		gofakeit.Phone(),
+		gofakeit.Date(),
+	)
 }

@@ -5,13 +5,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
 // Entity - Person Entity.
 type Entity struct {
-	ID        uuid.UUID         `json:"id"`
-	AccountID uuid.UUID         `json:"accountId"`
-	Details   Details           `json:"details"`
+	ID        uuid.UUID         `json:"id" validate:"uuid,required"`
+	AccountID uuid.UUID         `json:"accountId" validate:"uuid,required"`
+	Details   Details           `json:"details" validate:"required"`
 	Avatar    Avatar            `json:"avatar"`
 	Address   *[]address.Entity `json:"address"`
 }
@@ -26,11 +27,17 @@ type UpdateDetailsInput struct {
 }
 
 // New creates a new person entity.
-func New() Entity {
-	addrs := address.New()
+func New(accountID uuid.UUID, firstName, lastName, email, phone string, dateOfBirth time.Time) Entity {
 	return Entity{
-		ID:      uuid.New(),
-		Address: &addrs,
+		ID:        uuid.New(),
+		AccountID: accountID,
+		Details: Details{
+			FirstName:   firstName,
+			LastName:    lastName,
+			Email:       email,
+			Phone:       phone,
+			DateOfBirth: dateOfBirth,
+		},
 	}
 }
 
@@ -74,4 +81,18 @@ func (e *Entity) UpdateAvatar(s string) error {
 
 	e.Avatar = avatar
 	return nil
+}
+
+func (e *Entity) IsValid() error {
+	err := validator.Struct(e)
+	if err != nil {
+		return err
+	}
+
+	err = e.Details.IsValid()
+	if err != nil {
+		return err
+	}
+
+	return err
 }

@@ -15,7 +15,7 @@ func TestDetails_IsValid(t *testing.T) {
 	testCases := []struct {
 		name    string
 		payload person.Details
-		assert  func(t *testing.T, result bool, err error)
+		assert  func(t *testing.T, err error)
 	}{
 		{
 			name: "valid person details",
@@ -26,10 +26,9 @@ func TestDetails_IsValid(t *testing.T) {
 				Phone:       gofakeit.Phone(),
 				DateOfBirth: gofakeit.Date(),
 			},
-			assert: func(t *testing.T, result bool, err error) {
+			assert: func(t *testing.T, err error) {
 				errMsg := fmt.Sprintf("person details should be valid: %s", err)
-				require.True(t, result, errMsg)
-				require.Nil(t, err, errMsg)
+				require.NoError(t, err, errMsg)
 			},
 		},
 		{
@@ -41,18 +40,17 @@ func TestDetails_IsValid(t *testing.T) {
 				Phone:       "",
 				DateOfBirth: time.Time{},
 			},
-			assert: func(t *testing.T, result bool, err error) {
+			assert: func(t *testing.T, err error) {
 				errMsg := fmt.Sprintf("person details should be invalid: %s", err)
-				require.False(t, result, errMsg)
-				require.NotNil(t, err, errMsg)
+				require.Error(t, err, errMsg)
 			},
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			details := tc.payload
-			ok, err := details.IsValid()
-			tc.assert(t, ok, err)
+			err := details.IsValid()
+			tc.assert(t, err)
 		})
 	}
 }

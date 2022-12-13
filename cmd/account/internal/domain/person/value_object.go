@@ -16,17 +16,17 @@ type Details struct {
 }
 
 // IsValid checks the validity of the person details.
-func (d Details) IsValid() (bool, error) {
+func (d Details) IsValid() error {
 	err := validator.Struct(d)
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	return true, nil
+	return err
 }
 
 func (d Details) Update(input Details) (Details, error) {
-	_, err := input.IsValid()
+	err := input.IsValid()
 	if err != nil {
 		return Details{}, err
 	}
