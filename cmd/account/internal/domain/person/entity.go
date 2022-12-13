@@ -10,8 +10,8 @@ import (
 
 // Entity - Person Entity.
 type Entity struct {
-	ID        uuid.UUID         `json:"id" validate:"uuid,required"`
-	AccountID uuid.UUID         `json:"accountId" validate:"uuid,required"`
+	ID        uuid.UUID         `json:"id" validate:"required"`
+	AccountID uuid.UUID         `json:"accountId" validate:"required"`
 	Details   Details           `json:"details" validate:"required"`
 	Avatar    Avatar            `json:"avatar"`
 	Address   *[]address.Entity `json:"address"`

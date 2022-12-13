@@ -11,7 +11,7 @@ import (
 
 // Entity - Account Entity.
 type Entity struct {
-	ID          uuid.UUID      `json:"id" validate:"uuid,required"`
+	ID          uuid.UUID      `json:"id" validate:"required"`
 	Email       Email          `json:"email" validate:"required"`
 	Password    Password       `json:"password" validate:"required"`
 	Active      bool           `json:"active" validate:"required"`
