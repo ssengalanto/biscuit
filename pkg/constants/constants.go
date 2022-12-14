@@ -6,6 +6,7 @@ import "time"
 const (
 	MaxHeaderBytes      = 1 << 20
 	IdleTimeout         = time.Minute
+	RequestTimeout      = time.Second * 3
 	ReadTimeout         = 10 * time.Second
 	WriteTimeout        = 30 * time.Second
 	ShutdownGracePeriod = 15 * time.Second
