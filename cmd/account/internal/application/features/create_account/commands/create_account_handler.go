@@ -11,17 +11,17 @@ import (
 )
 
 type CreateAccountCommandHandler struct {
-	accountRepository *pgsql.AccountRepository
 	log               interfaces.Logger
+	accountRepository *pgsql.AccountRepository
 }
 
 func NewCreateAccountCommandHandler(
-	accountRepository *pgsql.AccountRepository,
 	logger interfaces.Logger,
+	accountRepository *pgsql.AccountRepository,
 ) *CreateAccountCommandHandler {
 	return &CreateAccountCommandHandler{
-		accountRepository: accountRepository,
 		log:               logger,
+		accountRepository: accountRepository,
 	}
 }
 

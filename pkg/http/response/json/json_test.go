@@ -3,7 +3,6 @@ package json_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	httpjson "github.com/ssengalanto/potato-project/pkg/http/response/json"
+	"github.com/stretchr/testify/require"
 )
 
 func TestEncodeResponse(t *testing.T) {
@@ -27,13 +27,17 @@ func TestEncodeResponse(t *testing.T) {
 	data, err := io.ReadAll(res.Body)
 	require.NoError(t, err)
 	require.Equal(t, res.Status, fmt.Sprintf("%d %s", http.StatusOK, http.StatusText(http.StatusOK)))
-	require.Equal(t, string(data), fmt.Sprintf(`{"data":{"firstName":"%s","lastName":"%s"}}`, user.FirstName, user.LastName))
+	require.Equal(
+		t,
+		string(data),
+		fmt.Sprintf(`{"data":{"firstName":"%s","lastName":"%s"}}`, user.FirstName, user.LastName),
+	)
 }
 
 func TestMustEncodeResponse(t *testing.T) {
 	w := httptest.NewRecorder()
 	require.NotPanics(t, func() {
-		httpjson.EncodeResponse(w, http.StatusOK, nil)
+		httpjson.EncodeResponse(w, http.StatusOK, nil) //nolint:errcheck //unnecessary
 	})
 }
 

@@ -3,13 +3,14 @@ package server
 import (
 	"context"
 	"errors"
-	"github.com/go-chi/chi/v5"
-	"github.com/ssengalanto/potato-project/pkg/constants"
 	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
 	"syscall"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/ssengalanto/potato-project/pkg/constants"
 )
 
 type Server struct {

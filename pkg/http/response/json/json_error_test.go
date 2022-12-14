@@ -66,10 +66,13 @@ func TestEncodeError(t *testing.T) {
 			data, err := io.ReadAll(res.Body)
 			require.NoError(t, err)
 			require.Equal(t, res.Status, fmt.Sprintf("%d %s", tc.httperror, http.StatusText(tc.httperror)))
-			require.Equal(t, string(data), fmt.Sprintf(`{"error":{"code":%d,"message":"%s"}}`, tc.httperror, http.StatusText(tc.httperror)))
+			require.Equal(
+				t,
+				string(data),
+				fmt.Sprintf(`{"error":{"code":%d,"message":"%s"}}`, tc.httperror, http.StatusText(tc.httperror)),
+			)
 		})
 	}
-
 }
 
 func TestMustEncodeError(t *testing.T) {
