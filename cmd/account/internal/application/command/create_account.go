@@ -1,9 +1,9 @@
-package commands
+package command
 
 import (
 	"time"
 
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/features/create_account/dtos"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 )
 
 type CreateAccountCommand struct {
@@ -16,7 +16,7 @@ type CreateAccountCommand struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
-func NewCreateAccountCommand(input dtos.CreateAccountRequestDto) *CreateAccountCommand {
+func NewCreateAccountCommand(input dto.CreateAccountRequestDto) *CreateAccountCommand {
 	return &CreateAccountCommand{
 		Email:       input.Email,
 		Password:    input.Password,
