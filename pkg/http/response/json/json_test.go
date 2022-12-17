@@ -30,7 +30,7 @@ func TestEncodeResponse(t *testing.T) {
 	require.Equal(
 		t,
 		string(data),
-		fmt.Sprintf(`{"data":{"firstName":"%s","lastName":"%s"}}`, user.FirstName, user.LastName),
+		fmt.Sprintf(`{"firstName":"%s","lastName":"%s"}`, user.FirstName, user.LastName),
 	)
 }
 

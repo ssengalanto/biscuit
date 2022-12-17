@@ -14,11 +14,7 @@ import (
 
 // EncodeResponse encodes the payload to JSON format, if the encoding fails it will return an error.
 func EncodeResponse(w http.ResponseWriter, statusCode int, payload any) error {
-	data := response.HTTPResponse{
-		Data: payload,
-	}
-
-	res, err := json.Marshal(data)
+	res, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
