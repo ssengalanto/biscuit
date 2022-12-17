@@ -44,7 +44,7 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 }
 
 // Create begins a new transaction to process and insert a new account record together with its associated
-// person and address records. If transaction fails it will roll back all the changes it made,
+// person record. If transaction fails it will roll back all the changes it made,
 // otherwise it will commit the changes to the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
 	e := account.Entity{}
@@ -62,15 +62,30 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 		return e, err
 	}
 
-	addrs, err := createAddress(ctx, tx, *entity.Person.Address)
+	tx.Commit() //nolint:errcheck //unnecessary
+
+	e = buildAccountEntity(acc, p, nil)
+	return e, nil
+}
+
+// CreatePersonAddresses begins a new transaction to process and insert a
+// single or multiple address associated with person record.
+// If transaction fails it will roll back all the changes it made,
+// otherwise it will commit the changes to the database.
+func (a *AccountRepository) CreatePersonAddresses(
+	ctx context.Context,
+	entities []address.Entity,
+) ([]address.Entity, error) {
+	tx := a.db.MustBeginTx(ctx, nil)
+
+	addrs, err := createAddress(ctx, tx, entities)
 	if err != nil {
-		return e, err
+		return nil, err
 	}
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	e = buildAccountEntity(acc, p, addrs)
-	return e, nil
+	return addrs, nil
 }
 
 // FindByID gets an account record with the specified ID in the database

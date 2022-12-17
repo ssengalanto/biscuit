@@ -67,6 +67,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 
 func TestAccountRepository_Create(t *testing.T) {
 	entity := newAccountEntity()
+	*entity.Person.Address = nil
 
 	db, dbmock, err := mock.NewSqlDb()
 	require.NoError(t, err)
@@ -100,6 +101,24 @@ func TestAccountRepository_Create(t *testing.T) {
 		entity.Person.Avatar,
 	).WillReturnRows(personRow)
 
+	dbmock.ExpectCommit()
+
+	result, err := repo.Create(context.Background(), entity)
+	require.NoError(t, err)
+	require.Equal(t, entity, result)
+}
+
+func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
+	entity := newAccountEntity()
+
+	db, dbmock, err := mock.NewSqlDb()
+	require.NoError(t, err)
+	defer db.Close()
+
+	repo := pgsql.NewAccountRepository(db)
+
+	dbmock.ExpectBegin()
+
 	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAddress)
 	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
 
@@ -123,10 +142,9 @@ func TestAccountRepository_Create(t *testing.T) {
 
 	dbmock.ExpectCommit()
 
-	result, err := repo.Create(context.Background(), entity)
-
+	result, err := repo.CreatePersonAddresses(context.Background(), *entity.Person.Address)
 	require.NoError(t, err)
-	require.Equal(t, entity, result)
+	require.Equal(t, *entity.Person.Address, result)
 }
 
 func TestAccountRepository_FindByID(t *testing.T) {
