@@ -2,12 +2,16 @@ package pgsql
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgerrcode"
 	"github.com/jmoiron/sqlx"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/potato-project/pkg/errors"
+	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
 
 type AccountRepository struct {
@@ -226,7 +230,13 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (acc
 
 	err = row.StructScan(&a)
 	if err != nil {
-		return a.ToEntity(), err
+		code := pgsql.ErrorCode(err)
+
+		if code == pgerrcode.UniqueViolation {
+			return a.ToEntity(), fmt.Errorf("%w: duplicate email key value", errors.ErrInvalid)
+		}
+
+		return a.ToEntity(), fmt.Errorf("%w: %s", errors.ErrInternal, err.Error())
 	}
 
 	return a.ToEntity(), nil
