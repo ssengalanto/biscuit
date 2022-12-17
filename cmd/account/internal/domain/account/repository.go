@@ -2,9 +2,9 @@ package account
 
 import (
 	"context"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 
 	"github.com/google/uuid"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 )
 
 type Repository interface {

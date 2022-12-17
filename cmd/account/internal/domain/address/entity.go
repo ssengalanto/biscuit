@@ -35,11 +35,9 @@ type UpdateInput struct {
 }
 
 // New creates a new address entity.
-func New() []Entity {
-	return []Entity{
-		{
-			ID: uuid.New(),
-		},
+func New() Entity {
+	return Entity{
+		ID: uuid.New(),
 	}
 }
 
