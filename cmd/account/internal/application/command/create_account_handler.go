@@ -1,23 +1,22 @@
-package commands
+package command
 
 import (
 	"context"
 
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/features/create_account/dtos"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 )
 
 type CreateAccountCommandHandler struct {
 	log               interfaces.Logger
-	accountRepository *pgsql.AccountRepository
+	accountRepository account.Repository
 }
 
 func NewCreateAccountCommandHandler(
 	logger interfaces.Logger,
-	accountRepository *pgsql.AccountRepository,
+	accountRepository account.Repository,
 ) *CreateAccountCommandHandler {
 	return &CreateAccountCommandHandler{
 		log:               logger,
@@ -28,9 +27,9 @@ func NewCreateAccountCommandHandler(
 func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
 	command *CreateAccountCommand,
-) (dtos.CreateAccountResponseDto, error) {
+) (dto.CreateAccountResponseDto, error) {
 	entity := account.Entity{}
-	empty := dtos.CreateAccountResponseDto{}
+	empty := dto.CreateAccountResponseDto{}
 
 	acct := account.New(command.Email, command.Password, command.Active)
 	err := acct.IsValid()
@@ -55,11 +54,11 @@ func (c *CreateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dtos.CreateAccountResponseDto{
+	response := dto.CreateAccountResponseDto{
 		ID:     result.ID.String(),
 		Email:  result.Email.String(),
 		Active: result.Active,
-		Person: dtos.PersonResponseDto{
+		Person: dto.PersonResponseDto{
 			ID:          result.Person.ID.String(),
 			FirstName:   result.Person.Details.FirstName,
 			LastName:    result.Person.Details.LastName,
