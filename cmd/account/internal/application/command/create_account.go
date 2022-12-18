@@ -16,6 +16,10 @@ type CreateAccountCommand struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
+func (c *CreateAccountCommand) Topic() string {
+	return CreateAccountTopic
+}
+
 func NewCreateAccountCommand(input dto.CreateAccountRequestDto) *CreateAccountCommand {
 	return &CreateAccountCommand{
 		Email:       input.Email,

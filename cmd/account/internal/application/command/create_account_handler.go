@@ -2,11 +2,13 @@ package command
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
 type CreateAccountCommandHandler struct {
@@ -24,12 +26,22 @@ func NewCreateAccountCommandHandler(
 	}
 }
 
+func (c *CreateAccountCommandHandler) Topic() string {
+	return CreateAccountTopic
+}
+
 func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
-	command *CreateAccountCommand,
-) (dto.CreateAccountResponseDto, error) {
+	request mediatr.Request,
+) (any, error) {
 	entity := account.Entity{}
 	empty := dto.CreateAccountResponseDto{}
+
+	command, ok := request.(*CreateAccountCommand)
+	if !ok {
+		c.log.Error("invalid command", map[string]any{"command": command})
+		return nil, fmt.Errorf("invalid command: %s", command.Topic())
+	}
 
 	acct := account.New(command.Email, command.Password, command.Active)
 	err := acct.IsValid()
