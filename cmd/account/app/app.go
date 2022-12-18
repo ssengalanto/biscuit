@@ -9,6 +9,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/config"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/logger"
+	"github.com/ssengalanto/potato-project/pkg/mediatr"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/server"
 )
@@ -32,9 +33,10 @@ func Run() {
 
 	repo := repository.NewAccountRepository(db)
 	router := http.NewRouter()
+	mediator := mediatr.NewMediatr()
 
-	command.RegisterHandlers(slog, repo)
-	http.RegisterHandlers(slog, router)
+	command.RegisterHandlers(slog, repo, mediator)
+	http.RegisterHandlers(slog, router, mediator)
 
 	svr := server.New(cfg.GetInt(constants.AccountServicePort), router)
 	err = svr.Start()
