@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/brianvoe/gofakeit/v6 v6.19.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-playground/validator/v10 v10.11.1
