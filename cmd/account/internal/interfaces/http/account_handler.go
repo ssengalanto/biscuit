@@ -1,3 +1,4 @@
+//nolint:godot //unnecessary
 package http
 
 import (
@@ -23,6 +24,17 @@ func NewAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *Acc
 	return &AccountHandler{log: logger, mediator: mediator}
 }
 
+// CreateAccount
+// @Tags account
+// @Summary Create a new account
+// @Description Creates a new account
+// @Accept json
+// @Produce json
+// @Param CreateAccountRequestDto body dto.CreateAccountRequestDto true "Account data"
+// @Success 201 {object} dto.CreateAccountResponseDto
+// @Failure 400 {object} errors.HTTPError
+// @Failure 500 {object} errors.HTTPError
+// @Router /api/v1/account [post]
 func (a *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()
