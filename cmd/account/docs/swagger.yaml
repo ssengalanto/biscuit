@@ -1,0 +1,90 @@
+definitions:
+  dto.CreateAccountRequestDto:
+    properties:
+      active:
+        type: boolean
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    type: object
+  dto.CreateAccountResponseDto:
+    properties:
+      active:
+        type: boolean
+      email:
+        type: string
+      id:
+        type: string
+      person:
+        $ref: '#/definitions/dto.PersonResponseDto'
+    type: object
+  dto.PersonResponseDto:
+    properties:
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+    type: object
+  errors.Err:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  errors.HTTPError:
+    properties:
+      error:
+        $ref: '#/definitions/errors.Err'
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/account:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new account
+      parameters:
+      - description: Account data
+        in: body
+        name: CreateAccountRequestDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateAccountRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateAccountResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+      summary: Create a new account
+      tags:
+      - account
+swagger: "2.0"
