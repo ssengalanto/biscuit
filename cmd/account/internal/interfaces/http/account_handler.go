@@ -48,7 +48,6 @@ func (a *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	response, err := a.mediator.Send(ctx, cmd)
 	if err != nil {
-		a.log.Error("create account command failed", map[string]any{"error": err})
 		json.MustEncodeError(w, err)
 		return
 	}
