@@ -28,7 +28,21 @@ tasks:
       - brew install golangci-lint
       - brew install golang-migrate
       - brew install pre-commit
+      - go install github.com/swaggo/swag/cmd/swag@latest
       - pre-commit install
+
+  swag:gen:
+    desc: Generate swagger docs for services.
+    summary: |
+      Generate swagger docs for services.
+
+      Arguments:
+      BIN = service name
+
+      Example:
+      `task swag:gen BIN=<service-name>`
+    cmds:
+      - swag init -g ./cmd/{{.BIN}}/main.go -o ./cmd/{{.BIN}}/docs
 
   run:
     desc: Run the application.
