@@ -3,6 +3,7 @@ package app
 import (
 	"log"
 
+	_ "github.com/ssengalanto/potato-project/cmd/account/docs" //notlint:revive //unnecessary
 	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
 	repository "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
@@ -12,6 +13,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/server"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func Run() {
@@ -32,8 +34,10 @@ func Run() {
 	defer db.Close()
 
 	repo := repository.NewAccountRepository(db)
-	router := http.NewRouter()
 	mediator := mediatr.NewMediatr()
+
+	router := http.NewRouter()
+	router.Mount("/swagger", httpSwagger.WrapHandler)
 
 	command.RegisterHandlers(slog, repo, mediator)
 	http.RegisterHandlers(slog, router, mediator)
