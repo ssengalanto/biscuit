@@ -6,6 +6,7 @@ import (
 
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
@@ -65,5 +66,7 @@ func (c *CreateAccountCommandHandler) Handle(
 		return nil, err
 	}
 
-	return acct.ID.String(), err
+	response := dto.CreateAccountResponseDto{ID: acct.ID.String()}
+
+	return response, err
 }

@@ -12,18 +12,6 @@ type CreateAccountRequestDto struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
-type PersonResponseDto struct {
-	ID          string    `json:"id"`
-	FirstName   string    `json:"firstName"`
-	LastName    string    `json:"lastName"`
-	Email       string    `json:"email"`
-	Phone       string    `json:"phone"`
-	DateOfBirth time.Time `json:"dateOfBirth"`
-}
-
 type CreateAccountResponseDto struct {
-	ID     string            `json:"id"`
-	Email  string            `json:"email"`
-	Active bool              `json:"active"`
-	Person PersonResponseDto `json:"person"`
+	ID string `json:"id"`
 }

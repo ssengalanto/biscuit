@@ -55,7 +55,7 @@ func (c *GetAccountQueryHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.CreateAccountResponseDto{
+	response := dto.GetAccountResponseDto{
 		ID:     result.ID.String(),
 		Email:  result.Email.String(),
 		Active: result.Active,

@@ -59,19 +59,19 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		DateOfBirth: request.DateOfBirth,
 	})
 
-	resource, err := c.mediator.Send(ctx, cmd)
+	rr, err := c.mediator.Send(ctx, cmd)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	resourceID, ok := resource.(string)
+	resource, ok := rr.(dto.CreateAccountResponseDto)
 	if !ok {
-		c.log.Error("invalid resource id", map[string]any{"id": resourceID})
+		c.log.Error("invalid resource", map[string]any{"resource": resource})
 		json.MustEncodeError(w, errors.ErrInvalid)
 	}
 
-	q := query.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resourceID})
+	q := query.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resource.ID}) //nolint:gosimple //explicit
 	response, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
