@@ -27,6 +27,22 @@ definitions:
       person:
         $ref: '#/definitions/dto.PersonResponseDto'
     type: object
+  dto.GetAccountRequestDto:
+    properties:
+      id:
+        type: string
+    type: object
+  dto.GetAccountResponseDto:
+    properties:
+      active:
+        type: boolean
+      email:
+        type: string
+      id:
+        type: string
+      person:
+        $ref: '#/definitions/dto.PersonResponseDto'
+    type: object
   dto.PersonResponseDto:
     properties:
       dateOfBirth:
@@ -85,6 +101,36 @@ paths:
           schema:
             $ref: '#/definitions/errors.HTTPError'
       summary: Create a new account
+      tags:
+      - account
+  /api/v1/account/:id:
+    get:
+      consumes:
+      - application/json
+      description: Get account record by account ID.
+      parameters:
+      - description: Account Id
+        in: body
+        name: GetAccountRequestDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetAccountRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GetAccountResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+      summary: Get account by ID
       tags:
       - account
 swagger: "2.0"

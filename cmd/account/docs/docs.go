@@ -61,6 +61,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/account/:id": {
+            "get": {
+                "description": "Get account record by account ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account"
+                ],
+                "summary": "Get account by ID",
+                "parameters": [
+                    {
+                        "description": "Account Id",
+                        "name": "GetAccountRequestDto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAccountRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errors.HTTPError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -91,6 +137,31 @@ const docTemplate = `{
             }
         },
         "dto.CreateAccountResponseDto": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "person": {
+                    "$ref": "#/definitions/dto.PersonResponseDto"
+                }
+            }
+        },
+        "dto.GetAccountRequestDto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetAccountResponseDto": {
             "type": "object",
             "properties": {
                 "active": {
