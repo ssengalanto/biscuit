@@ -7,6 +7,9 @@ import (
 )
 
 func RegisterHandlers(logger interfaces.Logger, router *chi.Mux, mediator *mediatr.Mediatr) {
-	httpHandlers := NewAccountHandler(logger, mediator)
-	router.Post("/account", httpHandlers.CreateAccount)
+	createAccountHandler := NewCreateAccountHandler(logger, mediator)
+	router.Post("/account", createAccountHandler.Handle)
+
+	getAccountHandler := NewGetAccountHandler(logger, mediator)
+	router.Get("/account/{id}", getAccountHandler.Handle)
 }
