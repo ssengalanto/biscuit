@@ -42,14 +42,12 @@ const accountExistsQuery = `
 
 const createAccountQuery = `
 	INSERT INTO account (id, email, password, active, last_login_at)
-	VALUES ($1, $2, $3, $4, $5)
-	RETURNING id, email, password, active, last_login_at;
+	VALUES ($1, $2, $3, $4, $5);
 	`
 
 const createPersonQuery = `
 	INSERT INTO person (id, account_id, first_name, last_name, email, phone, date_of_birth, avatar)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-	RETURNING id, account_id, first_name, last_name, email, phone, date_of_birth, avatar;
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
 	`
 
 const createAddressQuery = `
@@ -67,20 +65,7 @@ const createAddressQuery = `
 		lat, 
 		lng
 	)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-	RETURNING 
-		id, 
-		person_id, 
-		place_id, 
-		address_line1, 
-		address_line2, 
-		city, 
-		state, 
-		country, 
-		postal_code, 
-		formatted_address, 
-		lat, 
-		lng;
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);
 	`
 
 const findAccountByIDQuery = `
@@ -122,15 +107,13 @@ const findAccountByEmailQuery = `
 const updateAccountByIDQuery = `
 	UPDATE account
 	SET email = $2, password = $3, active = $4, last_login_at = $5, updated_at = NOW()
-	WHERE id = $1
-	RETURNING id, email, password, active, last_login_at;
+	WHERE id = $1;
 	`
 
 const updatePersonByIDQuery = `
 	UPDATE person
 	SET first_name = $2, last_name = $3, email = $4, phone = $5, date_of_birth = $6, avatar = $7, updated_at = NOW()
-	WHERE id = $1
-	RETURNING id, account_id, first_name, last_name, email, phone, date_of_birth, avatar;
+	WHERE id = $1;
 	`
 
 const updateAddressByIDQuery = `
@@ -147,20 +130,7 @@ const updateAddressByIDQuery = `
 		lat = $10,
 		lng = $11,
 		updated_at = NOW()
-	WHERE id = $1
-	RETURNING 
-		id, 
-		person_id, 
-		place_id, 
-		address_line1, 
-		address_line2, 
-		city, 
-		state, 
-		country, 
-		postal_code, 
-		formatted_address, 
-		lat, 
-		lng;
+	WHERE id = $1;
 	`
 
 const deleteAccountByIDQuery = `
