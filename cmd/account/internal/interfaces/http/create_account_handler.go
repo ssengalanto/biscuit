@@ -14,17 +14,17 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
-type AccountHandler struct {
+type CreateAccountHandler struct {
 	log      interfaces.Logger
 	mediator *mediatr.Mediatr
 }
 
-// NewAccountHandler creates a new account handler.
-func NewAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *AccountHandler {
-	return &AccountHandler{log: logger, mediator: mediator}
+// NewCreateAccountHandler creates a new http handler for handling account creation.
+func NewCreateAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *CreateAccountHandler {
+	return &CreateAccountHandler{log: logger, mediator: mediator}
 }
 
-// CreateAccount
+// Handle
 // @Tags account
 // @Summary Create a new account
 // @Description Creates a new account
@@ -35,7 +35,7 @@ func NewAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *Acc
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account [post]
-func (a *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()
 
@@ -43,7 +43,7 @@ func (a *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
-		a.log.Error("invalid request", map[string]any{"error": err})
+		c.log.Error("invalid request", map[string]any{"error": err})
 		json.MustEncodeError(w, errors.ErrInvalid)
 		return
 	}
@@ -58,7 +58,7 @@ func (a *AccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		DateOfBirth: request.DateOfBirth,
 	})
 
-	response, err := a.mediator.Send(ctx, cmd)
+	response, err := c.mediator.Send(ctx, cmd)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
