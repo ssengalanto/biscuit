@@ -17,7 +17,7 @@ type CreateAccountCommand struct {
 }
 
 func (c *CreateAccountCommand) Topic() string {
-	return CreateAccountTopic
+	return CommandCreateAccount
 }
 
 func NewCreateAccountCommand(input dto.CreateAccountRequestDto) *CreateAccountCommand {

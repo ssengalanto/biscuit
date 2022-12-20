@@ -1,5 +1,5 @@
 package command
 
 const (
-	CreateAccountTopic = "CreateAccount"
+	CommandCreateAccount = "CommandCreateAccount"
 )

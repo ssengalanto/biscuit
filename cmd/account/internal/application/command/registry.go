@@ -7,8 +7,8 @@ import (
 )
 
 func RegisterHandlers(logger interfaces.Logger, repository account.Repository, mediator *mediatr.Mediatr) {
-	createAccountHandler := NewCreateAccountCommandHandler(logger, repository)
-	err := mediator.RegisterRequestHandler(createAccountHandler)
+	createAccountCommandHandler := NewCreateAccountCommandHandler(logger, repository)
+	err := mediator.RegisterRequestHandler(createAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}

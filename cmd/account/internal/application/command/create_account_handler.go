@@ -7,6 +7,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
@@ -27,7 +28,7 @@ func NewCreateAccountCommandHandler(
 }
 
 func (c *CreateAccountCommandHandler) Topic() string {
-	return CreateAccountTopic
+	return CommandCreateAccount
 }
 
 func (c *CreateAccountCommandHandler) Handle(
@@ -40,7 +41,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
 		c.log.Error("invalid command", map[string]any{"command": command})
-		return nil, fmt.Errorf("invalid command: %s", command.Topic())
+		return nil, fmt.Errorf("%w: command %s", errors.ErrInvalid, command.Topic())
 	}
 
 	acct := account.New(command.Email, command.Password, command.Active)
