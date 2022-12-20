@@ -101,39 +101,6 @@ func createPersonRow(entity account.Entity) *sqlmock.Rows {
 		)
 }
 
-func createAddressRow(addr address.Entity) *sqlmock.Rows {
-	return sqlmock.NewRows(
-		[]string{
-			"id",
-			"person_id",
-			"place_id",
-			"address_line1",
-			"address_line2",
-			"city",
-			"state",
-			"country",
-			"postal_code",
-			"formatted_address",
-			"lat",
-			"lng",
-		},
-	).
-		AddRow(
-			addr.ID,
-			addr.PersonID,
-			addr.Components.PlaceID,
-			addr.Components.AddressLine1.MustEncodeJSON(),
-			addr.Components.AddressLine2.MustEncodeJSON(),
-			addr.Components.City.MustEncodeJSON(),
-			addr.Components.State.MustEncodeJSON(),
-			addr.Components.Country.MustEncodeJSON(),
-			addr.Components.PostalCode.MustEncodeJSON(),
-			addr.Components.FormattedAddress,
-			addr.Geometry.Lat,
-			addr.Geometry.Lng,
-		)
-}
-
 func createAddressRows(entity account.Entity) *sqlmock.Rows {
 	rows := sqlmock.NewRows(
 		[]string{

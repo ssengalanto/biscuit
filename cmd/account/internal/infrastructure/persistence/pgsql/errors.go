@@ -6,6 +6,6 @@ import "fmt"
 var (
 	// ErrInvalidQuery is returned when the query doesn't exist.
 	ErrInvalidQuery = fmt.Errorf("invalid query")
-	// ErrDeletionFailed is returned when the deletion of records failed.
-	ErrDeletionFailed = fmt.Errorf("deletion failed")
+	// ErrExecFailed is returned when the query execution failed.
+	ErrExecFailed = fmt.Errorf("exec failed")
 )

@@ -51,26 +51,23 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 // Create begins a new transaction to process and insert a new account record together with its associated
 // person record. If transaction fails it will roll back all the changes it made,
 // otherwise it will commit the changes to the database.
-func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	e := account.Entity{}
-
+func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) error {
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	acc, err := createAccount(ctx, tx, entity)
+	err := createAccount(ctx, tx, entity)
 	if err != nil {
-		return e, err
+		return err
 	}
 
-	p, err := createPerson(ctx, tx, *entity.Person)
+	err = createPerson(ctx, tx, *entity.Person)
 	if err != nil {
-		return e, err
+		return err
 	}
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	e = buildAccountEntity(acc, p, nil)
-	return e, nil
+	return nil
 }
 
 // CreatePersonAddresses begins a new transaction to process and insert a
@@ -80,17 +77,17 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) (
 func (a *AccountRepository) CreatePersonAddresses(
 	ctx context.Context,
 	entities []address.Entity,
-) ([]address.Entity, error) {
+) error {
 	tx := a.db.MustBeginTx(ctx, nil)
 
-	addrs, err := createAddress(ctx, tx, entities)
+	err := createAddress(ctx, tx, entities)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	return addrs, nil
+	return nil
 }
 
 // FindByID gets an account record with the specified ID in the database
@@ -151,76 +148,60 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 }
 
 // Update updates an account record in the database.
-func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) (account.Entity, error) {
-	e := account.Entity{}
-
+func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) error {
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
 
-	acc, err := updateAccount(ctx, tx, entity)
+	err := updateAccount(ctx, tx, entity)
 	if err != nil {
-		return e, err
+		return err
 	}
 
-	p, err := updatePerson(ctx, tx, *entity.Person)
+	err = updatePerson(ctx, tx, *entity.Person)
 	if err != nil {
-		return e, err
+		return err
 	}
 
-	addrs, err := updateAddress(ctx, tx, *entity.Person.Address)
+	err = updateAddress(ctx, tx, *entity.Person.Address)
 	if err != nil {
-		return e, err
+		return err
 	}
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	e = buildAccountEntity(acc, p, addrs)
-	return e, nil
+	return nil
 }
 
 // DeleteByID deletes an account record with the specified ID in the database.
-func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
-	empty := account.Entity{}
-
-	acc, err := a.FindByID(ctx, id)
-	if err != nil {
-		return empty, err
-	}
-
+func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) error {
 	query := MustBeValidAccountQuery(QueryDeleteAccountByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
 	if err != nil {
-		return empty, err
+		return err
 	}
 
 	result, err := stmt.ExecContext(ctx, id)
 	if err != nil {
-		return empty, err
+		return err
 	}
 
-	n, err := result.RowsAffected()
+	err = handleRowsAffected(result.RowsAffected())
 	if err != nil {
-		return empty, err
+		return err
 	}
 
-	if !gg.Itob(n) {
-		return empty, ErrDeletionFailed
-	}
-
-	return acc, nil
+	return nil
 }
 
 // createAccount inserts a new account record in the database.
-func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
-	a := Account{}
-
+func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreateAccount)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return a.ToEntity(), err
+		return err
 	}
 
-	row := stmt.QueryRowxContext(
+	result, err := stmt.ExecContext(
 		ctx,
 		entity.ID,
 		entity.Email,
@@ -228,32 +209,33 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (acc
 		entity.Active,
 		entity.LastLoginAt,
 	)
-
-	err = row.StructScan(&a)
 	if err != nil {
 		code := pgsql.ErrorCode(err)
 
 		if code == pgerrcode.UniqueViolation {
-			return a.ToEntity(), fmt.Errorf("%w: duplicate email key value", errors.ErrInvalid)
+			return fmt.Errorf("%w: duplicate email key value", errors.ErrInvalid)
 		}
 
-		return a.ToEntity(), fmt.Errorf("%w: %s", errors.ErrInternal, err.Error())
+		return fmt.Errorf("%w: %s", errors.ErrInternal, err.Error())
 	}
 
-	return a.ToEntity(), nil
+	err = handleRowsAffected(result.RowsAffected())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // createPerson inserts a new person record associated with account in the database.
-func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
-	p := Person{}
-
+func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreatePerson)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return p.ToEntity(), err
+		return err
 	}
 
-	row := stmt.QueryRowxContext(
+	result, err := stmt.ExecContext(
 		ctx,
 		entity.ID,
 		entity.AccountID,
@@ -264,29 +246,28 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 		entity.Details.DateOfBirth,
 		entity.Avatar,
 	)
-
-	err = row.StructScan(&p)
 	if err != nil {
-		return p.ToEntity(), err
+		return err
 	}
 
-	return p.ToEntity(), nil
+	err = handleRowsAffected(result.RowsAffected())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // createAddress inserts a new address record associated with person in the database.
-func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
-	var addrs []address.Entity
-
+func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreateAddress)
-	stmt, err := tx.PreparexContext(ctx, query)
-	if err != nil {
-		return nil, err
+	stmt, preperr := tx.PreparexContext(ctx, query)
+	if preperr != nil {
+		return preperr
 	}
 
 	for _, entity := range entities {
-		a := Address{}
-
-		row := stmt.QueryRowxContext(
+		result, err := stmt.ExecContext(
 			ctx,
 			entity.ID,
 			entity.PersonID,
@@ -301,16 +282,17 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 			entity.Geometry.Lat,
 			entity.Geometry.Lng,
 		)
-
-		err = row.StructScan(&a)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		addrs = append(addrs, a.ToEntity())
+		err = handleRowsAffected(result.RowsAffected())
+		if err != nil {
+			return err
+		}
 	}
 
-	return addrs, nil
+	return nil
 }
 
 // findAccountByID gets the account record with the specified ID in the database.
@@ -403,16 +385,14 @@ func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account
 }
 
 // updateAccount updates an account record in the database.
-func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (account.Entity, error) {
-	a := Account{}
-
+func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdateAccountByID)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return a.ToEntity(), err
+		return err
 	}
 
-	row := stmt.QueryRowxContext(
+	result, err := stmt.ExecContext(
 		ctx,
 		entity.ID,
 		entity.Email,
@@ -420,26 +400,27 @@ func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) (acc
 		entity.Active,
 		entity.LastLoginAt,
 	)
-
-	err = row.StructScan(&a)
 	if err != nil {
-		return a.ToEntity(), err
+		return err
 	}
 
-	return a.ToEntity(), nil
+	err = handleRowsAffected(result.RowsAffected())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // updatePerson updates a person record associated with account in the database.
-func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (person.Entity, error) {
-	p := Person{}
-
+func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdatePersonByID)
 	stmt, err := tx.PreparexContext(ctx, query)
 	if err != nil {
-		return p.ToEntity(), err
+		return err
 	}
 
-	row := stmt.QueryRowxContext(
+	result, err := stmt.ExecContext(
 		ctx,
 		entity.ID,
 		entity.Details.FirstName,
@@ -449,29 +430,28 @@ func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) (perso
 		entity.Details.DateOfBirth,
 		entity.Avatar,
 	)
-
-	err = row.StructScan(&p)
 	if err != nil {
-		return p.ToEntity(), err
+		return err
 	}
 
-	return p.ToEntity(), nil
+	err = handleRowsAffected(result.RowsAffected())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // updateAddress updates an address record associated with person in the database.
-func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) ([]address.Entity, error) {
-	var addrs []address.Entity
-
+func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdateAddressByID)
-	stmt, err := tx.PreparexContext(ctx, query)
-	if err != nil {
-		return nil, err
+	stmt, preperr := tx.PreparexContext(ctx, query)
+	if preperr != nil {
+		return preperr
 	}
 
 	for _, entity := range entities {
-		a := Address{}
-
-		row := stmt.QueryRowxContext(
+		result, err := stmt.ExecContext(
 			ctx,
 			entity.ID,
 			entity.Components.PlaceID,
@@ -485,16 +465,29 @@ func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 			entity.Geometry.Lat,
 			entity.Geometry.Lng,
 		)
-
-		err = row.StructScan(&a)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		addrs = append(addrs, a.ToEntity())
+		err = handleRowsAffected(result.RowsAffected())
+		if err != nil {
+			return err
+		}
 	}
 
-	return addrs, nil
+	return nil
+}
+
+func handleRowsAffected(n int64, err error) error {
+	if err != nil {
+		return err
+	}
+
+	if !gg.Itob(n) {
+		return ErrExecFailed
+	}
+
+	return nil
 }
 
 // buildAccountEntity takes account, person and address entities as parameters

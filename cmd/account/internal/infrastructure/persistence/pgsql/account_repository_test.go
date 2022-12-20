@@ -77,20 +77,18 @@ func TestAccountRepository_Create(t *testing.T) {
 
 	dbmock.ExpectBegin()
 
-	accountRow := createAccountRow(entity)
 	createAccountQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
 	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAccountQuery))
-	accountStmt.ExpectQuery().WithArgs(
+	accountStmt.ExpectExec().WithArgs(
 		entity.ID,
 		entity.Email,
 		entity.Password,
 		entity.Active,
-		entity.LastLoginAt).WillReturnRows(accountRow)
+		entity.LastLoginAt).WillReturnResult(sqlmock.NewResult(0, 1))
 
-	personRow := createPersonRow(entity)
 	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreatePerson)
 	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
-	personStmt.ExpectQuery().WithArgs(
+	personStmt.ExpectExec().WithArgs(
 		entity.Person.ID,
 		entity.Person.AccountID,
 		entity.Person.Details.FirstName,
@@ -99,13 +97,12 @@ func TestAccountRepository_Create(t *testing.T) {
 		entity.Person.Details.Phone,
 		entity.Person.Details.DateOfBirth,
 		entity.Person.Avatar,
-	).WillReturnRows(personRow)
+	).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	dbmock.ExpectCommit()
 
-	result, err := repo.Create(context.Background(), entity)
+	err = repo.Create(context.Background(), entity)
 	require.NoError(t, err)
-	require.Equal(t, entity, result)
 }
 
 func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
@@ -123,8 +120,7 @@ func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
 	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
 
 	for _, addr := range *entity.Person.Address {
-		addressRows := createAddressRow(addr)
-		addressStmt.ExpectQuery().WithArgs(
+		addressStmt.ExpectExec().WithArgs(
 			addr.ID,
 			addr.PersonID,
 			addr.Components.PlaceID,
@@ -137,14 +133,13 @@ func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
 			addr.Components.FormattedAddress,
 			addr.Geometry.Lat,
 			addr.Geometry.Lng,
-		).WillReturnRows(addressRows)
+		).WillReturnResult(sqlmock.NewResult(0, 1))
 	}
 
 	dbmock.ExpectCommit()
 
-	result, err := repo.CreatePersonAddresses(context.Background(), *entity.Person.Address)
+	err = repo.CreatePersonAddresses(context.Background(), *entity.Person.Address)
 	require.NoError(t, err)
-	require.Equal(t, *entity.Person.Address, result)
 }
 
 func TestAccountRepository_FindByID(t *testing.T) {
@@ -224,20 +219,18 @@ func TestAccountRepository_Update(t *testing.T) {
 
 	dbmock.ExpectBegin()
 
-	accountRow := createAccountRow(entity)
 	createAccountQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAccountByID)
 	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAccountQuery))
-	accountStmt.ExpectQuery().WithArgs(
+	accountStmt.ExpectExec().WithArgs(
 		entity.ID,
 		entity.Email,
 		entity.Password,
 		entity.Active,
-		entity.LastLoginAt).WillReturnRows(accountRow)
+		entity.LastLoginAt).WillReturnResult(sqlmock.NewResult(0, 1))
 
-	personRow := createPersonRow(entity)
 	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdatePersonByID)
 	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
-	personStmt.ExpectQuery().WithArgs(
+	personStmt.ExpectExec().WithArgs(
 		entity.Person.ID,
 		entity.Person.Details.FirstName,
 		entity.Person.Details.LastName,
@@ -245,14 +238,13 @@ func TestAccountRepository_Update(t *testing.T) {
 		entity.Person.Details.Phone,
 		entity.Person.Details.DateOfBirth,
 		entity.Person.Avatar,
-	).WillReturnRows(personRow)
+	).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryUpdateAddressByID)
 	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
 
 	for _, addr := range *entity.Person.Address {
-		addressRows := createAddressRow(addr)
-		addressStmt.ExpectQuery().WithArgs(
+		addressStmt.ExpectExec().WithArgs(
 			addr.ID,
 			addr.Components.PlaceID,
 			addr.Components.AddressLine1.MustEncodeJSON(),
@@ -264,15 +256,13 @@ func TestAccountRepository_Update(t *testing.T) {
 			addr.Components.FormattedAddress,
 			addr.Geometry.Lat,
 			addr.Geometry.Lng,
-		).WillReturnRows(addressRows)
+		).WillReturnResult(sqlmock.NewResult(0, 1))
 	}
 
 	dbmock.ExpectCommit()
 
-	result, err := repo.Update(context.Background(), entity)
-
+	err = repo.Update(context.Background(), entity)
 	require.NoError(t, err)
-	require.Equal(t, entity, result)
 }
 
 func TestAccountRepository_DeleteByID(t *testing.T) {
@@ -284,30 +274,10 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 
 	repo := pgsql.NewAccountRepository(db)
 
-	dbmock.ExpectBegin()
-
-	accountRow := createAccountRow(entity)
-	findAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAccountByID)
-	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(findAccountByIDQuery))
-	accountStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(accountRow)
-
-	personRow := createPersonRow(entity)
-	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindPersonByAccountID)
-	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
-	personStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(personRow)
-
-	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAddressByPersonID)
-	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
-	addressRows := createAddressRows(entity)
-	addressStmt.ExpectQuery().WithArgs(entity.Person.ID).WillReturnRows(addressRows)
-
-	dbmock.ExpectCommit()
-
 	deleteAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
 	deleteStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(deleteAccountByIDQuery))
 	deleteStmt.ExpectExec().WithArgs(entity.ID).WillReturnResult(sqlmock.NewResult(0, 3))
 
-	result, err := repo.DeleteByID(context.Background(), entity.ID)
+	err = repo.DeleteByID(context.Background(), entity.ID)
 	require.NoError(t, err)
-	require.Equal(t, result, entity)
 }
