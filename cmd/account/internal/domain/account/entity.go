@@ -1,12 +1,12 @@
 package account
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/fn"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/potato-project/pkg/fn"
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
@@ -139,13 +139,4 @@ func (e *Entity) IsValid() error {
 	}
 
 	return err
-}
-
-func indexOf(id uuid.UUID, data []address.Entity) int {
-	for k, v := range data {
-		if id == v.ID {
-			return k
-		}
-	}
-	return -1
 }

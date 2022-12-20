@@ -1,9 +1,10 @@
 package fn_test
 
 import (
+	"testing"
+
 	"github.com/ssengalanto/potato-project/pkg/fn"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestPrepend(t *testing.T) {
@@ -15,6 +16,8 @@ func TestPrepend(t *testing.T) {
 }
 
 func TestFindIndexOf(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		name      string
 		element   []int
