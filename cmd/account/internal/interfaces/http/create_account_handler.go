@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/application/query"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/errors"
@@ -58,7 +59,20 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		DateOfBirth: request.DateOfBirth,
 	})
 
-	response, err := c.mediator.Send(ctx, cmd)
+	resource, err := c.mediator.Send(ctx, cmd)
+	if err != nil {
+		json.MustEncodeError(w, err)
+		return
+	}
+
+	resourceID, ok := resource.(string)
+	if !ok {
+		c.log.Error("invalid resource id", map[string]any{"id": resourceID})
+		json.MustEncodeError(w, errors.ErrInvalid)
+	}
+
+	q := query.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resourceID})
+	response, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return

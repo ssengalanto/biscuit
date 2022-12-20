@@ -6,7 +6,6 @@ import (
 
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
@@ -36,7 +35,6 @@ func (c *CreateAccountCommandHandler) Handle(
 	request mediatr.Request,
 ) (any, error) {
 	entity := account.Entity{}
-	empty := dto.CreateAccountResponseDto{}
 
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
@@ -48,38 +46,24 @@ func (c *CreateAccountCommandHandler) Handle(
 	err := acct.IsValid()
 	if err != nil {
 		c.log.Error("account is invalid", map[string]any{"account": acct, "error": err})
-		return empty, err
+		return nil, err
 	}
 
 	pers := person.New(acct.ID, command.FirstName, command.LastName, command.Email, command.Phone, command.DateOfBirth)
 	err = pers.IsValid()
 	if err != nil {
 		c.log.Error("person is invalid", map[string]any{"person": pers, "error": err})
-		return empty, err
+		return nil, err
 	}
 
 	entity = acct
 	entity.Person = &pers
 
-	result, err := c.accountRepository.Create(ctx, entity)
+	err = c.accountRepository.Create(ctx, entity)
 	if err != nil {
 		c.log.Error("account creation failed", map[string]any{"payload": entity, "error": err})
-		return empty, err
+		return nil, err
 	}
 
-	response := dto.CreateAccountResponseDto{
-		ID:     result.ID.String(),
-		Email:  result.Email.String(),
-		Active: result.Active,
-		Person: dto.PersonResponseDto{
-			ID:          result.Person.ID.String(),
-			FirstName:   result.Person.Details.FirstName,
-			LastName:    result.Person.Details.LastName,
-			Email:       result.Person.Details.Email,
-			Phone:       result.Person.Details.Phone,
-			DateOfBirth: result.Person.Details.DateOfBirth,
-		},
-	}
-
-	return response, err
+	return acct.ID.String(), err
 }
