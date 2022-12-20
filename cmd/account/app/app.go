@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/ssengalanto/potato-project/cmd/account/docs" //notlint:revive //unnecessary
 	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/application/query"
 	repository "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/potato-project/pkg/config"
@@ -40,6 +41,7 @@ func Run() {
 	router.Mount("/swagger", httpSwagger.WrapHandler)
 
 	command.RegisterHandlers(slog, repo, mediator)
+	query.RegisterHandlers(slog, repo, mediator)
 	http.RegisterHandlers(slog, router, mediator)
 
 	svr := server.New(cfg.GetInt(constants.AccountServicePort), router)
