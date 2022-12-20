@@ -1,9 +1,9 @@
-package fn_test
+package gg_test
 
 import (
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/fn"
+	"github.com/ssengalanto/potato-project/pkg/gg"
 	"github.com/stretchr/testify/require"
 )
 
@@ -11,7 +11,7 @@ func TestPrepend(t *testing.T) {
 	t.Parallel()
 
 	n := []int{2, 3}
-	n = fn.Prepend(n, 1)
+	n = gg.Prepend(n, 1)
 	require.Equal(t, []int{1, 2, 3}, n)
 }
 
@@ -44,7 +44,7 @@ func TestFindIndexOf(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			idx := fn.FindIndexOf(tc.element, tc.predicate)
+			idx := gg.FindIndexOf(tc.element, tc.predicate)
 			require.Equal(t, tc.want, idx)
 		})
 	}

@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/potato-project/pkg/fn"
+	"github.com/ssengalanto/potato-project/pkg/gg"
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
@@ -105,7 +105,7 @@ func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
 	addrs := *e.Person.Address
 
 	for _, input := range inputs {
-		idx := fn.FindIndexOf[address.Entity](addrs, func(addr address.Entity) bool {
+		idx := gg.FindIndexOf[address.Entity](addrs, func(addr address.Entity) bool {
 			return addr.ID == input.ID
 		})
 

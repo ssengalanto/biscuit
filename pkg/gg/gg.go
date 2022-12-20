@@ -1,7 +1,4 @@
-// Copyright 2022 Ssen Galanto. All rights reserved.
-
-// Package fn provides a collection of generic helper functions.
-package fn
+package gg
 
 // Prepend prepends an element in the slice.
 func Prepend[T any](x []T, y T) []T {

@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	"github.com/ahmetb/go-linq/v3"
-	"github.com/ssengalanto/potato-project/pkg/fn"
+	"github.com/ssengalanto/potato-project/pkg/gg"
 )
 
 type Mediatr struct {
@@ -75,7 +75,7 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 		return fmt.Errorf("%w: %s", ErrPipelineBehaviourAlreadyExists, behaviourType)
 	}
 
-	m.pipelineBehaviourRegistry = fn.Prepend(m.pipelineBehaviourRegistry, behaviour)
+	m.pipelineBehaviourRegistry = gg.Prepend(m.pipelineBehaviourRegistry, behaviour)
 	return nil
 }
 
