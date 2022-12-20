@@ -6,6 +6,7 @@ import (
 	"reflect"
 
 	"github.com/ahmetb/go-linq/v3"
+	"github.com/ssengalanto/potato-project/pkg/fn"
 )
 
 type Mediatr struct {
@@ -74,7 +75,7 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 		return fmt.Errorf("%w: %s", ErrPipelineBehaviourAlreadyExists, behaviourType)
 	}
 
-	m.pipelineBehaviourRegistry = prepend(m.pipelineBehaviourRegistry, behaviour)
+	m.pipelineBehaviourRegistry = fn.Prepend(m.pipelineBehaviourRegistry, behaviour)
 	return nil
 }
 
@@ -135,11 +136,6 @@ func (m *Mediatr) Publish(ctx context.Context, request Request) error {
 	}
 
 	return nil
-}
-
-func prepend[T any](x []T, y T) []T {
-	x = append([]T{y}, x...)
-	return x
 }
 
 func (m *Mediatr) existsPipeType(p reflect.Type) bool {

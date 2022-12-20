@@ -1,6 +1,7 @@
 package account
 
 import (
+	"github.com/ssengalanto/potato-project/pkg/fn"
 	"time"
 
 	"github.com/google/uuid"
@@ -104,7 +105,9 @@ func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
 	addrs := *e.Person.Address
 
 	for _, input := range inputs {
-		idx := indexOf(input.ID, addrs)
+		idx := fn.FindIndexOf[address.Entity](addrs, func(addr address.Entity) bool {
+			return addr.ID == input.ID
+		})
 
 		if idx == -1 {
 			continue
