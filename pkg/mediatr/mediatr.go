@@ -74,7 +74,7 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 		return fmt.Errorf("%w: %s", ErrPipelineBehaviourAlreadyExists, behaviourType)
 	}
 
-	m.pipelineBehaviourRegistry = append(m.pipelineBehaviourRegistry, behaviour)
+	m.pipelineBehaviourRegistry = prepend(m.pipelineBehaviourRegistry, behaviour)
 	return nil
 }
 
@@ -87,13 +87,11 @@ func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
 	}
 
 	if len(m.pipelineBehaviourRegistry) > 0 {
-		var reversedPipes = reversePipelineOrder(m.pipelineBehaviourRegistry)
-
 		var lastHandler RequestHandlerFunc = func() (any, error) {
 			return handler.Handle(ctx, request)
 		}
 
-		aggregateResult := linq.From(reversedPipes).AggregateWithSeedT(
+		aggregateResult := linq.From(m.pipelineBehaviourRegistry).AggregateWithSeedT(
 			lastHandler,
 			func(next RequestHandlerFunc, pipe PipelineBehavior) RequestHandlerFunc {
 				pipeValue := pipe
@@ -139,14 +137,9 @@ func (m *Mediatr) Publish(ctx context.Context, request Request) error {
 	return nil
 }
 
-func reversePipelineOrder(values []PipelineBehavior) []PipelineBehavior {
-	var reverseValues []PipelineBehavior
-
-	for i := len(values) - 1; i >= 0; i-- {
-		reverseValues = append(reverseValues, values[i])
-	}
-
-	return reverseValues
+func prepend[T any](x []T, y T) []T {
+	x = append([]T{y}, x...)
+	return x
 }
 
 func (m *Mediatr) existsPipeType(p reflect.Type) bool {
