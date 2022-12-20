@@ -1,5 +1,7 @@
 package gg
 
+import "golang.org/x/exp/constraints"
+
 // Prepend prepends an element in the slice.
 func Prepend[T any](x []T, y T) []T {
 	x = append([]T{y}, x...)
@@ -16,4 +18,9 @@ func FindIndexOf[T any](collection []T, predicate func(item T) bool) int {
 	}
 
 	return -1
+}
+
+// Itob converts integer value to boolean value.
+func Itob[T constraints.Integer](n T) bool {
+	return n > 0
 }

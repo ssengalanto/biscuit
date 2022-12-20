@@ -49,3 +49,31 @@ func TestFindIndexOf(t *testing.T) {
 		})
 	}
 }
+
+func TestItob(t *testing.T) {
+	t.Parallel()
+
+	testCases := []struct {
+		name  string
+		input int
+		want  bool
+	}{
+		{
+			name:  "truthy",
+			input: 23,
+			want:  true,
+		},
+		{
+			name:  "falsy",
+			input: -1,
+			want:  false,
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			b := gg.Itob(tc.input)
+			require.Equal(t, tc.want, b)
+		})
+	}
+}

@@ -11,6 +11,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/pkg/errors"
+	"github.com/ssengalanto/potato-project/pkg/gg"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
 
@@ -202,7 +203,7 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) (accou
 		return empty, err
 	}
 
-	if n == 0 {
+	if !gg.Itob(n) {
 		return empty, ErrDeletionFailed
 	}
 
