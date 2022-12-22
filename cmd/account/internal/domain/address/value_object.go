@@ -4,7 +4,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
-// Components - address component value object.
+// Components contains the core fields for address entity.
 type Components struct {
 	PlaceID          string `json:"placeID" validate:"required"`
 	AddressLine1     Names  `json:"addressLine1" validate:"required"`
@@ -36,13 +36,13 @@ func (c Components) Update(input Components) (Components, error) {
 	return input, nil
 }
 
-// Geometry - address lat lng value object.
+// Geometry contains lat and lng values for address entity.
 type Geometry struct {
 	Lat float64 `json:"lat" validate:"required"`
 	Lng float64 `json:"lng" validate:"required"`
 }
 
-// IsValid checks the validity of the person details.
+// IsValid checks the validity of the geometry details.
 func (g Geometry) IsValid() (bool, error) {
 	err := validator.Struct(g)
 	if err != nil {

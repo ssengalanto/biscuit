@@ -10,7 +10,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
-// Entity - Account Entity.
+// Entity - account entity struct.
 type Entity struct {
 	ID          uuid.UUID      `json:"id" validate:"required"`
 	Email       Email          `json:"email" validate:"required"`
@@ -30,28 +30,27 @@ func New(email, password string, active bool) Entity {
 	}
 }
 
-// IsActive returns a boolean if the account is active or not.
+// IsActive returns the active state of the account entity.
 func (e *Entity) IsActive() bool {
 	return e.Active
 }
 
-// Activate sets the account entity active field to true.
+// Activate sets the active state of the account entity to `true`.
 func (e *Entity) Activate() {
 	e.Active = true
 }
 
-// Deactivate sets the account entity active field to true.
+// Deactivate sets the active state of the account entity to `false`.
 func (e *Entity) Deactivate() {
 	e.Active = false
 }
 
-// LoginTimestamp records the date time when the user logs in.
+// LoginTimestamp sets the last login at state of the account entity with current timestamp.
 func (e *Entity) LoginTimestamp() {
 	e.LastLoginAt = time.Now()
 }
 
-// UpdateEmail checks the validity of the email address
-// and updates the account entity email field value.
+// UpdateEmail checks the validity of the email address and updates the account entity email field value.
 func (e *Entity) UpdateEmail(s string) error {
 	email, err := e.Email.Update(s)
 	if err != nil {
@@ -62,8 +61,7 @@ func (e *Entity) UpdateEmail(s string) error {
 	return nil
 }
 
-// UpdatePassword checks the validity of the password
-// and updates the account entity password field value.
+// UpdatePassword checks the validity of the password and updates the account entity password field value.
 func (e *Entity) UpdatePassword(s string) error {
 	password, err := e.Password.Update(s)
 	if err != nil {
@@ -75,8 +73,7 @@ func (e *Entity) UpdatePassword(s string) error {
 }
 
 // UpdatePersonAvatar takes a string parameter that should contain a valid avatar URL.
-// If validation failed it will return an error,
-// otherwise it will update the corresponding field in the person entity.
+// If validation failed it will return an error, otherwise it will update the corresponding field in the person entity.
 func (e *Entity) UpdatePersonAvatar(avatar string) error {
 	err := e.Person.UpdateAvatar(avatar)
 	if err != nil {

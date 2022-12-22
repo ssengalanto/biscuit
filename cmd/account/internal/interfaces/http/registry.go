@@ -6,6 +6,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
+// RegisterHandlers registers all the http handlers in http router.
 func RegisterHandlers(logger interfaces.Logger, router *chi.Mux, mediator *mediatr.Mediatr) {
 	createAccountHandler := NewCreateAccountHandler(logger, mediator)
 	router.Post("/account", createAccountHandler.Handle)

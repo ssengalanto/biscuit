@@ -15,6 +15,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
+// CreateAccountHandler - http handler struct for account creation.
 type CreateAccountHandler struct {
 	log      interfaces.Logger
 	mediator *mediatr.Mediatr

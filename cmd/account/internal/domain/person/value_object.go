@@ -6,7 +6,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
-// Details - person details value object.
+// Details contains the core fields for person entity.
 type Details struct {
 	FirstName   string    `json:"firstName" validate:"required"`
 	LastName    string    `json:"lastName" validate:"required"`
@@ -25,6 +25,7 @@ func (d Details) IsValid() error {
 	return err
 }
 
+// Update checks the validity of the person details and updates its value.
 func (d Details) Update(input Details) (Details, error) {
 	err := input.IsValid()
 	if err != nil {

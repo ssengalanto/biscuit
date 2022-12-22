@@ -16,18 +16,18 @@ type Mediatr struct {
 }
 
 type Request interface {
-	Topic() string
+	Name() string
 }
 
 type RequestHandlerFunc func() (any, error)
 
 type RequestHandler interface {
-	Topic() string
+	Name() string
 	Handle(ctx context.Context, request Request) (any, error)
 }
 
 type NotificationHandler interface {
-	Topic() string
+	Name() string
 	Handle(ctx context.Context, notification Request) error
 }
 
@@ -44,26 +44,26 @@ func NewMediatr() *Mediatr {
 }
 
 func (m *Mediatr) RegisterRequestHandler(handler RequestHandler) error {
-	topic := handler.Topic()
+	hn := handler.Name()
 
-	_, ok := m.requestHandlerRegistry[topic]
+	_, ok := m.requestHandlerRegistry[hn]
 	if ok {
-		return fmt.Errorf("%w: %s", ErrRequestHandlerAlreadyExists, topic)
+		return fmt.Errorf("%w: %s", ErrRequestHandlerAlreadyExists, hn)
 	}
 
-	m.requestHandlerRegistry[topic] = handler
+	m.requestHandlerRegistry[hn] = handler
 	return nil
 }
 
 func (m *Mediatr) RegisterNotificationHandler(handler NotificationHandler) error {
-	topic := handler.Topic()
+	hn := handler.Name()
 
-	_, ok := m.notificationHandlerRegistry[topic]
+	_, ok := m.notificationHandlerRegistry[hn]
 	if ok {
-		return fmt.Errorf("%w: %s", ErrNotificationHandlerAlreadyExists, topic)
+		return fmt.Errorf("%w: %s", ErrNotificationHandlerAlreadyExists, hn)
 	}
 
-	m.notificationHandlerRegistry[topic] = handler
+	m.notificationHandlerRegistry[hn] = handler
 	return nil
 }
 
@@ -80,11 +80,11 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 }
 
 func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
-	topic := request.Topic()
+	rn := request.Name()
 
-	handler, ok := m.requestHandlerRegistry[topic]
+	handler, ok := m.requestHandlerRegistry[rn]
 	if !ok {
-		return nil, fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, topic)
+		return nil, fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rn)
 	}
 
 	if len(m.pipelineBehaviourRegistry) > 0 {
@@ -123,11 +123,11 @@ func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
 }
 
 func (m *Mediatr) Publish(ctx context.Context, request Request) error {
-	topic := request.Topic()
+	rn := request.Name()
 
-	handler, ok := m.notificationHandlerRegistry[topic]
+	handler, ok := m.notificationHandlerRegistry[rn]
 	if !ok {
-		return fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, topic)
+		return fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rn)
 	}
 
 	err := handler.Handle(ctx, request)

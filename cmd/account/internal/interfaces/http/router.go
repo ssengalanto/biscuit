@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+// NewRouter creates a new http router.
 func NewRouter() *chi.Mux {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)

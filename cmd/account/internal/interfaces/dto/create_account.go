@@ -2,6 +2,7 @@ package dto
 
 import "time"
 
+// CreateAccountRequestDto - account creation request dto.
 type CreateAccountRequestDto struct {
 	Email       string    `json:"email"`
 	Password    string    `json:"password"`
@@ -12,6 +13,7 @@ type CreateAccountRequestDto struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
+// CreateAccountResponseDto - account creation response dto.
 type CreateAccountResponseDto struct {
 	ID string `json:"id"`
 }

@@ -12,11 +12,13 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
+// CreateAccountCommandHandler - command handler struct for account retrieval, satisfies mediatr.RequestHandler.
 type CreateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository
 }
 
+// NewCreateAccountCommandHandler creates a new command handler that handles account creation.
 func NewCreateAccountCommandHandler(
 	logger interfaces.Logger,
 	accountRepository account.Repository,
@@ -27,7 +29,7 @@ func NewCreateAccountCommandHandler(
 	}
 }
 
-func (c *CreateAccountCommandHandler) Topic() string {
+func (c *CreateAccountCommandHandler) Name() string {
 	return CommandCreateAccount
 }
 
@@ -40,7 +42,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
 		c.log.Error("invalid command", map[string]any{"command": command})
-		return nil, fmt.Errorf("%w: command %s", errors.ErrInvalid, command.Topic())
+		return nil, fmt.Errorf("%w: command %s", errors.ErrInvalid, command.Name())
 	}
 
 	acct := account.New(command.Email, command.Password, command.Active)

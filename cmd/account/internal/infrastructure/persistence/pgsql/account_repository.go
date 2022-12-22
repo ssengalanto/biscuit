@@ -15,6 +15,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
 
+// AccountRepository - account repository struct.
 type AccountRepository struct {
 	db *sqlx.DB
 }
@@ -48,8 +49,8 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 	return false, nil
 }
 
-// Create begins a new transaction to process and insert a new account record together with its associated
-// person record. If transaction fails it will roll back all the changes it made,
+// Create begins a new transaction to process and insert a new Account record together with its associated
+// Person record. If transaction fails it will roll back all the changes it made,
 // otherwise it will commit the changes to the database.
 func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) error {
 	tx := a.db.MustBeginTx(ctx, nil)
@@ -70,8 +71,8 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) e
 	return nil
 }
 
-// CreatePersonAddresses begins a new transaction to process and insert a
-// single or multiple address associated with person record.
+// CreatePersonAddresses begins a new transaction to process and inserts a list of
+// Address associated with Person record.
 // If transaction fails it will roll back all the changes it made,
 // otherwise it will commit the changes to the database.
 func (a *AccountRepository) CreatePersonAddresses(
@@ -90,8 +91,8 @@ func (a *AccountRepository) CreatePersonAddresses(
 	return nil
 }
 
-// FindByID gets an account record with the specified ID in the database
-// together with its associated person and address records.
+// FindByID gets an Account record with the specified ID in the database
+// together with its associated Person and Address records.
 func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account.Entity, error) {
 	entity := account.Entity{}
 
@@ -119,7 +120,7 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 	return entity, nil
 }
 
-// FindByEmail gets an account record with the specified email in the database.
+// FindByEmail gets an Account record with the specified email in the database.
 func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
 	entity := account.Entity{}
 
@@ -147,7 +148,7 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 	return entity, nil
 }
 
-// Update updates an account record in the database.
+// Update updates an Account record in the database.
 func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) error {
 	tx := a.db.MustBeginTx(ctx, nil)
 	defer tx.Rollback() //nolint:errcheck //unnecessary
@@ -172,7 +173,8 @@ func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) e
 	return nil
 }
 
-// DeleteByID deletes an account record with the specified ID in the database.
+// DeleteByID deletes an Account record with the specified ID in the database.
+// Associated Person and Address records will also get deleted.
 func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) error {
 	query := MustBeValidAccountQuery(QueryDeleteAccountByID)
 	stmt, err := a.db.PreparexContext(ctx, query)
@@ -193,7 +195,7 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) error 
 	return nil
 }
 
-// createAccount inserts a new account record in the database.
+// createAccount inserts a new Account record in the database.
 func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreateAccount)
 	stmt, err := tx.PreparexContext(ctx, query)
@@ -227,7 +229,7 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 	return nil
 }
 
-// createPerson inserts a new person record associated with account in the database.
+// createPerson inserts a new Person record associated with account in the database.
 func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreatePerson)
 	stmt, err := tx.PreparexContext(ctx, query)
@@ -258,7 +260,7 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error 
 	return nil
 }
 
-// createAddress inserts a new address record associated with person in the database.
+// createAddress inserts a new Address record associated with person in the database.
 func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) error {
 	query := MustBeValidAccountQuery(QueryCreateAddress)
 	stmt, preperr := tx.PreparexContext(ctx, query)
@@ -295,7 +297,7 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 	return nil
 }
 
-// findAccountByID gets the account record with the specified ID in the database.
+// findAccountByID gets the Account record with the specified ID in the database.
 func findAccountByID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (account.Entity, error) {
 	acc := Account{}
 
@@ -315,7 +317,7 @@ func findAccountByID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (account.En
 	return acc.ToEntity(), nil
 }
 
-// findPersonByAccountID gets the person record associated with account in the database.
+// findPersonByAccountID gets the Person record associated with account in the database.
 func findPersonByAccountID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (person.Entity, error) {
 	p := Person{}
 
@@ -335,7 +337,7 @@ func findPersonByAccountID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (pers
 	return p.ToEntity(), nil
 }
 
-// findAddressByPersonID gets the list of address records associated with person in the database.
+// findAddressByPersonID gets the list of Address records associated with Person in the database.
 func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]address.Entity, error) {
 	var addrs []address.Entity
 
@@ -364,7 +366,7 @@ func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]ad
 	return addrs, nil
 }
 
-// findAccountByEmail gets the account record with the specified email address in the database.
+// findAccountByEmail gets the Account record with the specified email in the database.
 func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account.Entity, error) {
 	acc := Account{}
 
@@ -384,7 +386,7 @@ func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account
 	return acc.ToEntity(), nil
 }
 
-// updateAccount updates an account record in the database.
+// updateAccount updates an Account record in the database.
 func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdateAccountByID)
 	stmt, err := tx.PreparexContext(ctx, query)
@@ -412,7 +414,7 @@ func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 	return nil
 }
 
-// updatePerson updates a person record associated with account in the database.
+// updatePerson updates a Person record associated with Account in the database.
 func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdatePersonByID)
 	stmt, err := tx.PreparexContext(ctx, query)
@@ -442,7 +444,7 @@ func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error 
 	return nil
 }
 
-// updateAddress updates an address record associated with person in the database.
+// updateAddress updates an Address record associated with Person in the database.
 func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) error {
 	query := MustBeValidAccountQuery(QueryUpdateAddressByID)
 	stmt, preperr := tx.PreparexContext(ctx, query)
@@ -478,6 +480,7 @@ func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 	return nil
 }
 
+// handleRowsAffected handles sql Exec errors.
 func handleRowsAffected(n int64, err error) error {
 	if err != nil {
 		return err
@@ -490,8 +493,7 @@ func handleRowsAffected(n int64, err error) error {
 	return nil
 }
 
-// buildAccountEntity takes account, person and address entities as parameters
-// and builds the account entity.
+// buildAccountEntity aggregates Account, Person and Address records.
 func buildAccountEntity(account account.Entity, person person.Entity, address []address.Entity) account.Entity {
 	entity := account
 	entity.Person = &person

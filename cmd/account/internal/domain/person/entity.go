@@ -8,7 +8,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
-// Entity - Person Entity.
+// Entity - person entity struct.
 type Entity struct {
 	ID        uuid.UUID         `json:"id" validate:"required"`
 	AccountID uuid.UUID         `json:"accountId" validate:"required"`
@@ -17,7 +17,7 @@ type Entity struct {
 	Address   *[]address.Entity `json:"address"`
 }
 
-// UpdateDetailsInput - input for updating peron Details.
+// UpdateDetailsInput contains required fields for updating person details.
 type UpdateDetailsInput struct {
 	FirstName   *string
 	LastName    *string
@@ -73,6 +73,7 @@ func (e *Entity) UpdateDetails(input UpdateDetailsInput) error {
 	return nil
 }
 
+// UpdateAvatar checks the validity of the avatar URL and updates the person entity avatar field value.
 func (e *Entity) UpdateAvatar(s string) error {
 	avatar, err := e.Avatar.Update(s)
 	if err != nil {
@@ -83,6 +84,7 @@ func (e *Entity) UpdateAvatar(s string) error {
 	return nil
 }
 
+// IsValid checks the validity of the person entity.
 func (e *Entity) IsValid() error {
 	err := validator.Struct(e)
 	if err != nil {

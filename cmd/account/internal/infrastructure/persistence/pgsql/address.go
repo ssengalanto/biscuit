@@ -8,8 +8,10 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 )
 
+// namesJSON is a json string that satisfies the address.Names fields.
 type namesJSON string
 
+// mustDecodeJSON decodes the string to address.Names.
 func (n namesJSON) mustDecodeJSON() address.Names {
 	var names address.Names
 	err := json.Unmarshal([]byte(n), &names)

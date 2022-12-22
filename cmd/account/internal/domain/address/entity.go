@@ -6,11 +6,21 @@ import (
 	"github.com/google/uuid"
 )
 
+// Entity - address entity struct.
+type Entity struct {
+	ID         uuid.UUID  `json:"id"`
+	PersonID   uuid.UUID  `json:"personId"`
+	Components Components `json:"components"`
+	Geometry   Geometry   `json:"geometry"`
+}
+
+// Names contains fields for json fields under Components.
 type Names struct {
 	ShortName string `json:"shortName"`
 	LongName  string `json:"longName"`
 }
 
+// MustEncodeJSON encodes Names to json, it panics on error.
 func (n Names) MustEncodeJSON() string {
 	data, err := json.Marshal(n)
 	if err != nil {
@@ -20,14 +30,7 @@ func (n Names) MustEncodeJSON() string {
 	return string(data)
 }
 
-// Entity - Address Entity.
-type Entity struct {
-	ID         uuid.UUID  `json:"id"`
-	PersonID   uuid.UUID  `json:"personId"`
-	Components Components `json:"components"`
-	Geometry   Geometry   `json:"geometry"`
-}
-
+// UpdateInput contains all the required fields for updating address entity.
 type UpdateInput struct {
 	ID         uuid.UUID
 	Components Components

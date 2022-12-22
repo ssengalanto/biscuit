@@ -17,6 +17,7 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// Run bootstrap and runs the application.
 func Run() {
 	cfg, err := config.New(constants.Dev, constants.ViperConfigType)
 	if err != nil {

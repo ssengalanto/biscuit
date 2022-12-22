@@ -18,7 +18,7 @@ const (
 	QueryDeleteAccountByID     = "deleteAccountByID"
 )
 
-// AccountQueries is a map holds all queries for account table.
+// AccountQueries is a map holds all queries for account entity.
 var accountQueries = map[string]string{ //nolint:gochecknoglobals //intended
 	QueryExists:                accountExistsQuery,
 	QueryCreateAccount:         createAccountQuery,
@@ -52,17 +52,17 @@ const createPersonQuery = `
 
 const createAddressQuery = `
 	INSERT INTO address (
-		id, 
-		person_id, 
-		place_id, 
-		address_line1, 
-		address_line2, 
-		city, 
-		state, 
-		country, 
-		postal_code, 
-		formatted_address, 
-		lat, 
+		id,
+		person_id,
+		place_id,
+		address_line1,
+		address_line2,
+		city,
+		state,
+		country,
+		postal_code,
+		formatted_address,
+		lat,
 		lng
 	)
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);
@@ -81,18 +81,18 @@ const findPersonByAccountIDQuery = `
 	`
 
 const findAddressByPersonIDQuery = `
-	SELECT 
-		id, 
-		person_id, 
-		place_id, 
-		address_line1, 
-		address_line2, 
-		city, 
-		state, 
-		country, 
-		postal_code, 
-		formatted_address, 
-		lat, 
+	SELECT
+		id,
+		person_id,
+		place_id,
+		address_line1,
+		address_line2,
+		city,
+		state,
+		country,
+		postal_code,
+		formatted_address,
+		lat,
 		lng
 	FROM address
 	WHERE person_id = $1;
@@ -118,7 +118,7 @@ const updatePersonByIDQuery = `
 
 const updateAddressByIDQuery = `
 	UPDATE address
-	SET 
+	SET
 		place_id = $2,
 		address_line1 = $3,
 		address_line2 = $4,

@@ -12,11 +12,13 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
+// GetAccountQueryHandler - query handler struct for account creation, satisfies mediatr.RequestHandler.
 type GetAccountQueryHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository
 }
 
+// NewGetAccountQueryHandler creates a new query handler that handles account retrieval.
 func NewGetAccountQueryHandler(
 	logger interfaces.Logger,
 	accountRepository account.Repository,
@@ -27,7 +29,7 @@ func NewGetAccountQueryHandler(
 	}
 }
 
-func (c *GetAccountQueryHandler) Topic() string {
+func (c *GetAccountQueryHandler) Name() string {
 	return QueryGetAccount
 }
 
@@ -40,7 +42,7 @@ func (c *GetAccountQueryHandler) Handle(
 	query, ok := request.(*GetAccountQuery)
 	if !ok {
 		c.log.Error("invalid query", map[string]any{"query": query})
-		return nil, fmt.Errorf("%w: query %s", errors.ErrInvalid, query.Topic())
+		return nil, fmt.Errorf("%w: query %s", errors.ErrInvalid, query.Name())
 	}
 
 	id, err := uuid.Parse(query.ID)

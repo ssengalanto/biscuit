@@ -9,6 +9,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 )
 
+// newAccountEntity creates a new account.Entity with mock values.
 func newAccountEntity() account.Entity {
 	accountID := uuid.New()
 	personID := uuid.New()
@@ -39,6 +40,7 @@ func newAccountEntity() account.Entity {
 	}
 }
 
+// newAccountEntity creates a new address.Entity with mock values.
 func newAddressEntity(personID uuid.UUID) address.Entity {
 	addr := gofakeit.Address()
 
@@ -80,11 +82,13 @@ func newAddressEntity(personID uuid.UUID) address.Entity {
 	}
 }
 
+// createAccountRow creates a new mock Account record.
 func createAccountRow(entity account.Entity) *sqlmock.Rows {
 	return sqlmock.NewRows([]string{"id", "email", "password", "active", "last_login_at"}).
 		AddRow(entity.ID, entity.Email, entity.Password, entity.Active, entity.LastLoginAt)
 }
 
+// createPersonRow creates a new mock Person record.
 func createPersonRow(entity account.Entity) *sqlmock.Rows {
 	return sqlmock.NewRows(
 		[]string{"id", "account_id", "first_name", "last_name", "email", "phone", "date_of_birth", "avatar"},
@@ -101,6 +105,7 @@ func createPersonRow(entity account.Entity) *sqlmock.Rows {
 		)
 }
 
+// createAddressRows creates a new mock Address record.
 func createAddressRows(entity account.Entity) *sqlmock.Rows {
 	rows := sqlmock.NewRows(
 		[]string{

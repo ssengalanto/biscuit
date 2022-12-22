@@ -14,6 +14,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
+// GetAccountHandler - http handler struct for account retrieval.
 type GetAccountHandler struct {
 	log      interfaces.Logger
 	mediator *mediatr.Mediatr
