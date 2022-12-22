@@ -15,20 +15,16 @@ type Mediatr struct {
 	pipelineBehaviourRegistry   []PipelineBehavior
 }
 
-type Request interface {
-	Name() string
-}
-
 type RequestHandlerFunc func() (any, error)
 
 type RequestHandler interface {
 	Name() string
-	Handle(ctx context.Context, request Request) (any, error)
+	Handle(ctx context.Context, request any) (any, error)
 }
 
 type NotificationHandler interface {
 	Name() string
-	Handle(ctx context.Context, notification Request) error
+	Handle(ctx context.Context, notification any) error
 }
 
 type PipelineBehavior interface {
@@ -84,12 +80,12 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 }
 
 // Send sends the request to its corresponding request handler.
-func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
-	rn := request.Name()
+func (m *Mediatr) Send(ctx context.Context, request any) (any, error) {
+	rt := reflect.TypeOf(request).String()
 
-	handler, ok := m.requestHandlerRegistry[rn]
+	handler, ok := m.requestHandlerRegistry[rt]
 	if !ok {
-		return nil, fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rn)
+		return nil, fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rt)
 	}
 
 	if len(m.pipelineBehaviourRegistry) > 0 {
@@ -128,12 +124,12 @@ func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
 }
 
 // Publish publishes the notification event to its corresponding notification handler.
-func (m *Mediatr) Publish(ctx context.Context, request Request) error {
-	rn := request.Name()
+func (m *Mediatr) Publish(ctx context.Context, request any) error {
+	rt := reflect.TypeOf(request).String()
 
-	handler, ok := m.notificationHandlerRegistry[rn]
+	handler, ok := m.notificationHandlerRegistry[rt]
 	if !ok {
-		return fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rn)
+		return fmt.Errorf("%w: %s", ErrRequestHandlerNotFound, rt)
 	}
 
 	err := handler.Handle(ctx, request)
