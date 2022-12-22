@@ -9,7 +9,6 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
 // CreateAccountCommandHandler - command handler struct for account retrieval, satisfies mediatr.RequestHandler.
@@ -30,19 +29,19 @@ func NewCreateAccountCommandHandler(
 }
 
 func (c *CreateAccountCommandHandler) Name() string {
-	return CommandCreateAccount
+	return fmt.Sprintf("%T", &CreateAccountCommand{})
 }
 
 func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
-	request mediatr.Request,
+	request any,
 ) (any, error) {
 	entity := account.Entity{}
 
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
 		c.log.Error("invalid command", map[string]any{"command": command})
-		return nil, fmt.Errorf("%w: command %s", errors.ErrInvalid, command.Name())
+		return nil, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
 
 	acct := account.New(command.Email, command.Password, command.Active)

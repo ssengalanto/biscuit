@@ -9,7 +9,6 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/mediatr"
 )
 
 // GetAccountQueryHandler - query handler struct for account creation, satisfies mediatr.RequestHandler.
@@ -30,19 +29,19 @@ func NewGetAccountQueryHandler(
 }
 
 func (c *GetAccountQueryHandler) Name() string {
-	return QueryGetAccount
+	return fmt.Sprintf("%T", &GetAccountQuery{})
 }
 
 func (c *GetAccountQueryHandler) Handle(
 	ctx context.Context,
-	request mediatr.Request,
+	request any,
 ) (any, error) {
 	empty := dto.GetAccountResponseDto{}
 
 	query, ok := request.(*GetAccountQuery)
 	if !ok {
 		c.log.Error("invalid query", map[string]any{"query": query})
-		return nil, fmt.Errorf("%w: query %s", errors.ErrInvalid, query.Name())
+		return nil, fmt.Errorf("%w: query", errors.ErrInvalid)
 	}
 
 	id, err := uuid.Parse(query.ID)

@@ -17,10 +17,6 @@ type CreateAccountCommand struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
-func (c *CreateAccountCommand) Name() string {
-	return CommandCreateAccount
-}
-
 // NewCreateAccountCommand creates a new command for account creation.
 func NewCreateAccountCommand(input dto.CreateAccountRequestDto) *CreateAccountCommand {
 	return &CreateAccountCommand{

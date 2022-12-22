@@ -1,6 +1,8 @@
 package query
 
 import (
+	"fmt"
+
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 )
 
@@ -10,7 +12,7 @@ type GetAccountQuery struct {
 }
 
 func (c *GetAccountQuery) Name() string {
-	return QueryGetAccount
+	return fmt.Sprintf("%T", &GetAccountQuery{})
 }
 
 // NewGetAccountQuery creates a new query for account retrieval.
