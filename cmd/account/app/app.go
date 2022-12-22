@@ -3,18 +3,12 @@ package app
 import (
 	"log"
 
-	_ "github.com/ssengalanto/potato-project/cmd/account/docs" //notlint:revive //unnecessary
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/query"
 	repository "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/potato-project/pkg/config"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/logger"
-	"github.com/ssengalanto/potato-project/pkg/mediatr"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/server"
-	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // Run bootstrap and runs the application.
@@ -36,16 +30,10 @@ func Run() {
 	defer db.Close()
 
 	repo := repository.NewAccountRepository(db)
-	mediator := mediatr.New()
+	mediatr := RegisterMediatrHandlers(slog, repo)
+	mux := RegisterHTTPHandlers(slog, mediatr)
 
-	router := http.NewRouter()
-	router.Mount("/swagger", httpSwagger.WrapHandler)
-
-	command.RegisterHandlers(slog, repo, mediator)
-	query.RegisterHandlers(slog, repo, mediator)
-	http.RegisterHandlers(slog, router, mediator)
-
-	svr := server.New(cfg.GetInt(constants.AccountServicePort), router)
+	svr := server.New(cfg.GetInt(constants.AccountServicePort), mux)
 	err = svr.Start()
 	if err != nil {
 		slog.Info("shutting down http server", nil)
