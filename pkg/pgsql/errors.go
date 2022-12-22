@@ -12,6 +12,7 @@ import (
 // ErrConnectionFailed is returned when postgres database connection failed.
 var ErrConnectionFailed = fmt.Errorf("pgsql database connection failed")
 
+// ErrorCode returns the sql error code.
 func ErrorCode(err error) string {
 	var pgErr *pgconn.PgError
 

@@ -35,7 +35,8 @@ type PipelineBehavior interface {
 	Handle(ctx context.Context, request any, next RequestHandlerFunc) (any, error)
 }
 
-func NewMediatr() *Mediatr {
+// New creates a new mediatr instance.
+func New() *Mediatr {
 	return &Mediatr{
 		requestHandlerRegistry:      map[string]RequestHandler{},
 		notificationHandlerRegistry: map[string]NotificationHandler{},
@@ -43,6 +44,7 @@ func NewMediatr() *Mediatr {
 	}
 }
 
+// RegisterRequestHandler register a request handler in the registry.
 func (m *Mediatr) RegisterRequestHandler(handler RequestHandler) error {
 	hn := handler.Name()
 
@@ -55,6 +57,7 @@ func (m *Mediatr) RegisterRequestHandler(handler RequestHandler) error {
 	return nil
 }
 
+// RegisterNotificationHandler register a notification handler in the registry.
 func (m *Mediatr) RegisterNotificationHandler(handler NotificationHandler) error {
 	hn := handler.Name()
 
@@ -67,6 +70,7 @@ func (m *Mediatr) RegisterNotificationHandler(handler NotificationHandler) error
 	return nil
 }
 
+// RegisterPipelineBehaviour register a behaviour in the registry.
 func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 	behaviourType := reflect.TypeOf(behaviour)
 
@@ -79,6 +83,7 @@ func (m *Mediatr) RegisterPipelineBehaviour(behaviour PipelineBehavior) error {
 	return nil
 }
 
+// Send sends the request to its corresponding request handler.
 func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
 	rn := request.Name()
 
@@ -122,6 +127,7 @@ func (m *Mediatr) Send(ctx context.Context, request Request) (any, error) {
 	return response, nil
 }
 
+// Publish publishes the notification event to its corresponding notification handler.
 func (m *Mediatr) Publish(ctx context.Context, request Request) error {
 	rn := request.Name()
 
@@ -138,6 +144,7 @@ func (m *Mediatr) Publish(ctx context.Context, request Request) error {
 	return nil
 }
 
+// existsPipeType checks if a pipeline behaviour exists in the registry.
 func (m *Mediatr) existsPipeType(p reflect.Type) bool {
 	for _, pipe := range m.pipelineBehaviourRegistry {
 		if reflect.TypeOf(pipe) == p {

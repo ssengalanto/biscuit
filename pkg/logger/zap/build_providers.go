@@ -62,7 +62,7 @@ func (p production) build() (*zap.Logger, error) {
 	return logger, nil
 }
 
-// createDevelopmentConfig creates a new zap.Config for development environment.
+// createDevelopmentConfig creates a new zap config for development environment.
 func createDevelopmentConfig() zap.Config {
 	cfg := zap.NewDevelopmentConfig()
 	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -71,7 +71,7 @@ func createDevelopmentConfig() zap.Config {
 	return cfg
 }
 
-// createProductionConfig creates a new zap.Config for production environment.
+// createProductionConfig creates a new zap config for production environment.
 func createProductionConfig() zap.Config {
 	cfg := zap.NewProductionConfig()
 	cfg.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder

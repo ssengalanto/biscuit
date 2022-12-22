@@ -7,6 +7,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/constants"
 )
 
+// NewSqlDb returns a sqlx stub.
 func NewSqlDb() (*sqlx.DB, sqlmock.Sqlmock, error) {
 	mockDb, mock, err := sqlmock.New()
 	if err != nil {

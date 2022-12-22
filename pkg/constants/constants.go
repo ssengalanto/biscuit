@@ -2,7 +2,7 @@ package constants
 
 import "time"
 
-// Constants for application invariants.
+// Constants for application configurations.
 const (
 	MaxHeaderBytes      = 1 << 20
 	IdleTimeout         = time.Minute
@@ -15,7 +15,7 @@ const (
 	Prod                = "production"
 )
 
-// Constants for packages.
+// Constants for internal packages.
 const (
 	ZapLogType      = "zap"
 	ViperConfigType = "viper"

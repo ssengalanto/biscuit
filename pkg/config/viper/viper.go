@@ -24,7 +24,7 @@ func New(env string) (*Config, error) {
 	}, nil
 }
 
-// buildViper builds a new viper.Viper for specific environment with predefined configuration.
+// buildViper builds a new viper instance for specific environment with predefined configuration.
 func buildViper(env string) (*viper.Viper, error) {
 	var config *viper.Viper
 	var err error

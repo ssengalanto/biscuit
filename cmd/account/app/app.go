@@ -36,7 +36,7 @@ func Run() {
 	defer db.Close()
 
 	repo := repository.NewAccountRepository(db)
-	mediator := mediatr.NewMediatr()
+	mediator := mediatr.New()
 
 	router := http.NewRouter()
 	router.Mount("/swagger", httpSwagger.WrapHandler)

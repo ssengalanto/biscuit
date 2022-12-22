@@ -60,7 +60,7 @@ func (p production) build() (*viper.Viper, error) {
 	return v, nil
 }
 
-// createViperInstance creates a new viper.Viper for specific environment.
+// createViperInstance creates a new viper instance for specific environment.
 func createViperInstance(env string) (*viper.Viper, error) {
 	pkg := "potato-project"
 
