@@ -17,11 +17,14 @@ func RegisterHTTPHandlers(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 	r := http.NewRouter()
 	r.Mount("/swagger", httpSwagger.WrapHandler)
 
+	getAccountHandler := http.NewGetAccountHandler(logger, mediator)
+	r.Get("/account/{id}", getAccountHandler.Handle)
+
 	createAccountHandler := http.NewCreateAccountHandler(logger, mediator)
 	r.Post("/account", createAccountHandler.Handle)
 
-	getAccountHandler := http.NewGetAccountHandler(logger, mediator)
-	r.Get("/account/{id}", getAccountHandler.Handle)
+	deleteAccountHandler := http.NewDeleteAccountHandler(logger, mediator)
+	r.Delete("/account/{id}", deleteAccountHandler.Handle)
 
 	return r
 }
@@ -33,6 +36,12 @@ func RegisterMediatrHandlers(logger interfaces.Logger, repository account.Reposi
 	// commands
 	createAccountCommandHandler := command.NewCreateAccountCommandHandler(logger, repository)
 	err := m.RegisterRequestHandler(createAccountCommandHandler)
+	if err != nil {
+		logger.Fatal(err.Error(), nil)
+	}
+
+	deleteAccountCommandHandler := command.NewDeleteAccountCommandHandler(logger, repository)
+	err = m.RegisterRequestHandler(deleteAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
