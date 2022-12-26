@@ -87,7 +87,7 @@ paths:
       summary: Create a new account
       tags:
       - account
-  /api/v1/account/:id:
+  /api/v1/account/{id}:
     delete:
       consumes:
       - application/json

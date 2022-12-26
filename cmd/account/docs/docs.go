@@ -62,7 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/account/:id": {
+        "/api/v1/account/{id}": {
             "get": {
                 "description": "Get account record by account ID.",
                 "consumes": [
