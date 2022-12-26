@@ -31,8 +31,8 @@ func NewGetAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 // @Description Get account record by account ID.
 // @Accept json
 // @Produce json
-// @Param GetAccountRequestDto body dto.GetAccountRequestDto true "Account Id"
-// @Success 201 {object} dto.GetAccountResponseDto
+// @Param id path string true "Account ID"
+// @Success 200 {object} dto.GetAccountResponseDto
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account/:id [get]

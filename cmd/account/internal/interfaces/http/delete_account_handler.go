@@ -32,11 +32,11 @@ func NewDeleteAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr
 // @Description Delete an existing account record
 // @Accept json
 // @Produce json
-// @Param DeleteAccountRequestDto body dto.DeleteAccountRequestDto true "Account ID"
+// @Param id path string true "Account ID"
 // @Success 200 {object} dto.GetAccountResponseDto
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
-// @Router /api/v1/account [delete]
+// @Router /api/v1/account/:id [delete]
 func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()

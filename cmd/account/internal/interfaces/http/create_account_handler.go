@@ -33,7 +33,7 @@ func NewCreateAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr
 // @Accept json
 // @Produce json
 // @Param CreateAccountRequestDto body dto.CreateAccountRequestDto true "Account data"
-// @Success 201 {object} dto.CreateAccountResponseDto
+// @Success 201 {object} dto.GetAccountResponseDto
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account [post]
