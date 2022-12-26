@@ -6,7 +6,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 )
 
-// CreateAccountCommand contains required fields for account creation, satisfies mediatr.Request.
+// CreateAccountCommand contains required fields for account creation.
 type CreateAccountCommand struct {
 	Email       string    `json:"email"`
 	Password    string    `json:"password"`
