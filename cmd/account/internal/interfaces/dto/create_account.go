@@ -4,13 +4,13 @@ import "time"
 
 // CreateAccountRequestDto - account creation request dto.
 type CreateAccountRequestDto struct {
-	Email       string    `json:"email"`
-	Password    string    `json:"password"`
-	Active      bool      `json:"active"`
-	FirstName   string    `json:"firstName"`
-	LastName    string    `json:"lastName"`
-	Phone       string    `json:"phone"`
-	DateOfBirth time.Time `json:"dateOfBirth"`
+	Email       string    `json:"email" validate:"required,email"`
+	Password    string    `json:"password" validate:"min=10,required"`
+	Active      bool      `json:"active" validate:"boolean"`
+	FirstName   string    `json:"firstName" validate:"required"`
+	LastName    string    `json:"lastName" validate:"required"`
+	Phone       string    `json:"phone" validate:"required,numeric"`
+	DateOfBirth time.Time `json:"dateOfBirth" validate:"required"`
 }
 
 // CreateAccountResponseDto - account creation response dto.

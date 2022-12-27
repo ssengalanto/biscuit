@@ -44,6 +44,10 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	getreq := dto.GetAccountRequestDto{ID: id}
+	if !validateRequest(w, c.log, getreq) {
+		return
+	}
+
 	q := query.NewGetAccountQuery(getreq)
 
 	response, err := c.mediator.Send(ctx, q)
@@ -53,6 +57,10 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	delreq := dto.DeleteAccountRequestDto{ID: id}
+	if !validateRequest(w, c.log, delreq) {
+		return
+	}
+
 	cmd := command.NewDeleteAccountCommand(delreq)
 
 	_, err = c.mediator.Send(ctx, cmd)

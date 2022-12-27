@@ -4,7 +4,7 @@ import "time"
 
 // GetAccountRequestDto - get account request dto.
 type GetAccountRequestDto struct {
-	ID string `json:"id"`
+	ID string `json:"id" validate:"required,uuid"`
 }
 
 // PersonResponseDto - person field response dto.

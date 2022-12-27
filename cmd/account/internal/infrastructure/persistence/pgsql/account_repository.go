@@ -137,7 +137,6 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 		if errors.Is(err, sql.ErrNoRows) {
 			return entity, fmt.Errorf("%w: account with email of `%s`", apperr.ErrNotFound, email)
 		}
-
 		return entity, err
 	}
 

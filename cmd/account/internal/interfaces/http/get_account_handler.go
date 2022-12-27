@@ -44,6 +44,9 @@ func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	request := dto.GetAccountRequestDto{ID: id}
+	if !validateRequest(w, c.log, request) {
+		return
+	}
 
 	q := query.NewGetAccountQuery(request)
 

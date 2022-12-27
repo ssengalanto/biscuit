@@ -45,8 +45,12 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
-		c.log.Error("invalid request", map[string]any{"error": err})
+		c.log.Error("invalid request body format", map[string]any{"error": err})
 		json.MustEncodeError(w, errors.ErrInvalid)
+		return
+	}
+
+	if !validateRequest(w, c.log, request) {
 		return
 	}
 
