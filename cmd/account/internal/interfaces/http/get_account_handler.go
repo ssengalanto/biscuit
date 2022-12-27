@@ -34,6 +34,7 @@ func NewGetAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 // @Param id path string true "Account ID"
 // @Success 200 {object} dto.GetAccountResponseDto
 // @Failure 400 {object} errors.HTTPError
+// @Failure 404 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account/{id} [get]
 func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
