@@ -1,13 +1,14 @@
 //nolint:godot //unnecessary
-package http
+package v1
 
 import (
 	"context"
 	"net/http"
 
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/query"
+	cmdv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/command/v1"
+	qv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/query/v1"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
+	apphttp "github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/http/response/json"
@@ -50,11 +51,11 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !validateRequest(w, c.log, request) {
+	if !apphttp.ValidateRequest(w, c.log, request) {
 		return
 	}
 
-	cmd := command.NewCreateAccountCommand(dto.CreateAccountRequestDto{
+	cmd := cmdv1.NewCreateAccountCommand(dto.CreateAccountRequestDto{
 		Email:       request.Email,
 		Password:    request.Password,
 		Active:      request.Active,
@@ -76,7 +77,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		json.MustEncodeError(w, errors.ErrInvalid)
 	}
 
-	q := query.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resource.ID}) //nolint:gosimple //explicit
+	q := qv1.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resource.ID}) //nolint:gosimple //explicit
 	response, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)

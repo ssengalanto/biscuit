@@ -1,4 +1,4 @@
-package query
+package v1
 
 import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"

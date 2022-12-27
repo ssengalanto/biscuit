@@ -9,7 +9,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
 )
 
-func validateRequest(w http.ResponseWriter, log interfaces.Logger, req any) bool {
+func ValidateRequest(w http.ResponseWriter, log interfaces.Logger, req any) bool {
 	err := validator.Struct(req)
 	if err != nil {
 		log.Error("invalid request", map[string]any{"error": err})

@@ -1,4 +1,4 @@
-package query
+package v1
 
 import (
 	"context"

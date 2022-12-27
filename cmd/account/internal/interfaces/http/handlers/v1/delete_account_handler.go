@@ -1,14 +1,15 @@
 //nolint:godot //unnecessary
-package http
+package v1
 
 import (
 	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/command"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/application/query"
+	cmdv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/command/v1"
+	qv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/query/v1"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
+	apphttp "github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/http/response/json"
 	"github.com/ssengalanto/potato-project/pkg/interfaces"
@@ -44,11 +45,11 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	getreq := dto.GetAccountRequestDto{ID: id}
-	if !validateRequest(w, c.log, getreq) {
+	if !apphttp.ValidateRequest(w, c.log, getreq) {
 		return
 	}
 
-	q := query.NewGetAccountQuery(getreq)
+	q := qv1.NewGetAccountQuery(getreq)
 
 	response, err := c.mediator.Send(ctx, q)
 	if err != nil {
@@ -57,11 +58,11 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	delreq := dto.DeleteAccountRequestDto{ID: id}
-	if !validateRequest(w, c.log, delreq) {
+	if !apphttp.ValidateRequest(w, c.log, delreq) {
 		return
 	}
 
-	cmd := command.NewDeleteAccountCommand(delreq)
+	cmd := cmdv1.NewDeleteAccountCommand(delreq)
 
 	_, err = c.mediator.Send(ctx, cmd)
 	if err != nil {
