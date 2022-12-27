@@ -2,6 +2,8 @@ package pgsql
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -10,7 +12,7 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/potato-project/pkg/errors"
+	apperr "github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/gg"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
@@ -101,6 +103,9 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 
 	acc, err := findAccountByID(ctx, tx, id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity, fmt.Errorf("%w: account with ID of `%s`", apperr.ErrNotFound, id)
+		}
 		return entity, err
 	}
 
@@ -129,6 +134,10 @@ func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (acco
 
 	acc, err := findAccountByEmail(ctx, tx, email)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity, fmt.Errorf("%w: account with email of `%s`", apperr.ErrNotFound, email)
+		}
+
 		return entity, err
 	}
 
@@ -215,10 +224,10 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 		code := pgsql.ErrorCode(err)
 
 		if code == pgerrcode.UniqueViolation {
-			return fmt.Errorf("%w: duplicate email key value", errors.ErrInvalid)
+			return fmt.Errorf("%w: duplicate email key value", apperr.ErrInvalid)
 		}
 
-		return fmt.Errorf("%w: %s", errors.ErrInternal, err.Error())
+		return fmt.Errorf("%w: %s", apperr.ErrInternal, err.Error())
 	}
 
 	err = handleRowsAffected(result.RowsAffected())
