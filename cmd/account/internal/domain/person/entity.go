@@ -13,7 +13,7 @@ type Entity struct {
 	ID        uuid.UUID         `json:"id" validate:"required"`
 	AccountID uuid.UUID         `json:"accountId" validate:"required"`
 	Details   Details           `json:"details" validate:"required"`
-	Avatar    Avatar            `json:"avatar"`
+	Avatar    Avatar            `json:"avatar,omitempty"`
 	Address   *[]address.Entity `json:"address"`
 }
 

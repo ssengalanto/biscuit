@@ -16,7 +16,7 @@ type Entity struct {
 	Email       Email          `json:"email" validate:"required"`
 	Password    Password       `json:"password" validate:"required"`
 	Active      bool           `json:"active" validate:"required"`
-	LastLoginAt time.Time      `json:"lastLoginAt"`
+	LastLoginAt time.Time      `json:"lastLoginAt,omitempty"`
 	Person      *person.Entity `json:"person"`
 }
 
