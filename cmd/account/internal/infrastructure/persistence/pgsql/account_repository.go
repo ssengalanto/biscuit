@@ -14,17 +14,19 @@ import (
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	apperr "github.com/ssengalanto/potato-project/pkg/errors"
 	"github.com/ssengalanto/potato-project/pkg/gg"
+	"github.com/ssengalanto/potato-project/pkg/interfaces"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
 )
 
 // AccountRepository - account repository struct.
 type AccountRepository struct {
-	db *sqlx.DB
+	log interfaces.Logger
+	db  *sqlx.DB
 }
 
 // NewAccountRepository creates a new account repository.
-func NewAccountRepository(db *sqlx.DB) *AccountRepository {
-	return &AccountRepository{db: db}
+func NewAccountRepository(log interfaces.Logger, db *sqlx.DB) *AccountRepository {
+	return &AccountRepository{log: log, db: db}
 }
 
 // Exists checks if an account record with the specified ID exists in the database.

@@ -38,7 +38,7 @@ func Run() {
 	)
 	defer rdb.Close()
 
-	repo := repository.NewAccountRepository(db)
+	repo := repository.NewAccountRepository(slog, db)
 	mediatr := RegisterMediatrHandlers(slog, repo, rdb)
 	mux := RegisterHTTPHandlers(slog, mediatr)
 
