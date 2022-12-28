@@ -197,43 +197,6 @@ func TestAccountRepository_FindByID(t *testing.T) {
 	require.Equal(t, result, entity)
 }
 
-func TestAccountRepository_FindByEmail(t *testing.T) {
-	entity := newAccountEntity()
-
-	db, dbmock, err := mock.NewSqlDb()
-	require.NoError(t, err)
-	defer db.Close()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	logger := mock.NewLogger(ctrl)
-	repo := pgsql.NewAccountRepository(logger, db)
-
-	dbmock.ExpectBegin()
-
-	accountRow := createAccountRow(entity)
-	findAccountByEmailQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAccountByEmail)
-	accountStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(findAccountByEmailQuery))
-	accountStmt.ExpectQuery().WithArgs(entity.Email).WillReturnRows(accountRow)
-
-	personRow := createPersonRow(entity)
-	createPersonQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindPersonByAccountID)
-	personStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createPersonQuery))
-	personStmt.ExpectQuery().WithArgs(entity.ID).WillReturnRows(personRow)
-
-	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryFindAddressByPersonID)
-	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
-	addressRows := createAddressRows(entity)
-	addressStmt.ExpectQuery().WithArgs(entity.Person.ID).WillReturnRows(addressRows)
-
-	dbmock.ExpectCommit()
-
-	result, err := repo.FindByEmail(context.Background(), entity.Email.String())
-	require.NoError(t, err)
-	require.Equal(t, result, entity)
-}
-
 func TestAccountRepository_Update(t *testing.T) {
 	entity := newAccountEntity()
 
