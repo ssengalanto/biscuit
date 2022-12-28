@@ -15,16 +15,19 @@ import (
 type DeleteAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository
+	cache             account.Cache
 }
 
 // NewDeleteAccountCommandHandler creates a new command handler that handles account deletion.
 func NewDeleteAccountCommandHandler(
 	logger interfaces.Logger,
 	accountRepository account.Repository,
+	cache account.Cache,
 ) *DeleteAccountCommandHandler {
 	return &DeleteAccountCommandHandler{
 		log:               logger,
 		accountRepository: accountRepository,
+		cache:             cache,
 	}
 }
 
@@ -51,6 +54,11 @@ func (d *DeleteAccountCommandHandler) Handle(
 	err = d.accountRepository.DeleteByID(ctx, id)
 	if err != nil {
 		d.log.Error("account deletion failed", map[string]any{"id": id, "error": err})
+		return nil, err
+	}
+
+	err = d.cache.Delete(ctx, command.ID)
+	if err != nil {
 		return nil, err
 	}
 

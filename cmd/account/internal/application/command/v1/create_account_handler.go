@@ -15,16 +15,19 @@ import (
 type CreateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository
+	cache             account.Cache
 }
 
 // NewCreateAccountCommandHandler creates a new command handler that handles account creation.
 func NewCreateAccountCommandHandler(
 	logger interfaces.Logger,
 	accountRepository account.Repository,
+	cache account.Cache,
 ) *CreateAccountCommandHandler {
 	return &CreateAccountCommandHandler{
 		log:               logger,
 		accountRepository: accountRepository,
+		cache:             cache,
 	}
 }
 
