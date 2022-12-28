@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -21,10 +20,9 @@ const (
 )
 
 // NewUniversalClient creates a new redis universal client.
-func NewUniversalClient(url string, port int, db int, password string) redis.UniversalClient {
-	addr := fmt.Sprintf("%s:%d", url, port)
+func NewUniversalClient(host string, db int, password string) redis.UniversalClient {
 	universalClient := redis.NewUniversalClient(&redis.UniversalOptions{
-		Addrs:           []string{addr},
+		Addrs:           []string{host},
 		Password:        password,
 		DB:              db,
 		MaxRetries:      maxRetries,

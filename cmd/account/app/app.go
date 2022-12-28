@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"log"
 
 	repository "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
@@ -8,6 +9,7 @@ import (
 	"github.com/ssengalanto/potato-project/pkg/constants"
 	"github.com/ssengalanto/potato-project/pkg/logger"
 	"github.com/ssengalanto/potato-project/pkg/pgsql"
+	"github.com/ssengalanto/potato-project/pkg/redis"
 	"github.com/ssengalanto/potato-project/pkg/server"
 )
 
@@ -28,6 +30,13 @@ func Run() {
 		slog.Fatal("connection failed", map[string]any{"err": err})
 	}
 	defer db.Close()
+
+	rdb := redis.NewUniversalClient(
+		fmt.Sprintf("%s:%d", cfg.GetString(constants.RedisURL), cfg.GetInt(constants.RedisPort)),
+		cfg.GetInt(constants.RedisDB),
+		cfg.GetString(constants.RedisPassword),
+	)
+	defer rdb.Close()
 
 	repo := repository.NewAccountRepository(db)
 	mediatr := RegisterMediatrHandlers(slog, repo)
