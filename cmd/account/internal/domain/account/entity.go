@@ -119,6 +119,19 @@ func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
 	return nil
 }
 
+// HashPassword hashes the password, if the hashing failed, it will return an error.
+func (e *Entity) HashPassword() error {
+	hashed, err := e.Password.Hash()
+	if err != nil {
+		return err
+	}
+
+	e.Password = hashed
+
+	return nil
+}
+
+// IsValid checks the validity of the account entity.
 func (e *Entity) IsValid() error {
 	err := validator.Struct(e)
 	if err != nil {
