@@ -54,6 +54,12 @@ func (c *CreateAccountCommandHandler) Handle(
 		return nil, err
 	}
 
+	err = acct.HashPassword()
+	if err != nil {
+		c.log.Error("hashing password failed", map[string]any{"account": acct, "error": err})
+		return nil, err
+	}
+
 	pers := person.New(acct.ID, command.FirstName, command.LastName, command.Email, command.Phone, command.DateOfBirth)
 	err = pers.IsValid()
 	if err != nil {
