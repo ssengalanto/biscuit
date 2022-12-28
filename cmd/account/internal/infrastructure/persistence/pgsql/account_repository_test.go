@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/potato-project/pkg/mock"
@@ -17,7 +18,12 @@ func TestNewAccountRepository(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+
+	repo := pgsql.NewAccountRepository(logger, db)
 	require.NotNil(t, repo)
 }
 
@@ -53,7 +59,11 @@ func TestAccountRepository_Exists(t *testing.T) {
 			require.NoError(t, err)
 			defer db.Close()
 
-			repo := pgsql.NewAccountRepository(db)
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			logger := mock.NewLogger(ctrl)
+			repo := pgsql.NewAccountRepository(logger, db)
 
 			query := pgsql.MustBeValidAccountQuery(pgsql.QueryExists)
 			stmt := dbmock.ExpectPrepare(regexp.QuoteMeta(query))
@@ -73,7 +83,11 @@ func TestAccountRepository_Create(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
 
@@ -112,7 +126,11 @@ func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
 
@@ -149,7 +167,11 @@ func TestAccountRepository_FindByID(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
 
@@ -182,7 +204,11 @@ func TestAccountRepository_FindByEmail(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
 
@@ -215,7 +241,11 @@ func TestAccountRepository_Update(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
 
@@ -272,7 +302,11 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo := pgsql.NewAccountRepository(db)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	logger := mock.NewLogger(ctrl)
+	repo := pgsql.NewAccountRepository(logger, db)
 
 	deleteAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
 	deleteStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(deleteAccountByIDQuery))
