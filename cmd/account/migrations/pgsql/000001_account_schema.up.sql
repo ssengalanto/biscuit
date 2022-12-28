@@ -9,5 +9,5 @@ CREATE TABLE "account" (
     "created_at" timestamp NOT NULL DEFAULT NOW(),
     "updated_at" timestamp NOT NULL DEFAULT NOW(),
     CONSTRAINT account_pkey PRIMARY KEY (id),
-    CONSTRAINT account_password_ck CHECK (char_length(password) <= 10)
+    CONSTRAINT account_password_ck CHECK (char_length(password) >= 10)
 );
