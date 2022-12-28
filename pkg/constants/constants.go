@@ -34,7 +34,11 @@ const (
 	PgsqlPort          = "PGSQL_PORT"
 	PgsqlDSN           = "PGSQL_DSN"
 	RedisPort          = "REDIS_PORT"
+	RedisUrl           = "REDIS_URL"
+	RedisDB            = "REDIS_DB"
+	RedisPassword      = "REDIS_PASSWORD"
 	RedisInsightPort   = "REDIS_INSIGHT_PORT"
+	RedisInsightUrl    = "REDIS_INSIGHT_URL"
 	LogType            = "LOG_TYPE"
 	ConfigType         = "CONFIG_TYPE"
 )
