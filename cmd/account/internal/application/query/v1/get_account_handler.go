@@ -59,13 +59,12 @@ func (c *GetAccountQueryHandler) Handle(
 
 	id, err := uuid.Parse(query.ID)
 	if err != nil {
-		c.log.Error("invalid uuid", map[string]any{"query": query})
+		c.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
 		return nil, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, query.ID)
 	}
 
 	result, err = c.accountRepository.FindByID(ctx, id)
 	if err != nil {
-		c.log.Error("get account failed", map[string]any{"payload": query, "error": err})
 		return empty, err
 	}
 

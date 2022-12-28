@@ -25,6 +25,7 @@ const accountCacheKeyPrefix = "account_cache"
 func (a *AccountCache) Set(ctx context.Context, key string, value account.Entity) {
 	data, err := json.Marshal(value)
 	if err != nil {
+		a.log.Error("json marshal failed", map[string]any{"key": key, "value": value, "error": err})
 		panic(err)
 	}
 
@@ -38,11 +39,13 @@ func (a *AccountCache) Get(ctx context.Context, key string) (*account.Entity, er
 		if errors.Is(err, redis.Nil) {
 			return nil, nil //nolint:nilnil //necessary
 		}
+		a.log.Error("cache retrieval failed", map[string]any{"key": key, "error": err})
 		return nil, err
 	}
 
 	var account account.Entity
 	if err = json.Unmarshal(data, &account); err != nil {
+		a.log.Error("json unmarshal failed", map[string]any{"key": key, "error": err})
 		return nil, err
 	}
 
@@ -53,6 +56,7 @@ func (a *AccountCache) Get(ctx context.Context, key string) (*account.Entity, er
 func (a *AccountCache) Delete(ctx context.Context, key string) error {
 	err := a.client.HDel(ctx, a.keyPrefix(), key).Err()
 	if err != nil {
+		a.log.Error("cache deletion failed", map[string]any{"key": key, "error": err})
 		return err
 	}
 

@@ -47,13 +47,12 @@ func (d *DeleteAccountCommandHandler) Handle(
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
-		d.log.Error("invalid uuid", map[string]any{"command": command})
+		d.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
 		return nil, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, command.ID)
 	}
 
 	err = d.accountRepository.DeleteByID(ctx, id)
 	if err != nil {
-		d.log.Error("account deletion failed", map[string]any{"id": id, "error": err})
 		return nil, err
 	}
 

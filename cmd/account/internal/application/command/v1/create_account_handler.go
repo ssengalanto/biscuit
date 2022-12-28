@@ -51,7 +51,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	err := acct.IsValid()
 	if err != nil {
 		c.log.Error("account is invalid", map[string]any{"account": acct, "error": err})
-		return nil, err
+		return nil, fmt.Errorf("%w: account", errors.ErrInvalid)
 	}
 
 	err = acct.HashPassword()
@@ -64,7 +64,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	err = pers.IsValid()
 	if err != nil {
 		c.log.Error("person is invalid", map[string]any{"person": pers, "error": err})
-		return nil, err
+		return nil, fmt.Errorf("%w: person", errors.ErrInvalid)
 	}
 
 	entity = acct
@@ -72,7 +72,6 @@ func (c *CreateAccountCommandHandler) Handle(
 
 	err = c.accountRepository.Create(ctx, entity)
 	if err != nil {
-		c.log.Error("account creation failed", map[string]any{"payload": entity, "error": err})
 		return nil, err
 	}
 

@@ -62,11 +62,13 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) e
 
 	err := createAccount(ctx, tx, entity)
 	if err != nil {
+		a.log.Error("persisting account record failed", map[string]any{"payload": entity, "error": err})
 		return err
 	}
 
 	err = createPerson(ctx, tx, *entity.Person)
 	if err != nil {
+		a.log.Error("persisting person record failed", map[string]any{"payload": *entity.Person, "error": err})
 		return err
 	}
 
@@ -87,6 +89,7 @@ func (a *AccountRepository) CreatePersonAddresses(
 
 	err := createAddress(ctx, tx, entities)
 	if err != nil {
+		a.log.Error("persisting address record failed", map[string]any{"payload": entities, "error": err})
 		return err
 	}
 
@@ -106,49 +109,25 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 	acc, err := findAccountByID(ctx, tx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
+			a.log.Error(fmt.Sprintf("no record found for account with id of `%s`", id), map[string]any{"error": err})
 			return entity, fmt.Errorf("%w: account with ID of `%s`", apperr.ErrNotFound, id)
 		}
+		a.log.Error(fmt.Sprintf("account record with id of `%s` retrieval failed", id), map[string]any{"error": err})
 		return entity, err
 	}
 
 	p, err := findPersonByAccountID(ctx, tx, acc.ID)
 	if err != nil {
+		a.log.Error(
+			fmt.Sprintf("person record with account_id of `%s` retrieval failed", acc.ID),
+			map[string]any{"error": err},
+		)
 		return entity, err
 	}
 
 	addrs, err := findAddressByPersonID(ctx, tx, p.ID)
 	if err != nil {
-		return entity, err
-	}
-
-	tx.Commit() //nolint:errcheck //unnecessary
-
-	entity = buildAccountEntity(acc, p, addrs)
-	return entity, nil
-}
-
-// FindByEmail gets an Account record with the specified email in the database.
-func (a *AccountRepository) FindByEmail(ctx context.Context, email string) (account.Entity, error) {
-	entity := account.Entity{}
-
-	tx := a.db.MustBeginTx(ctx, nil)
-	defer tx.Rollback() //nolint:errcheck //unnecessary
-
-	acc, err := findAccountByEmail(ctx, tx, email)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return entity, fmt.Errorf("%w: account with email of `%s`", apperr.ErrNotFound, email)
-		}
-		return entity, err
-	}
-
-	p, err := findPersonByAccountID(ctx, tx, acc.ID)
-	if err != nil {
-		return entity, err
-	}
-
-	addrs, err := findAddressByPersonID(ctx, tx, p.ID)
-	if err != nil {
+		a.log.Error(fmt.Sprintf("address record with person_id of `%s` retrieval failed", p.ID), map[string]any{"error": err})
 		return entity, err
 	}
 
@@ -165,16 +144,29 @@ func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) e
 
 	err := updateAccount(ctx, tx, entity)
 	if err != nil {
+		a.log.Error(
+			fmt.Sprintf("updating account record with id of `%s` failed", entity.ID),
+			map[string]any{"payload": entity, "error": err},
+		)
 		return err
 	}
 
 	err = updatePerson(ctx, tx, *entity.Person)
 	if err != nil {
+		a.log.Error(
+			fmt.Sprintf("updating person record with id of `%s` failed", entity.Person.ID),
+			map[string]any{"payload": entity, "error": err},
+		)
 		return err
 	}
 
 	err = updateAddress(ctx, tx, *entity.Person.Address)
 	if err != nil {
+		a.log.Error(
+			// TODO: replace real value
+			fmt.Sprintf("updating address record with id of `%s` failed", "0"),
+			map[string]any{"payload": entity, "error": err},
+		)
 		return err
 	}
 
@@ -374,26 +366,6 @@ func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]ad
 	defer rows.Close()
 
 	return addrs, nil
-}
-
-// findAccountByEmail gets the Account record with the specified email in the database.
-func findAccountByEmail(ctx context.Context, tx *sqlx.Tx, email string) (account.Entity, error) {
-	acc := Account{}
-
-	query := MustBeValidAccountQuery(QueryFindAccountByEmail)
-	stmt, err := tx.PreparexContext(ctx, query)
-	if err != nil {
-		return acc.ToEntity(), err
-	}
-
-	row := stmt.QueryRowxContext(ctx, email)
-
-	err = row.StructScan(&acc)
-	if err != nil {
-		return acc.ToEntity(), err
-	}
-
-	return acc.ToEntity(), nil
 }
 
 // updateAccount updates an Account record in the database.
