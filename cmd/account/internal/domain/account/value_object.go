@@ -2,6 +2,7 @@ package account
 
 import (
 	"github.com/ssengalanto/potato-project/pkg/validator"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Email value object.
@@ -53,6 +54,21 @@ func (p Password) Update(s string) (Password, error) {
 	}
 
 	return password, nil
+}
+
+// Hash hashes the password using bcrypt algorithm.
+func (p Password) Hash() (Password, error) {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+
+	return Password(hashed), nil
+}
+
+// Check checks if the provided password is correct or not.
+func (p Password) Check(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(p), []byte(password))
 }
 
 // String converts Password to type string.
