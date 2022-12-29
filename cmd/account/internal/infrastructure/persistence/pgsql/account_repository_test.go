@@ -113,27 +113,6 @@ func TestAccountRepository_Create(t *testing.T) {
 		entity.Person.Avatar,
 	).WillReturnResult(sqlmock.NewResult(0, 1))
 
-	dbmock.ExpectCommit()
-
-	err = repo.Create(context.Background(), entity)
-	require.NoError(t, err)
-}
-
-func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
-	entity := newAccountEntity()
-
-	db, dbmock, err := mock.NewSqlDb()
-	require.NoError(t, err)
-	defer db.Close()
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	logger := mock.NewLogger(ctrl)
-	repo := pgsql.NewAccountRepository(logger, db)
-
-	dbmock.ExpectBegin()
-
 	createAddressQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAddress)
 	addressStmt := dbmock.ExpectPrepare(regexp.QuoteMeta(createAddressQuery))
 
@@ -151,12 +130,12 @@ func TestAccountRepository_CreatePersonAddresses(t *testing.T) {
 			addr.Components.FormattedAddress,
 			addr.Geometry.Lat,
 			addr.Geometry.Lng,
-		).WillReturnResult(sqlmock.NewResult(0, 1))
+		).WillReturnResult(sqlmock.NewResult(0, int64(len(*entity.Person.Address))))
 	}
 
 	dbmock.ExpectCommit()
 
-	err = repo.CreatePersonAddresses(context.Background(), *entity.Person.Address)
+	err = repo.Create(context.Background(), entity)
 	require.NoError(t, err)
 }
 

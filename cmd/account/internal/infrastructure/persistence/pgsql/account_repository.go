@@ -72,24 +72,9 @@ func (a *AccountRepository) Create(ctx context.Context, entity account.Entity) e
 		return err
 	}
 
-	tx.Commit() //nolint:errcheck //unnecessary
-
-	return nil
-}
-
-// CreatePersonAddresses begins a new transaction to process and inserts a list of
-// Address associated with Person record.
-// If transaction fails it will roll back all the changes it made,
-// otherwise it will commit the changes to the database.
-func (a *AccountRepository) CreatePersonAddresses(
-	ctx context.Context,
-	entities []address.Entity,
-) error {
-	tx := a.db.MustBeginTx(ctx, nil)
-
-	err := createAddress(ctx, tx, entities)
+	err = createAddress(ctx, tx, *entity.Person.Address)
 	if err != nil {
-		a.log.Error("persisting address record failed", map[string]any{"payload": entities, "error": err})
+		a.log.Error("persisting address record failed", map[string]any{"payload": *entity.Person.Address, "error": err})
 		return err
 	}
 
