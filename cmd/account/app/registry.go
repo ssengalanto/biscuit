@@ -20,16 +20,17 @@ func RegisterHTTPHandlers(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 	r := http.NewRouter()
 	r.Mount("/swagger", httpSwagger.WrapHandler)
 
-	// v1 routes
-	r.Route("/api/v1", func(r chi.Router) {
-		getAccountHandler := httphv1.NewGetAccountHandler(logger, mediator)
-		r.Get("/account/{id}", getAccountHandler.Handle)
+	r.Route("/api", func(r chi.Router) {
+		r.Route("/v1", func(r chi.Router) {
+			getAccountHandler := httphv1.NewGetAccountHandler(logger, mediator)
+			r.Get("/account/{id}", getAccountHandler.Handle)
 
-		createAccountHandler := httphv1.NewCreateAccountHandler(logger, mediator)
-		r.Post("/account", createAccountHandler.Handle)
+			createAccountHandler := httphv1.NewCreateAccountHandler(logger, mediator)
+			r.Post("/account", createAccountHandler.Handle)
 
-		deleteAccountHandler := httphv1.NewDeleteAccountHandler(logger, mediator)
-		r.Delete("/account/{id}", deleteAccountHandler.Handle)
+			deleteAccountHandler := httphv1.NewDeleteAccountHandler(logger, mediator)
+			r.Delete("/account/{id}", deleteAccountHandler.Handle)
+		})
 	})
 
 	return r
