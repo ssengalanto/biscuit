@@ -131,6 +131,12 @@ func (e *Entity) HashPassword() error {
 	return nil
 }
 
+// CheckPassword checks if the provided password is correct or not.
+func (e *Entity) CheckPassword(password string) bool {
+	err := e.Password.Check(password)
+	return err == nil
+}
+
 // IsValid checks the validity of the account entity.
 func (e *Entity) IsValid() error {
 	err := validator.Struct(e)
