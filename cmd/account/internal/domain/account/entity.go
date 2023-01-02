@@ -20,6 +20,12 @@ type Entity struct {
 	Person      *person.Entity `json:"person"`
 }
 
+// UpdateAddressInput contains all the required fields for updating address entity.
+type UpdateAddressInput struct {
+	ID         uuid.UUID
+	Components address.Components
+}
+
 // New creates a new account entity.
 func New(email, password string, active bool) Entity {
 	return Entity{
@@ -98,7 +104,7 @@ func (e *Entity) UpdatePersonDetails(input person.UpdateDetailsInput) error {
 // UpdateAddress takes a slice of struct parameter that contains the address components
 // to be used for the update. If validation failed it will return an error
 // otherwise it will update the corresponding fields in address entity.
-func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
+func (e *Entity) UpdateAddress(inputs []UpdateAddressInput) error {
 	addrs := *e.Person.Address
 
 	for _, input := range inputs {
@@ -110,7 +116,7 @@ func (e *Entity) UpdateAddress(inputs []address.UpdateInput) error {
 			continue
 		}
 
-		err := addrs[idx].Update(input)
+		err := addrs[idx].Update(input.Components)
 		if err != nil {
 			return err
 		}

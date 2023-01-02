@@ -260,16 +260,13 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 			ctx,
 			entity.ID,
 			entity.PersonID,
-			entity.Components.PlaceID,
-			entity.Components.AddressLine1.MustEncodeJSON(),
-			entity.Components.AddressLine2.MustEncodeJSON(),
-			entity.Components.City.MustEncodeJSON(),
-			entity.Components.State.MustEncodeJSON(),
-			entity.Components.Country.MustEncodeJSON(),
-			entity.Components.PostalCode.MustEncodeJSON(),
-			entity.Components.FormattedAddress,
-			entity.Geometry.Lat,
-			entity.Geometry.Lng,
+			entity.Components.Street,
+			entity.Components.Unit,
+			entity.Components.City,
+			entity.Components.District,
+			entity.Components.State,
+			entity.Components.Country,
+			entity.Components.PostalCode,
 		)
 		if err != nil {
 			return err
@@ -423,16 +420,14 @@ func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 		result, err := stmt.ExecContext(
 			ctx,
 			entity.ID,
-			entity.Components.PlaceID,
-			entity.Components.AddressLine1.MustEncodeJSON(),
-			entity.Components.AddressLine2.MustEncodeJSON(),
-			entity.Components.City.MustEncodeJSON(),
-			entity.Components.State.MustEncodeJSON(),
-			entity.Components.Country.MustEncodeJSON(),
-			entity.Components.PostalCode.MustEncodeJSON(),
-			entity.Components.FormattedAddress,
-			entity.Geometry.Lat,
-			entity.Geometry.Lng,
+			entity.PersonID,
+			entity.Components.Street,
+			entity.Components.Unit,
+			entity.Components.City,
+			entity.Components.District,
+			entity.Components.State,
+			entity.Components.Country,
+			entity.Components.PostalCode,
 		)
 		if err != nil {
 			return err

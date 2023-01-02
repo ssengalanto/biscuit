@@ -52,18 +52,15 @@ const createAddressQuery = `
 	INSERT INTO address (
 		id,
 		person_id,
-		place_id,
-		address_line1,
-		address_line2,
+		street,
+		unit,
 		city,
+		district,
 		state,
 		country,
-		postal_code,
-		formatted_address,
-		lat,
-		lng
+		postal_code
 	)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
 	`
 
 const findAccountByIDQuery = `
@@ -82,16 +79,13 @@ const findAddressByPersonIDQuery = `
 	SELECT
 		id,
 		person_id,
-		place_id,
-		address_line1,
-		address_line2,
+		street,
+		unit,
 		city,
+		district,
 		state,
 		country,
-		postal_code,
-		formatted_address,
-		lat,
-		lng
+		postal_code
 	FROM address
 	WHERE person_id = $1;
 	`
@@ -111,16 +105,14 @@ const updatePersonByIDQuery = `
 const updateAddressByIDQuery = `
 	UPDATE address
 	SET
-		place_id = $2,
-		address_line1 = $3,
-		address_line2 = $4,
+		person_id = $2,
+		street = $3,
+		unit = $4,
 		city = $5,
-		state = $6,
-		country = $7,
-		postal_code = $8,
-		formatted_address = $9,
-		lat = $10,
-		lng = $11,
+		district = $6,
+		state = $7,
+		country = $8,
+		postal_code = $9,
 		updated_at = NOW()
 	WHERE id = $1;
 	`
