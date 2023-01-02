@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
+	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
-	entity := address.New()
+	entity := newAddress()
 	require.NotNilf(t, entity, "entity should not be nil")
 }
 
@@ -53,9 +54,22 @@ func TestEntity_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			entity := address.New()
+			entity := newAddress()
 			err := entity.Update(tc.payload)
 			tc.assert(t, entity.Components, tc.payload, err)
 		})
 	}
+}
+
+func newAddress() address.Entity {
+	addr := gofakeit.Address()
+	return address.New(uuid.New(), address.Components{
+		Street:     addr.Address,
+		Unit:       addr.Address,
+		City:       addr.City,
+		District:   addr.City,
+		State:      addr.State,
+		Country:    addr.Country,
+		PostalCode: addr.Zip,
+	})
 }

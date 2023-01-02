@@ -16,18 +16,17 @@ type Components struct {
 }
 
 // IsValid checks the validity of the person details.
-func (c Components) IsValid() (bool, error) {
+func (c Components) IsValid() error {
 	err := validator.Struct(c)
 	if err != nil {
-		return false, err
+		return err
 	}
-
-	return true, nil
+	return nil
 }
 
 // Update checks the validity of the address components and updates its value.
 func (c Components) Update(input Components) (Components, error) {
-	_, err := input.IsValid()
+	err := input.IsValid()
 	if err != nil {
 		return Components{}, err
 	}

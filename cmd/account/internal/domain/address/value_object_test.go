@@ -14,7 +14,7 @@ func TestComponents_IsValid(t *testing.T) {
 	testCases := []struct {
 		name    string
 		payload address.Components
-		assert  func(t *testing.T, result bool, err error)
+		assert  func(t *testing.T, err error)
 	}{
 		{
 			name: "valid address components",
@@ -27,18 +27,16 @@ func TestComponents_IsValid(t *testing.T) {
 				Country:    addr.Country,
 				PostalCode: addr.Zip,
 			},
-			assert: func(t *testing.T, result bool, err error) {
+			assert: func(t *testing.T, err error) {
 				errMsg := fmt.Sprintf("address components should be valid: %s", err)
-				require.True(t, result, errMsg)
 				require.Nil(t, err, errMsg)
 			},
 		},
 		{
 			name:    "invalid address components",
 			payload: address.Components{},
-			assert: func(t *testing.T, result bool, err error) {
+			assert: func(t *testing.T, err error) {
 				errMsg := fmt.Sprintf("address components should be invalid: %s", err)
-				require.False(t, result, errMsg)
 				require.NotNil(t, err, errMsg)
 			},
 		},
@@ -46,8 +44,8 @@ func TestComponents_IsValid(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			components := tc.payload
-			ok, err := components.IsValid()
-			tc.assert(t, ok, err)
+			err := components.IsValid()
+			tc.assert(t, err)
 		})
 	}
 }
