@@ -158,6 +158,15 @@ const docTemplate = `{
     "definitions": {
         "dto.CreateAccountRequestDto": {
             "type": "object",
+            "required": [
+                "dateOfBirth",
+                "email",
+                "firstName",
+                "lastName",
+                "locations",
+                "password",
+                "phone"
+            ],
             "properties": {
                 "active": {
                     "type": "boolean"
@@ -174,10 +183,51 @@ const docTemplate = `{
                 "lastName": {
                     "type": "string"
                 },
+                "locations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.CreateAddressRequestDto"
+                    }
+                },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 10
                 },
                 "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateAddressRequestDto": {
+            "type": "object",
+            "required": [
+                "city",
+                "country",
+                "district",
+                "postalCode",
+                "state",
+                "street"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "unit": {
                     "type": "string"
                 }
             }
@@ -194,8 +244,51 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "locations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.LocationResponseDto"
+                    }
+                },
                 "person": {
                     "$ref": "#/definitions/dto.PersonResponseDto"
+                }
+            }
+        },
+        "dto.LocationResponseDto": {
+            "type": "object",
+            "required": [
+                "city",
+                "country",
+                "district",
+                "postalCode",
+                "state",
+                "street"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "unit": {
+                    "type": "string"
                 }
             }
         },

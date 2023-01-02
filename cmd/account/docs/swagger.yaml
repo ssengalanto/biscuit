@@ -11,10 +11,47 @@ definitions:
         type: string
       lastName:
         type: string
+      locations:
+        items:
+          $ref: '#/definitions/dto.CreateAddressRequestDto'
+        type: array
       password:
+        minLength: 10
         type: string
       phone:
         type: string
+    required:
+    - dateOfBirth
+    - email
+    - firstName
+    - lastName
+    - locations
+    - password
+    - phone
+    type: object
+  dto.CreateAddressRequestDto:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      district:
+        type: string
+      postalCode:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      unit:
+        type: string
+    required:
+    - city
+    - country
+    - district
+    - postalCode
+    - state
+    - street
     type: object
   dto.GetAccountResponseDto:
     properties:
@@ -24,8 +61,38 @@ definitions:
         type: string
       id:
         type: string
+      locations:
+        items:
+          $ref: '#/definitions/dto.LocationResponseDto'
+        type: array
       person:
         $ref: '#/definitions/dto.PersonResponseDto'
+    type: object
+  dto.LocationResponseDto:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      district:
+        type: string
+      id:
+        type: string
+      postalCode:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      unit:
+        type: string
+    required:
+    - city
+    - country
+    - district
+    - postalCode
+    - state
+    - street
     type: object
   dto.PersonResponseDto:
     properties:
