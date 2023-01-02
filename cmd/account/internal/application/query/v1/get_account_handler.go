@@ -74,6 +74,22 @@ func (c *GetAccountQueryHandler) Handle(
 }
 
 func transformResponse(entity account.Entity) dto.GetAccountResponseDto {
+	var locations []dto.LocationResponseDto
+
+	for _, addr := range *entity.Person.Address {
+		location := dto.LocationResponseDto{
+			ID:         addr.ID.String(),
+			Street:     addr.Components.Street,
+			Unit:       addr.Components.Unit,
+			City:       addr.Components.City,
+			District:   addr.Components.District,
+			State:      addr.Components.State,
+			Country:    addr.Components.Country,
+			PostalCode: addr.Components.PostalCode,
+		}
+		locations = append(locations, location)
+	}
+
 	return dto.GetAccountResponseDto{
 		ID:     entity.ID.String(),
 		Email:  entity.Email.String(),
@@ -86,5 +102,6 @@ func transformResponse(entity account.Entity) dto.GetAccountResponseDto {
 			Phone:       entity.Person.Details.Phone,
 			DateOfBirth: entity.Person.Details.DateOfBirth,
 		},
+		Locations: locations,
 	}
 }
