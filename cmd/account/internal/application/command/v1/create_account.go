@@ -8,13 +8,14 @@ import (
 
 // CreateAccountCommand contains required fields for account creation.
 type CreateAccountCommand struct {
-	Email       string    `json:"email"`
-	Password    string    `json:"password"`
-	Active      bool      `json:"active"`
-	FirstName   string    `json:"firstName"`
-	LastName    string    `json:"lastName"`
-	Phone       string    `json:"phone"`
-	DateOfBirth time.Time `json:"dateOfBirth"`
+	Email       string                        `json:"email"`
+	Password    string                        `json:"password"`
+	Active      bool                          `json:"active"`
+	FirstName   string                        `json:"firstName"`
+	LastName    string                        `json:"lastName"`
+	Phone       string                        `json:"phone"`
+	DateOfBirth time.Time                     `json:"dateOfBirth"`
+	Locations   []dto.CreateAddressRequestDto `json:"locations"`
 }
 
 // NewCreateAccountCommand creates a new command for account creation.
@@ -27,5 +28,6 @@ func NewCreateAccountCommand(input dto.CreateAccountRequestDto) *CreateAccountCo
 		LastName:    input.LastName,
 		Phone:       input.Phone,
 		DateOfBirth: input.DateOfBirth,
+		Locations:   input.Locations,
 	}
 }
