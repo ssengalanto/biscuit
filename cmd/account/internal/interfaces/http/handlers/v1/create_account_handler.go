@@ -63,6 +63,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		LastName:    request.LastName,
 		Phone:       request.Phone,
 		DateOfBirth: request.DateOfBirth,
+		Locations:   request.Locations,
 	})
 
 	rr, err := c.mediator.Send(ctx, cmd)

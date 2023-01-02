@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
 	"github.com/ssengalanto/potato-project/pkg/errors"
@@ -39,43 +41,106 @@ func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
+	empty := dto.CreateAccountResponseDto{}
 	entity := account.Entity{}
 
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
 		c.log.Error("invalid command", map[string]any{"command": command})
-		return nil, fmt.Errorf("%w: command", errors.ErrInvalid)
+		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
 
-	acct := account.New(command.Email, command.Password, command.Active)
+	acct, err := c.createAccount(command)
+	if err != nil {
+		return empty, err
+	}
+
+	pers, err := c.createPerson(acct.ID, command)
+	if err != nil {
+		return empty, err
+	}
+
+	addrs, err := c.createAddresses(pers.ID, command)
+	if err != nil {
+		return empty, err
+	}
+
+	entity = acct
+	entity.Person = &pers
+	entity.Person.Address = &addrs
+
+	err = c.accountRepository.Create(ctx, entity)
+	if err != nil {
+		return empty, err
+	}
+
+	response := dto.CreateAccountResponseDto{ID: acct.ID.String()}
+	return response, err
+}
+
+func (c *CreateAccountCommandHandler) createAccount(cmd *CreateAccountCommand) (account.Entity, error) {
+	empty := account.Entity{}
+
+	acct := account.New(cmd.Email, cmd.Password, cmd.Active)
 	err := acct.IsValid()
 	if err != nil {
 		c.log.Error("account is invalid", map[string]any{"account": acct, "error": err})
-		return nil, fmt.Errorf("%w: account", errors.ErrInvalid)
+		return empty, fmt.Errorf("%w: account", errors.ErrInvalid)
 	}
 
 	err = acct.HashPassword()
 	if err != nil {
 		c.log.Error("hashing password failed", map[string]any{"account": acct, "error": err})
-		return nil, err
+		return empty, err
 	}
 
-	pers := person.New(acct.ID, command.FirstName, command.LastName, command.Email, command.Phone, command.DateOfBirth)
-	err = pers.IsValid()
+	return acct, nil
+}
+
+func (c *CreateAccountCommandHandler) createPerson(
+	accountID uuid.UUID,
+	cmd *CreateAccountCommand,
+) (person.Entity, error) {
+	empty := person.Entity{}
+
+	pers := person.New(accountID, cmd.FirstName, cmd.LastName, cmd.Email, cmd.Phone, cmd.DateOfBirth)
+	err := pers.IsValid()
 	if err != nil {
 		c.log.Error("person is invalid", map[string]any{"person": pers, "error": err})
-		return nil, fmt.Errorf("%w: person", errors.ErrInvalid)
+		return empty, fmt.Errorf("%w: person", errors.ErrInvalid)
 	}
 
-	entity = acct
-	entity.Person = &pers
+	return pers, nil
+}
 
-	err = c.accountRepository.Create(ctx, entity)
-	if err != nil {
-		return nil, err
+func (c *CreateAccountCommandHandler) createAddresses(
+	personID uuid.UUID,
+	cmd *CreateAccountCommand,
+) ([]address.Entity, error) {
+	var addrs []address.Entity
+
+	c.log.Debug("entity", map[string]any{"entity": cmd.Locations})
+
+	for _, location := range cmd.Locations {
+		component := address.Components{
+			Street:     location.Street,
+			Unit:       location.Unit,
+			City:       location.City,
+			District:   location.District,
+			State:      location.State,
+			Country:    location.Country,
+			PostalCode: location.PostalCode,
+		}
+
+		addr := address.New(personID, component)
+		err := addr.IsValid()
+		if err != nil {
+			c.log.Error("address is invalid", map[string]any{"address": addr, "error": err})
+			return nil, fmt.Errorf("%w: person", errors.ErrInvalid)
+		}
+
+		addrs = append(addrs, addr)
 	}
 
-	response := dto.CreateAccountResponseDto{ID: acct.ID.String()}
-
-	return response, err
+	return addrs, nil
 }
