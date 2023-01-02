@@ -120,16 +120,13 @@ func TestAccountRepository_Create(t *testing.T) {
 		addressStmt.ExpectExec().WithArgs(
 			addr.ID,
 			addr.PersonID,
-			addr.Components.PlaceID,
-			addr.Components.AddressLine1.MustEncodeJSON(),
-			addr.Components.AddressLine2.MustEncodeJSON(),
-			addr.Components.City.MustEncodeJSON(),
-			addr.Components.State.MustEncodeJSON(),
-			addr.Components.Country.MustEncodeJSON(),
-			addr.Components.PostalCode.MustEncodeJSON(),
-			addr.Components.FormattedAddress,
-			addr.Geometry.Lat,
-			addr.Geometry.Lng,
+			addr.Components.Street,
+			addr.Components.Unit,
+			addr.Components.City,
+			addr.Components.District,
+			addr.Components.State,
+			addr.Components.Country,
+			addr.Components.PostalCode,
 		).WillReturnResult(sqlmock.NewResult(0, int64(len(*entity.Person.Address))))
 	}
 
@@ -218,16 +215,14 @@ func TestAccountRepository_Update(t *testing.T) {
 	for _, addr := range *entity.Person.Address {
 		addressStmt.ExpectExec().WithArgs(
 			addr.ID,
-			addr.Components.PlaceID,
-			addr.Components.AddressLine1.MustEncodeJSON(),
-			addr.Components.AddressLine2.MustEncodeJSON(),
-			addr.Components.City.MustEncodeJSON(),
-			addr.Components.State.MustEncodeJSON(),
-			addr.Components.Country.MustEncodeJSON(),
-			addr.Components.PostalCode.MustEncodeJSON(),
-			addr.Components.FormattedAddress,
-			addr.Geometry.Lat,
-			addr.Geometry.Lng,
+			addr.PersonID,
+			addr.Components.Street,
+			addr.Components.Unit,
+			addr.Components.City,
+			addr.Components.District,
+			addr.Components.State,
+			addr.Components.Country,
+			addr.Components.PostalCode,
 		).WillReturnResult(sqlmock.NewResult(0, 1))
 	}
 

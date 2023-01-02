@@ -19,46 +19,21 @@ func TestEntity_Update(t *testing.T) {
 
 	testCases := []struct {
 		name    string
-		payload address.UpdateInput
-		assert  func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error)
+		payload address.Components
+		assert  func(t *testing.T, expected address.Components, actual address.Components, err error)
 	}{
 		{
 			name: "update address success",
-			payload: address.UpdateInput{
-				Components: address.Components{
-					PlaceID: gofakeit.UUID(),
-					AddressLine1: address.Names{
-						ShortName: addr.Street,
-						LongName:  addr.Street,
-					},
-					AddressLine2: address.Names{
-						ShortName: addr.Street,
-						LongName:  addr.Street,
-					},
-					City: address.Names{
-						ShortName: addr.City,
-						LongName:  addr.City,
-					},
-					State: address.Names{
-						ShortName: addr.State,
-						LongName:  addr.State,
-					},
-					Country: address.Names{
-						ShortName: addr.Country,
-						LongName:  addr.Country,
-					},
-					PostalCode: address.Names{
-						ShortName: addr.Zip,
-						LongName:  addr.Zip,
-					},
-					FormattedAddress: addr.Address,
-				},
-				Geometry: address.Geometry{
-					Lat: gofakeit.Latitude(),
-					Lng: gofakeit.Longitude(),
-				},
+			payload: address.Components{
+				Street:     addr.Address,
+				Unit:       addr.Address,
+				City:       addr.City,
+				District:   addr.City,
+				State:      addr.State,
+				Country:    addr.Country,
+				PostalCode: addr.Zip,
 			},
-			assert: func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error) {
+			assert: func(t *testing.T, expected address.Components, actual address.Components, err error) {
 				errMsg := fmt.Sprintf("update address should succeed: %s", err)
 				require.Equal(t, expected, actual, errMsg)
 				require.Nil(t, err, errMsg)
@@ -66,13 +41,10 @@ func TestEntity_Update(t *testing.T) {
 		},
 		{
 			name: "update address failed",
-			payload: address.UpdateInput{
-				Components: address.Components{
-					PlaceID: gofakeit.UUID(),
-				},
-				Geometry: address.Geometry{},
+			payload: address.Components{
+				PostalCode: addr.Zip,
 			},
-			assert: func(t *testing.T, expected address.UpdateInput, actual address.UpdateInput, err error) {
+			assert: func(t *testing.T, expected address.Components, actual address.Components, err error) {
 				errMsg := fmt.Sprintf("update address should fail: %s", err)
 				require.NotEqual(t, expected, actual, errMsg)
 				require.NotNil(t, err, errMsg)
@@ -83,11 +55,7 @@ func TestEntity_Update(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			entity := address.New()
 			err := entity.Update(tc.payload)
-			tc.assert(t,
-				address.UpdateInput{
-					Components: entity.Components,
-					Geometry:   entity.Geometry,
-				}, tc.payload, err)
+			tc.assert(t, entity.Components, tc.payload, err)
 		})
 	}
 }

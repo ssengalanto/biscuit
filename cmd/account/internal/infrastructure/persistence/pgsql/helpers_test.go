@@ -48,36 +48,13 @@ func newAddressEntity(personID uuid.UUID) address.Entity {
 		ID:       uuid.New(),
 		PersonID: personID,
 		Components: address.Components{
-			PlaceID: gofakeit.UUID(),
-			AddressLine1: address.Names{
-				ShortName: addr.Street,
-				LongName:  addr.Street,
-			},
-			AddressLine2: address.Names{
-				ShortName: addr.Street,
-				LongName:  addr.Street,
-			},
-			City: address.Names{
-				ShortName: addr.City,
-				LongName:  addr.City,
-			},
-			State: address.Names{
-				ShortName: addr.State,
-				LongName:  addr.State,
-			},
-			Country: address.Names{
-				ShortName: addr.Country,
-				LongName:  addr.Country,
-			},
-			PostalCode: address.Names{
-				ShortName: addr.Zip,
-				LongName:  addr.Zip,
-			},
-			FormattedAddress: addr.Address,
-		},
-		Geometry: address.Geometry{
-			Lat: gofakeit.Latitude(),
-			Lng: gofakeit.Longitude(),
+			Street:     addr.Address,
+			Unit:       addr.Address,
+			City:       addr.City,
+			District:   addr.City,
+			State:      addr.State,
+			Country:    addr.Country,
+			PostalCode: addr.Zip,
 		},
 	}
 }
@@ -111,16 +88,13 @@ func createAddressRows(entity account.Entity) *sqlmock.Rows {
 		[]string{
 			"id",
 			"person_id",
-			"place_id",
-			"address_line1",
-			"address_line2",
+			"street",
+			"unit",
 			"city",
+			"district",
 			"state",
 			"country",
 			"postal_code",
-			"formatted_address",
-			"lat",
-			"lng",
 		},
 	)
 
@@ -129,16 +103,13 @@ func createAddressRows(entity account.Entity) *sqlmock.Rows {
 			AddRow(
 				addr.ID,
 				addr.PersonID,
-				addr.Components.PlaceID,
-				addr.Components.AddressLine1.MustEncodeJSON(),
-				addr.Components.AddressLine2.MustEncodeJSON(),
-				addr.Components.City.MustEncodeJSON(),
-				addr.Components.State.MustEncodeJSON(),
-				addr.Components.Country.MustEncodeJSON(),
-				addr.Components.PostalCode.MustEncodeJSON(),
-				addr.Components.FormattedAddress,
-				addr.Geometry.Lat,
-				addr.Geometry.Lng,
+				addr.Components.Street,
+				addr.Components.Unit,
+				addr.Components.City,
+				addr.Components.District,
+				addr.Components.State,
+				addr.Components.Country,
+				addr.Components.PostalCode,
 			)
 	}
 
