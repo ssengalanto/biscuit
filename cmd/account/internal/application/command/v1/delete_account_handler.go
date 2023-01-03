@@ -39,26 +39,28 @@ func (d *DeleteAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
+	empty := dto.DeleteAccountResponseDto{}
+
 	command, ok := request.(*DeleteAccountCommand)
 	if !ok {
 		d.log.Error("invalid command", map[string]any{"command": command})
-		return nil, fmt.Errorf("%w: command", errors.ErrInvalid)
+		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
 		d.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return nil, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, command.ID)
+		return empty, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, command.ID)
 	}
 
 	err = d.accountRepository.DeleteByID(ctx, id)
 	if err != nil {
-		return nil, err
+		return empty, err
 	}
 
 	err = d.cache.Delete(ctx, command.ID)
 	if err != nil {
-		return nil, err
+		return empty, err
 	}
 
 	response := dto.DeleteAccountRequestDto{ID: command.ID}
