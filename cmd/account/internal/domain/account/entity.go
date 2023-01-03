@@ -22,8 +22,8 @@ type Entity struct {
 
 // UpdateAddressInput contains all the required fields for updating address entity.
 type UpdateAddressInput struct {
-	ID         uuid.UUID
-	Components address.Components
+	ID         string
+	Components address.UpdateComponentsInput
 }
 
 // New creates a new account entity.
@@ -109,14 +109,14 @@ func (e *Entity) UpdateAddress(inputs []UpdateAddressInput) error {
 
 	for _, input := range inputs {
 		idx := gg.FindIndexOf[address.Entity](addrs, func(addr address.Entity) bool {
-			return addr.ID == input.ID
+			return addr.ID.String() == input.ID
 		})
 
 		if idx == -1 {
 			continue
 		}
 
-		err := addrs[idx].Update(input.Components)
+		err := addrs[idx].UpdateComponents(input.Components)
 		if err != nil {
 			return err
 		}
