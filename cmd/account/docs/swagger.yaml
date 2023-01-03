@@ -109,6 +109,40 @@ definitions:
       phone:
         type: string
     type: object
+  dto.UpdateAccountRequestDto:
+    properties:
+      dateOfBirth:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      locations:
+        items:
+          $ref: '#/definitions/dto.UpdateAddressRequestDto'
+        type: array
+      phone:
+        type: string
+    type: object
+  dto.UpdateAddressRequestDto:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      district:
+        type: string
+      id:
+        type: string
+      postalCode:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      unit:
+        type: string
+    type: object
   errors.Err:
     properties:
       code:
@@ -213,6 +247,40 @@ paths:
           schema:
             $ref: '#/definitions/errors.HTTPError'
       summary: Get account by ID
+      tags:
+      - account
+    patch:
+      consumes:
+      - application/json
+      description: Update an existing account record
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Account data
+        in: body
+        name: UpdateAccountRequestDto
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateAccountRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAccountResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+      summary: Update an account
       tags:
       - account
 swagger: "2.0"
