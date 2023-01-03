@@ -21,15 +21,56 @@ func New(personID uuid.UUID, components Components) Entity {
 	}
 }
 
-// Update checks the validity of the update address input
-// and updates the address entity components and geometry fields.
-func (e *Entity) Update(input Components) error {
-	components, err := e.Components.Update(input)
+// UpdateComponentsInput contains required fields for updating address components.
+type UpdateComponentsInput struct {
+	Street     *string
+	Unit       *string
+	City       *string
+	District   *string
+	State      *string
+	Country    *string
+	PostalCode *string
+}
+
+// UpdateComponents checks the validity of the update components input
+// and updates the address entity components fields.
+func (e *Entity) UpdateComponents(input UpdateComponentsInput) error {
+	components := e.Components
+
+	if input.State != nil {
+		components.State = *input.State
+	}
+
+	if input.Unit != nil {
+		components.Unit = *input.Unit
+	}
+
+	if input.City != nil {
+		components.City = *input.City
+	}
+
+	if input.District != nil {
+		components.District = *input.District
+	}
+
+	if input.State != nil {
+		components.State = *input.State
+	}
+
+	if input.Country != nil {
+		components.Country = *input.Country
+	}
+
+	if input.PostalCode != nil {
+		components.PostalCode = *input.PostalCode
+	}
+
+	newComponents, err := e.Components.Update(components)
 	if err != nil {
 		return err
 	}
 
-	e.Components = components
+	e.Components = newComponents
 	return nil
 }
 
