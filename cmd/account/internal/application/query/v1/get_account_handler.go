@@ -31,11 +31,11 @@ func NewGetAccountQueryHandler(
 	}
 }
 
-func (c *GetAccountQueryHandler) Name() string {
+func (g *GetAccountQueryHandler) Name() string {
 	return fmt.Sprintf("%T", &GetAccountQuery{})
 }
 
-func (c *GetAccountQueryHandler) Handle(
+func (g *GetAccountQueryHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
@@ -44,11 +44,12 @@ func (c *GetAccountQueryHandler) Handle(
 
 	query, ok := request.(*GetAccountQuery)
 	if !ok {
-		c.log.Error("invalid query", map[string]any{"query": query})
+		g.log.Error("invalid query", map[string]any{"query": query})
 		return nil, fmt.Errorf("%w: query", errors.ErrInvalid)
 	}
+	g.log.Info(fmt.Sprintf("executing %s", g.Name()), nil)
 
-	cachedAccount, err := c.cache.Get(ctx, query.ID)
+	cachedAccount, err := g.cache.Get(ctx, query.ID)
 	if err != nil {
 		return empty, err
 	}
@@ -59,16 +60,16 @@ func (c *GetAccountQueryHandler) Handle(
 
 	id, err := uuid.Parse(query.ID)
 	if err != nil {
-		c.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
+		g.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
 		return nil, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, query.ID)
 	}
 
-	result, err = c.accountRepository.FindByID(ctx, id)
+	result, err = g.accountRepository.FindByID(ctx, id)
 	if err != nil {
 		return empty, err
 	}
 
-	c.cache.Set(ctx, result.ID.String(), result)
+	g.cache.Set(ctx, result.ID.String(), result)
 
 	return transformResponse(result), err
 }

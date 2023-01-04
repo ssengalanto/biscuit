@@ -49,6 +49,7 @@ func (c *CreateAccountCommandHandler) Handle(
 		c.log.Error("invalid command", map[string]any{"command": command})
 		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
+	c.log.Info(fmt.Sprintf("executing %s", c.Name()), nil)
 
 	acct, err := c.createAccount(command)
 	if err != nil {

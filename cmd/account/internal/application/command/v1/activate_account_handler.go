@@ -46,6 +46,7 @@ func (a *ActivateAccountCommandHandler) Handle(
 		a.log.Error("invalid command", map[string]any{"command": command})
 		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
+	a.log.Info(fmt.Sprintf("executing %s", a.Name()), nil)
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
