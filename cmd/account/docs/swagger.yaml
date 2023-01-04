@@ -312,4 +312,33 @@ paths:
       summary: Activate an account
       tags:
       - account
+  /api/v1/account/{id}/deactivate:
+    patch:
+      consumes:
+      - application/json
+      description: Deactivate an existing account record
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAccountResponseDto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.HTTPError'
+      summary: Deactivate an account
+      tags:
+      - account
 swagger: "2.0"
