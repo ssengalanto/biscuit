@@ -70,5 +70,5 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusCreated, response)
+	json.MustEncodeResponse(w, http.StatusOK, response)
 }
