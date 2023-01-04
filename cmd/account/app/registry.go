@@ -31,6 +31,9 @@ func RegisterHTTPHandlers(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 			updateAccountHandler := httphv1.NewUpdateAccountHandler(logger, mediator)
 			r.Patch("/account/{id}", updateAccountHandler.Handle)
 
+			activateAccountHandler := httphv1.NewActivateAccountHandler(logger, mediator)
+			r.Patch("/account/{id}/activate", activateAccountHandler.Handle)
+
 			deleteAccountHandler := httphv1.NewDeleteAccountHandler(logger, mediator)
 			r.Delete("/account/{id}", deleteAccountHandler.Handle)
 		})
@@ -57,6 +60,12 @@ func RegisterMediatrHandlers(
 
 	updateAccountCommandHandler := cmdv1.NewUpdateAccountCommandHandler(logger, repository, c)
 	err = m.RegisterRequestHandler(updateAccountCommandHandler)
+	if err != nil {
+		logger.Fatal(err.Error(), nil)
+	}
+
+	activateAccountCommandHandler := cmdv1.NewActivateAccountCommandHandler(logger, repository, c)
+	err = m.RegisterRequestHandler(activateAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
