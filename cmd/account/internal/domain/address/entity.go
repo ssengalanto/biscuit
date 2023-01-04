@@ -37,8 +37,8 @@ type UpdateComponentsInput struct {
 func (e *Entity) UpdateComponents(input UpdateComponentsInput) error {
 	components := e.Components
 
-	if input.State != nil {
-		components.State = *input.State
+	if input.Street != nil {
+		components.Street = *input.Street
 	}
 
 	if input.Unit != nil {
