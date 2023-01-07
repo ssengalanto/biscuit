@@ -27,15 +27,18 @@ func Run() {
 
 	db, err := pgsql.NewConnection(cfg.GetString(constants.PgsqlDSN))
 	if err != nil {
-		slog.Fatal("connection failed", map[string]any{"err": err})
+		slog.Fatal(err.Error(), map[string]any{"err": err})
 	}
 	defer db.Close()
 
-	rdb := redis.NewUniversalClient(
+	rdb, err := redis.NewUniversalClient(
 		fmt.Sprintf("%s:%d", cfg.GetString(constants.RedisURL), cfg.GetInt(constants.RedisPort)),
 		cfg.GetInt(constants.RedisDB),
 		cfg.GetString(constants.RedisPassword),
 	)
+	if err != nil {
+		slog.Fatal(err.Error(), map[string]any{"err": err})
+	}
 	defer rdb.Close()
 
 	repo := repository.NewAccountRepository(slog, db)
