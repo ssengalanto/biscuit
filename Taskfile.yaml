@@ -1,6 +1,9 @@
 version: "3"
 
-dotenv: [ '.env.development' ]
+env:
+  ENV: development
+
+dotenv: [ '.env.{{ENV}}' ]
 
 includes:
   app:
