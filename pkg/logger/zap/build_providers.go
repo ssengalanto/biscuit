@@ -1,7 +1,7 @@
 package zap
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/constants"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

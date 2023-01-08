@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
-	"github.com/ssengalanto/potato-project/pkg/errors"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/hex/pkg/errors"
+	"github.com/ssengalanto/hex/pkg/interfaces"
 )
 
 // GetAccountQueryHandler - query handler struct for account creation, satisfies mediatr.RequestHandler.

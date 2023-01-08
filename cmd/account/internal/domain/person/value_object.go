@@ -3,7 +3,7 @@ package person
 import (
 	"time"
 
-	"github.com/ssengalanto/potato-project/pkg/validator"
+	"github.com/ssengalanto/hex/pkg/validator"
 )
 
 // Details contains the core fields for person entity.

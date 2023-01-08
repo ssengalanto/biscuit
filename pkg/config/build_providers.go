@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/config/viper"
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/config/viper"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/interfaces"
 )
 
 type buildProvider interface {

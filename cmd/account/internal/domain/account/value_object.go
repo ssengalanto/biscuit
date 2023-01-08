@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/validator"
+	"github.com/ssengalanto/hex/pkg/validator"
 	"golang.org/x/crypto/bcrypt"
 )
 

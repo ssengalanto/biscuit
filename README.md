@@ -1,2 +1,2 @@
-# Potato Project ![workflow](https://github.com/ssengalanto/potato-project/actions/workflows/ci.yaml/badge.svg)
+# Hex ![workflow](https://github.com/ssengalanto/hex/actions/workflows/ci.yaml/badge.svg)
 ![Gopher Wiz](./assets/ssengalanto-gopher-wiz.png)

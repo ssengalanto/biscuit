@@ -3,7 +3,7 @@ package mock_test
 import (
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/mock"
+	"github.com/ssengalanto/hex/pkg/mock"
 	"github.com/stretchr/testify/require"
 )
 

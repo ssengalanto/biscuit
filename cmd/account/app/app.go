@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"log"
 
-	repository "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
-	"github.com/ssengalanto/potato-project/pkg/config"
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/logger"
-	"github.com/ssengalanto/potato-project/pkg/pgsql"
-	"github.com/ssengalanto/potato-project/pkg/redis"
-	"github.com/ssengalanto/potato-project/pkg/server"
+	repository "github.com/ssengalanto/hex/cmd/account/internal/infrastructure/persistence/pgsql"
+	"github.com/ssengalanto/hex/pkg/config"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/logger"
+	"github.com/ssengalanto/hex/pkg/pgsql"
+	"github.com/ssengalanto/hex/pkg/redis"
+	"github.com/ssengalanto/hex/pkg/server"
 )
 
 // Run bootstrap and runs the application.

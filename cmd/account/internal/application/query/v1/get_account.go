@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
 )
 
 // GetAccountQuery contains required fields for account retrieval.

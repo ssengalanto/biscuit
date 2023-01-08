@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/http/response"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/http/response"
 )
 
 // EncodeResponse encodes the payload to JSON format, if the encoding fails it will return an error.

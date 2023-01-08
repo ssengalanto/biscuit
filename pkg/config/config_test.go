@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/config"
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/config"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/interfaces"
 	"github.com/stretchr/testify/require"
 )
 

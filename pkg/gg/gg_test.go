@@ -3,7 +3,7 @@ package gg_test
 import (
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/gg"
+	"github.com/ssengalanto/hex/pkg/gg"
 	"github.com/stretchr/testify/require"
 )
 

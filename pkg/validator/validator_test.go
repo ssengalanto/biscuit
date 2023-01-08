@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/ssengalanto/potato-project/pkg/validator"
+	"github.com/ssengalanto/hex/pkg/validator"
 	"github.com/stretchr/testify/require"
 )
 

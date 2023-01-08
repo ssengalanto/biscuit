@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/interfaces"
 )
 
 // New creates a new config instance for specific config type and environment.

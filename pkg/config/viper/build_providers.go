@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/spf13/viper"
-	"github.com/ssengalanto/potato-project/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/constants"
 )
 
 type buildProvider interface {
@@ -62,7 +62,7 @@ func (p production) build() (*viper.Viper, error) {
 
 // createViperInstance creates a new viper instance for specific environment.
 func createViperInstance(env string) (*viper.Viper, error) {
-	pkg := "potato-project"
+	pkg := "hex"
 
 	wd, err := os.Getwd()
 	if err != nil {

@@ -3,15 +3,15 @@ package app
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-redis/redis/v8"
-	_ "github.com/ssengalanto/potato-project/cmd/account/docs" //notlint:revive //unnecessary
-	cmdv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/command/v1"
-	qv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/query/v1"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
-	cache "github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/cache/redis"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
-	httphv1 "github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http/handlers/v1"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/mediatr"
+	_ "github.com/ssengalanto/hex/cmd/account/docs" //notlint:revive //unnecessary
+	cmdv1 "github.com/ssengalanto/hex/cmd/account/internal/application/command/v1"
+	qv1 "github.com/ssengalanto/hex/cmd/account/internal/application/query/v1"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
+	cache "github.com/ssengalanto/hex/cmd/account/internal/infrastructure/cache/redis"
+	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/http"
+	httphv1 "github.com/ssengalanto/hex/cmd/account/internal/interfaces/http/handlers/v1"
+	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/mediatr"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 

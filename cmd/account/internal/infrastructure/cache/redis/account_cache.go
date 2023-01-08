@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/hex/pkg/interfaces"
 )
 
 type AccountCache struct {

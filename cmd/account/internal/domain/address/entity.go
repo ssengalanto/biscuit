@@ -2,7 +2,7 @@ package address
 
 import (
 	"github.com/google/uuid"
-	"github.com/ssengalanto/potato-project/pkg/validator"
+	"github.com/ssengalanto/hex/pkg/validator"
 )
 
 // Entity - address entity struct.

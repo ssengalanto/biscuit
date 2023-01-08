@@ -1,4 +1,4 @@
-module github.com/ssengalanto/potato-project
+module github.com/ssengalanto/hex
 
 go 1.19
 

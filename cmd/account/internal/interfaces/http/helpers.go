@@ -3,10 +3,10 @@ package http
 import (
 	"net/http"
 
-	"github.com/ssengalanto/potato-project/pkg/errors"
-	"github.com/ssengalanto/potato-project/pkg/http/response/json"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/validator"
+	"github.com/ssengalanto/hex/pkg/errors"
+	"github.com/ssengalanto/hex/pkg/http/response/json"
+	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/validator"
 )
 
 func ValidateRequest(w http.ResponseWriter, log interfaces.Logger, req any) bool {

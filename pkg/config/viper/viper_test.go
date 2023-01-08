@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/config/viper"
+	"github.com/ssengalanto/hex/pkg/config/viper"
 	"github.com/stretchr/testify/require"
 )
 

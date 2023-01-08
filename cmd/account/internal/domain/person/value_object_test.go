@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/person"
 	"github.com/stretchr/testify/require"
 )
 

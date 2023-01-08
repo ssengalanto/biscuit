@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/address"
 )
 
 // Address pgsql model.

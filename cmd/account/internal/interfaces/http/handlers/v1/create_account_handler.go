@@ -5,15 +5,15 @@ import (
 	"context"
 	"net/http"
 
-	cmdv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/command/v1"
-	qv1 "github.com/ssengalanto/potato-project/cmd/account/internal/application/query/v1"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
-	apphttp "github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/http"
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/errors"
-	"github.com/ssengalanto/potato-project/pkg/http/response/json"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/mediatr"
+	cmdv1 "github.com/ssengalanto/hex/cmd/account/internal/application/command/v1"
+	qv1 "github.com/ssengalanto/hex/cmd/account/internal/application/query/v1"
+	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
+	apphttp "github.com/ssengalanto/hex/cmd/account/internal/interfaces/http"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/errors"
+	"github.com/ssengalanto/hex/pkg/http/response/json"
+	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/mediatr"
 )
 
 // CreateAccountHandler - http handler struct for account creation.

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ssengalanto/potato-project/pkg/errors"
-	httpjson "github.com/ssengalanto/potato-project/pkg/http/response/json"
+	"github.com/ssengalanto/hex/pkg/errors"
+	httpjson "github.com/ssengalanto/hex/pkg/http/response/json"
 	"github.com/stretchr/testify/require"
 )
 

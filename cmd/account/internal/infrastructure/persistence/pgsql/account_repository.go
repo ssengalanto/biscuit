@@ -9,13 +9,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgerrcode"
 	"github.com/jmoiron/sqlx"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/address"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/domain/person"
-	apperr "github.com/ssengalanto/potato-project/pkg/errors"
-	"github.com/ssengalanto/potato-project/pkg/gg"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/pgsql"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/hex/cmd/account/internal/domain/person"
+	apperr "github.com/ssengalanto/hex/pkg/errors"
+	"github.com/ssengalanto/hex/pkg/gg"
+	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/pgsql"
 )
 
 // AccountRepository - account repository struct.

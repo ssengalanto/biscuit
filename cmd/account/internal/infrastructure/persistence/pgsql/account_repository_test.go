@@ -8,8 +8,8 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
-	"github.com/ssengalanto/potato-project/cmd/account/internal/infrastructure/persistence/pgsql"
-	"github.com/ssengalanto/potato-project/pkg/mock"
+	"github.com/ssengalanto/hex/cmd/account/internal/infrastructure/persistence/pgsql"
+	"github.com/ssengalanto/hex/pkg/mock"
 	"github.com/stretchr/testify/require"
 )
 

@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	httpjson "github.com/ssengalanto/potato-project/pkg/http/response/json"
+	httpjson "github.com/ssengalanto/hex/pkg/http/response/json"
 	"github.com/stretchr/testify/require"
 )
 

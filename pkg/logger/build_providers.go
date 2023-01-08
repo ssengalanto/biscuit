@@ -1,9 +1,9 @@
 package logger
 
 import (
-	"github.com/ssengalanto/potato-project/pkg/constants"
-	"github.com/ssengalanto/potato-project/pkg/interfaces"
-	"github.com/ssengalanto/potato-project/pkg/logger/zap"
+	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/hex/pkg/logger/zap"
 )
 
 type buildProvider interface {

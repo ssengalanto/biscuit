@@ -3,7 +3,7 @@ package v1
 import (
 	"time"
 
-	"github.com/ssengalanto/potato-project/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
 )
 
 // CreateAccountCommand contains required fields for account creation.
