@@ -11,7 +11,7 @@ import (
 
 func TestNew(t *testing.T) {
 	entity := newAccountEntity()
-	require.NotNilf(t, entity, "entity should not be nil")
+	require.NotNil(t, entity, "entity should not be nil")
 }
 
 func TestEntity_IsActive(t *testing.T) {

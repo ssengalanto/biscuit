@@ -18,7 +18,7 @@ func TestNew(t *testing.T) {
 		assert     func(t *testing.T, result interfaces.Config, err error)
 	}{
 		// TODO: disabled temporary due to github workflow env path
-		//{
+		// {
 		//	name:       "valid env",
 		//	env:        constants.Dev,
 		//	configType: constants.ViperConfigType,
@@ -27,7 +27,7 @@ func TestNew(t *testing.T) {
 		//		require.NotNil(t, result, errMsg)
 		//		require.Nil(t, err, errMsg)
 		//	},
-		//},
+		// },
 		{
 			name:       "invalid env",
 			env:        "invalid",
