@@ -10,7 +10,7 @@ import (
 	"syscall"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/constants"
 )
 
 type Server struct {

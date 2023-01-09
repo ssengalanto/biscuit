@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
 // New creates a new config instance for specific config type and environment.

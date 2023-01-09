@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	apperr "github.com/ssengalanto/hex/pkg/errors"
+	apperr "github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
 

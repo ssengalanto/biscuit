@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ssengalanto/hex/pkg/config"
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/config"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 	"github.com/stretchr/testify/require"
 )
 

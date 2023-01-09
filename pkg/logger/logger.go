@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
 // New creates a new logger instance for specific log type and environment.

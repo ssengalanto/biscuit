@@ -1,9 +1,9 @@
 package logger
 
 import (
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/interfaces"
-	"github.com/ssengalanto/hex/pkg/logger/zap"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/logger/zap"
 )
 
 type buildProvider interface {

@@ -4,9 +4,9 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/address"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
 )
 
 // newAccountEntity creates a new account.Entity with mock values.

@@ -3,7 +3,7 @@ package gg_test
 import (
 	"testing"
 
-	"github.com/ssengalanto/hex/pkg/gg"
+	"github.com/ssengalanto/biscuit/pkg/gg"
 	"github.com/stretchr/testify/require"
 )
 

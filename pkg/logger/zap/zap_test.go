@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/logger/zap"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap/zapcore"

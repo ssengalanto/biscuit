@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"go.uber.org/zap/zaptest/observer"

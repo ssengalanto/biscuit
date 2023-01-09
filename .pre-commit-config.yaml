@@ -6,7 +6,7 @@ repos:
       - id: check-yaml
       - id: check-json
       - id: end-of-file-fixer
-  - repo: https://github.com/ssengalanto/go-pre-commit-hooks
+  - repo: https://github.com/ssengalanto/revidere
     rev: v1.0.0
     hooks:
       - id: go-fmt

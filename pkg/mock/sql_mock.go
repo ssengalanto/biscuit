@@ -4,7 +4,7 @@ package mock
 import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jmoiron/sqlx"
-	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/constants"
 )
 
 // NewSqlDb returns a sqlx stub.

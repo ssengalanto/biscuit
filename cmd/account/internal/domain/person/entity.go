@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/address"
-	"github.com/ssengalanto/hex/pkg/validator"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/biscuit/pkg/validator"
 )
 
 // Entity - person entity struct.

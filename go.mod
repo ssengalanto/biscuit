@@ -1,4 +1,4 @@
-module github.com/ssengalanto/hex
+module github.com/ssengalanto/biscuit
 
 go 1.19
 

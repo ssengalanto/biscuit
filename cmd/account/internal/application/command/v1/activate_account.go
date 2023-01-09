@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
 )
 
 // ActivateAccountCommand contains required fields for account activation.

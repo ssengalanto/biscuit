@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/constants"
 )
 
 // NewConnection initializes a new postgres database connection pool.

@@ -3,10 +3,10 @@ package http
 import (
 	"net/http"
 
-	"github.com/ssengalanto/hex/pkg/errors"
-	"github.com/ssengalanto/hex/pkg/http/response/json"
-	"github.com/ssengalanto/hex/pkg/interfaces"
-	"github.com/ssengalanto/hex/pkg/validator"
+	"github.com/ssengalanto/biscuit/pkg/errors"
+	"github.com/ssengalanto/biscuit/pkg/http/response/json"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/validator"
 )
 
 func ValidateRequest(w http.ResponseWriter, log interfaces.Logger, req any) bool {

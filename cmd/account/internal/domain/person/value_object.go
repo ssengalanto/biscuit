@@ -3,7 +3,7 @@ package person
 import (
 	"time"
 
-	"github.com/ssengalanto/hex/pkg/validator"
+	"github.com/ssengalanto/biscuit/pkg/validator"
 )
 
 // Details contains the core fields for person entity.

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ssengalanto/hex/pkg/http/errors"
+	"github.com/ssengalanto/biscuit/pkg/http/errors"
 )
 
 // EncodeError encodes HTTP error into JSON format.

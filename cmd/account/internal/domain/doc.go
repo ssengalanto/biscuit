@@ -1,4 +1,4 @@
-// Copyright 2022 Ssen Galanto. All rights reserved.
+// Copyright 2023 Ssen Galanto. All rights reserved.
 
 /*
 Package domain is the core layer of the software, it contains the data

@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/hex/cmd/account/internal/interfaces/dto"
-	"github.com/ssengalanto/hex/pkg/errors"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/biscuit/pkg/errors"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
 // DeactivateAccountCommandHandler - command handler struct for account deactivation, satisfies mediatr.RequestHandler.

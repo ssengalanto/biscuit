@@ -9,13 +9,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgerrcode"
 	"github.com/jmoiron/sqlx"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/address"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/person"
-	apperr "github.com/ssengalanto/hex/pkg/errors"
-	"github.com/ssengalanto/hex/pkg/gg"
-	"github.com/ssengalanto/hex/pkg/interfaces"
-	"github.com/ssengalanto/hex/pkg/pgsql"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
+	apperr "github.com/ssengalanto/biscuit/pkg/errors"
+	"github.com/ssengalanto/biscuit/pkg/gg"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/pgsql"
 )
 
 // AccountRepository - account repository struct.

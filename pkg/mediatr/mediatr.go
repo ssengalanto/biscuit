@@ -6,7 +6,7 @@ import (
 	"reflect"
 
 	"github.com/ahmetb/go-linq/v3"
-	"github.com/ssengalanto/hex/pkg/gg"
+	"github.com/ssengalanto/biscuit/pkg/gg"
 )
 
 type Mediatr struct {

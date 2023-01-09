@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/ssengalanto/hex/pkg/config/viper"
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/config/viper"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
 type buildProvider interface {

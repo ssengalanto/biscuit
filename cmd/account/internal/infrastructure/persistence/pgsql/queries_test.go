@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ssengalanto/hex/cmd/account/internal/infrastructure/persistence/pgsql"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/stretchr/testify/require"
 )
 

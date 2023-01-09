@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	apperror "github.com/ssengalanto/hex/pkg/errors"
+	apperror "github.com/ssengalanto/biscuit/pkg/errors"
 )
 
 type HTTPError struct {

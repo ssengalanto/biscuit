@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
 )
 
 // Person pgsql model.

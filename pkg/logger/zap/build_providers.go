@@ -1,7 +1,7 @@
 package zap
 
 import (
-	"github.com/ssengalanto/hex/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/constants"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

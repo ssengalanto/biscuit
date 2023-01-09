@@ -1,7 +1,7 @@
 package address
 
 import (
-	"github.com/ssengalanto/hex/pkg/validator"
+	"github.com/ssengalanto/biscuit/pkg/validator"
 )
 
 // Components contains the core fields for address entity.

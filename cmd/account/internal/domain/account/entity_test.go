@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/ssengalanto/hex/cmd/account/internal/domain/account"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
 	"github.com/stretchr/testify/require"
 )
 

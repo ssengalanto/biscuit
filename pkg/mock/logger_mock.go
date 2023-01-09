@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/golang/mock/gomock"
-	"github.com/ssengalanto/hex/pkg/interfaces"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
 // LoggerRecorder is the mock recorder for MockLogger.

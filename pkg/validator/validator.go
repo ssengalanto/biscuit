@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	v "github.com/go-playground/validator/v10"
-	"github.com/ssengalanto/hex/pkg/errors"
+	"github.com/ssengalanto/biscuit/pkg/errors"
 )
 
 var validator *v.Validate

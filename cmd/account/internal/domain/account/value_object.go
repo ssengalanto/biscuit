@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/ssengalanto/hex/pkg/validator"
+	"github.com/ssengalanto/biscuit/pkg/validator"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"log"
 
-	repository "github.com/ssengalanto/hex/cmd/account/internal/infrastructure/persistence/pgsql"
-	"github.com/ssengalanto/hex/pkg/config"
-	"github.com/ssengalanto/hex/pkg/constants"
-	"github.com/ssengalanto/hex/pkg/logger"
-	"github.com/ssengalanto/hex/pkg/pgsql"
-	"github.com/ssengalanto/hex/pkg/redis"
-	"github.com/ssengalanto/hex/pkg/server"
+	repository "github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/persistence/pgsql"
+	"github.com/ssengalanto/biscuit/pkg/config"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/logger"
+	"github.com/ssengalanto/biscuit/pkg/pgsql"
+	"github.com/ssengalanto/biscuit/pkg/redis"
+	"github.com/ssengalanto/biscuit/pkg/server"
 )
 
 // Run bootstrap and runs the application.

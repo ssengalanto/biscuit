@@ -1,4 +1,4 @@
-// Copyright 2022 Ssen Galanto. All rights reserved.
+// Copyright 2023 Ssen Galanto. All rights reserved.
 
 /*
 Package interfaces is a layer that holds everything that other systems interacts with - Primary/Driving Adapters.
