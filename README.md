@@ -1,2 +1,2 @@
-# Hex ![workflow](https://github.com/ssengalanto/hex/actions/workflows/ci.yaml/badge.svg)
+# biscuit ![workflow](https://github.com/ssengalanto/biscuit/actions/workflows/ci.yaml/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/ssengalanto/biscuit)](https://goreportcard.com/report/github.com/ssengalanto/biscuit) [![Coverage Status](https://coveralls.io/repos/github/ssengalanto/biscuit/badge.svg?branch=main)](https://coveralls.io/github/ssengalanto/biscuit?branch=main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Gopher Wiz](./assets/ssengalanto-gopher-wiz.png)
