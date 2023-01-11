@@ -12,17 +12,17 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/constants"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
-	"github.com/ssengalanto/biscuit/pkg/mediatr"
+	"github.com/ssengalanto/midt"
 )
 
 // GetAccountHandler - http handler struct for account retrieval.
 type GetAccountHandler struct {
 	log      interfaces.Logger
-	mediator *mediatr.Mediatr
+	mediator *midt.Midt
 }
 
 // NewGetAccountHandler creates a new http handler for handling account retrieval.
-func NewGetAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *GetAccountHandler {
+func NewGetAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *GetAccountHandler {
 	return &GetAccountHandler{log: logger, mediator: mediator}
 }
 

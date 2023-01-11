@@ -13,17 +13,17 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/constants"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
-	"github.com/ssengalanto/biscuit/pkg/mediatr"
+	"github.com/ssengalanto/midt"
 )
 
 // ActivateAccountHandler - http handler struct for account activation.
 type ActivateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *mediatr.Mediatr
+	mediator *midt.Midt
 }
 
 // NewActivateAccountHandler creates a new http handler for handling account activation.
-func NewActivateAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *ActivateAccountHandler {
+func NewActivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *ActivateAccountHandler {
 	return &ActivateAccountHandler{log: logger, mediator: mediator}
 }
 

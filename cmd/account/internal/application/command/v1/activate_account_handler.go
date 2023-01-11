@@ -11,7 +11,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// ActivateAccountCommandHandler - command handler struct for account activation, satisfies mediatr.RequestHandler.
+// ActivateAccountCommandHandler - command handler struct for account activation, satisfies midt.RequestHandler.
 type ActivateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository

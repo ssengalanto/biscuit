@@ -14,17 +14,17 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
-	"github.com/ssengalanto/biscuit/pkg/mediatr"
+	"github.com/ssengalanto/midt"
 )
 
 // UpdateAccountHandler - http handler struct for updating account.
 type UpdateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *mediatr.Mediatr
+	mediator *midt.Midt
 }
 
 // NewUpdateAccountHandler creates a new http handler for handling account updates.
-func NewUpdateAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *UpdateAccountHandler {
+func NewUpdateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *UpdateAccountHandler {
 	return &UpdateAccountHandler{log: logger, mediator: mediator}
 }
 

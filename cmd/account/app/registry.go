@@ -11,12 +11,12 @@ import (
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
 	httphv1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http/handlers/v1"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
-	"github.com/ssengalanto/biscuit/pkg/mediatr"
+	"github.com/ssengalanto/midt"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // RegisterHTTPHandlers - http registry.
-func RegisterHTTPHandlers(logger interfaces.Logger, mediator *mediatr.Mediatr) *chi.Mux {
+func RegisterHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mux {
 	r := http.NewRouter()
 	r.Mount("/swagger", httpSwagger.WrapHandler)
 
@@ -45,13 +45,13 @@ func RegisterHTTPHandlers(logger interfaces.Logger, mediator *mediatr.Mediatr) *
 	return r
 }
 
-// RegisterMediatrHandlers - mediatr registry.
-func RegisterMediatrHandlers(
+// RegisterMediatorHandlers - mediator registry.
+func RegisterMediatorHandlers(
 	logger interfaces.Logger,
 	repository account.Repository,
 	rdb redis.UniversalClient,
-) *mediatr.Mediatr {
-	m := mediatr.New()
+) *midt.Midt {
+	m := midt.New()
 	c := cache.New(logger, rdb)
 
 	// v1 commands

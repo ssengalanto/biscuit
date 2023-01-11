@@ -13,7 +13,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// UpdateAccountCommandHandler - command handler struct for updating account, satisfies mediatr.RequestHandler.
+// UpdateAccountCommandHandler - command handler struct for updating account, satisfies midt.RequestHandler.
 type UpdateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository

@@ -13,7 +13,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// CreateAccountCommandHandler - command handler struct for account retrieval, satisfies mediatr.RequestHandler.
+// CreateAccountCommandHandler - command handler struct for account retrieval, satisfies midt.RequestHandler.
 type CreateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository

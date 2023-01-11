@@ -11,7 +11,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// DeleteAccountCommandHandler - command handler struct for account deletion, satisfies mediatr.RequestHandler.
+// DeleteAccountCommandHandler - command handler struct for account deletion, satisfies midt.RequestHandler.
 type DeleteAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository

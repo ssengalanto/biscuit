@@ -13,17 +13,17 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/constants"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
-	"github.com/ssengalanto/biscuit/pkg/mediatr"
+	"github.com/ssengalanto/midt"
 )
 
 // DeactivateAccountHandler - http handler struct for account deactivation.
 type DeactivateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *mediatr.Mediatr
+	mediator *midt.Midt
 }
 
 // NewDeactivateAccountHandler creates a new http handler for handling account deactivation.
-func NewDeactivateAccountHandler(logger interfaces.Logger, mediator *mediatr.Mediatr) *DeactivateAccountHandler {
+func NewDeactivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *DeactivateAccountHandler {
 	return &DeactivateAccountHandler{log: logger, mediator: mediator}
 }
 

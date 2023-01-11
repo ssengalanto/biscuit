@@ -11,7 +11,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// DeactivateAccountCommandHandler - command handler struct for account deactivation, satisfies mediatr.RequestHandler.
+// DeactivateAccountCommandHandler - command handler struct for account deactivation, satisfies midt.RequestHandler.
 type DeactivateAccountCommandHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository

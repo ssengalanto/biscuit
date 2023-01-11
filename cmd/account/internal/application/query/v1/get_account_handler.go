@@ -11,7 +11,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
-// GetAccountQueryHandler - query handler struct for account creation, satisfies mediatr.RequestHandler.
+// GetAccountQueryHandler - query handler struct for account creation, satisfies midt.RequestHandler.
 type GetAccountQueryHandler struct {
 	log               interfaces.Logger
 	accountRepository account.Repository
