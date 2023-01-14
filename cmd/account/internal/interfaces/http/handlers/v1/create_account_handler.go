@@ -29,14 +29,14 @@ func NewCreateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Cre
 
 // Handle
 // @Tags account
-// @Summary Create a new account
-// @Description Creates a new account
+// @Summary Create a new account.
+// @Description Creates a new account in the database with the provided request body.
 // @Accept json
 // @Produce json
-// @Param CreateAccountRequest body dto.CreateAccountRequest true "Account data"
-// @Success 201 {object} dto.GetAccountResponse
-// @Failure 400 {object} errors.HTTPError
-// @Failure 500 {object} errors.HTTPError
+// @Param CreateAccountRequest body CreateAccountRequest true "Account data"
+// @Success 201 {object} GetAccountResponse
+// @Failure 400 {object} HTTPError
+// @Failure 500 {object} HTTPError
 // @Router /api/v1/account [post]
 func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)

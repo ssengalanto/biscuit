@@ -29,14 +29,14 @@ func NewDeleteAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Del
 
 // Handle
 // @Tags account
-// @Summary Delete an account
-// @Description Delete an existing account record
+// @Summary Delete an existing account.
+// @Description Deletes an existing account record that matches the provided ID including its associated data.
 // @Accept json
 // @Produce json
-// @Param id path string true "Account ID"
-// @Success 200 {object} dto.GetAccountResponse
-// @Failure 400 {object} errors.HTTPError
-// @Failure 500 {object} errors.HTTPError
+// @Param id path string true "Account ID" example("0b6ecded-fa9d-4b39-a309-9ef501de15f4")
+// @Success 200 {object} GetAccountResponse
+// @Failure 400 {object} HTTPError
+// @Failure 500 {object} HTTPError
 // @Router /api/v1/account/{id} [delete]
 func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)

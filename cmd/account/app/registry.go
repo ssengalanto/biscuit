@@ -18,7 +18,7 @@ import (
 // RegisterHTTPHandlers - http registry.
 func RegisterHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mux {
 	r := http.NewRouter()
-	r.Mount("/swagger", httpSwagger.WrapHandler)
+	r.Mount("/swagger/docs", httpSwagger.WrapHandler)
 
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {

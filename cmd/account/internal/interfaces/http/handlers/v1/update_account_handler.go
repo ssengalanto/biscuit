@@ -30,15 +30,15 @@ func NewUpdateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Upd
 
 // Handle
 // @Tags account
-// @Summary Update an account
-// @Description Update an existing account record
+// @Summary Update an existing account.
+// @Description Updates an existing account in the database with the provided request body.
 // @Accept json
 // @Produce json
-// @Param id path string true "Account ID"
-// @Param UpdateAccountRequest body dto.UpdateAccountRequest true "Account data"
-// @Success 200 {object} dto.GetAccountResponse
-// @Failure 400 {object} errors.HTTPError
-// @Failure 500 {object} errors.HTTPError
+// @Param id path string true "Account ID" example("0b6ecded-fa9d-4b39-a309-9ef501de15f4")
+// @Param UpdateAccountRequest body UpdateAccountRequest true "Account data"
+// @Success 200 {object} GetAccountResponse
+// @Failure 400 {object} HTTPError
+// @Failure 500 {object} HTTPError
 // @Router /api/v1/account/{id} [patch]
 func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)

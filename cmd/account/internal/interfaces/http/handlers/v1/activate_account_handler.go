@@ -29,14 +29,14 @@ func NewActivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *A
 
 // Handle
 // @Tags account
-// @Summary Activate an account
-// @Description Activate an existing account record
+// @Summary Activate an existing account.
+// @Description Activate an existing account record that matches the provided ID.
 // @Accept json
 // @Produce json
-// @Param id path string true "Account ID"
-// @Success 200 {object} dto.GetAccountResponse
-// @Failure 400 {object} errors.HTTPError
-// @Failure 500 {object} errors.HTTPError
+// @Param id path string true "Account ID" example("0b6ecded-fa9d-4b39-a309-9ef501de15f4")
+// @Success 200 {object} GetAccountResponse
+// @Failure 400 {object} HTTPError
+// @Failure 500 {object} HTTPError
 // @Router /api/v1/account/{id}/activate [patch]
 func (a *ActivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)

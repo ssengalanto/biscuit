@@ -1,24 +1,31 @@
 definitions:
-  dto.CreateAccountRequestDto:
+  CreateAccountRequest:
     properties:
       active:
+        example: true
         type: boolean
       dateOfBirth:
+        example: "2000-2-20"
         type: string
       email:
+        example: johndoe@example.com
         type: string
       firstName:
+        example: John
         type: string
       lastName:
+        example: Doe
         type: string
       locations:
         items:
-          $ref: '#/definitions/dto.CreateAddressRequestDto'
+          $ref: '#/definitions/CreateAddressRequest'
         type: array
       password:
+        example: t5eC9E6ldLmaf
         minLength: 10
         type: string
       phone:
+        example: "09066871243"
         type: string
     required:
     - dateOfBirth
@@ -29,21 +36,28 @@ definitions:
     - password
     - phone
     type: object
-  dto.CreateAddressRequestDto:
+  CreateAddressRequest:
     properties:
       city:
+        example: San Pedro
         type: string
       country:
+        example: Philippines
         type: string
       district:
+        example: Laguna
         type: string
       postalCode:
+        example: "4023"
         type: string
       state:
+        example: Calabarzon
         type: string
       street:
+        example: 365 Talon I Real 1740
         type: string
       unit:
+        example: Unit 206 Rm. 5
         type: string
     required:
     - city
@@ -53,107 +67,86 @@ definitions:
     - state
     - street
     type: object
-  dto.GetAccountResponseDto:
-    properties:
-      active:
-        type: boolean
-      email:
-        type: string
-      id:
-        type: string
-      locations:
-        items:
-          $ref: '#/definitions/dto.LocationResponseDto'
-        type: array
-      person:
-        $ref: '#/definitions/dto.PersonResponseDto'
-    type: object
-  dto.LocationResponseDto:
-    properties:
-      city:
-        type: string
-      country:
-        type: string
-      district:
-        type: string
-      id:
-        type: string
-      postalCode:
-        type: string
-      state:
-        type: string
-      street:
-        type: string
-      unit:
-        type: string
-    required:
-    - city
-    - country
-    - district
-    - postalCode
-    - state
-    - street
-    type: object
-  dto.PersonResponseDto:
-    properties:
-      dateOfBirth:
-        type: string
-      email:
-        type: string
-      firstName:
-        type: string
-      id:
-        type: string
-      lastName:
-        type: string
-      phone:
-        type: string
-    type: object
-  dto.UpdateAccountRequestDto:
-    properties:
-      dateOfBirth:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      locations:
-        items:
-          $ref: '#/definitions/dto.UpdateAddressRequestDto'
-        type: array
-      phone:
-        type: string
-    type: object
-  dto.UpdateAddressRequestDto:
-    properties:
-      city:
-        type: string
-      country:
-        type: string
-      district:
-        type: string
-      id:
-        type: string
-      postalCode:
-        type: string
-      state:
-        type: string
-      street:
-        type: string
-      unit:
-        type: string
-    type: object
-  errors.Err:
+  Err:
     properties:
       code:
         type: integer
       message:
         type: string
     type: object
-  errors.HTTPError:
+  GetAccountResponse:
+    properties:
+      dateOfBirth:
+        example: "2000-2-20"
+        type: string
+      email:
+        example: johndoe@example.com
+        type: string
+      firstName:
+        example: John
+        type: string
+      id:
+        example: 63237c24-c6f3-49bd-808b-e7764e75ebd1
+        type: string
+      lastName:
+        example: Doe
+        type: string
+      phone:
+        example: "09066871243"
+        type: string
+    type: object
+  HTTPError:
     properties:
       error:
-        $ref: '#/definitions/errors.Err'
+        $ref: '#/definitions/Err'
+    type: object
+  UpdateAccountRequest:
+    properties:
+      dateOfBirth:
+        example: "2000-2-20"
+        type: string
+      firstName:
+        example: John
+        type: string
+      lastName:
+        example: Doe
+        type: string
+      locations:
+        items:
+          $ref: '#/definitions/dto.UpdateAddressRequest'
+        type: array
+      phone:
+        example: "09066871243"
+        type: string
+    type: object
+  dto.UpdateAddressRequest:
+    properties:
+      city:
+        example: San Pedro
+        type: string
+      country:
+        example: Philippines
+        type: string
+      district:
+        example: Laguna
+        type: string
+      id:
+        example: 3d3e36e1-9533-4408-8677-9d693a9ed8d4
+        type: string
+      postalCode:
+        example: "4023"
+        type: string
+      state:
+        example: Calabarzon
+        type: string
+      street:
+        example: 365 Talon I Real 1740
+        type: string
+      unit:
+        example: Unit 206 Rm. 5
+        type: string
+    required:
+    - street
     type: object
 info:
   contact: {}
@@ -162,39 +155,42 @@ paths:
     post:
       consumes:
       - application/json
-      description: Creates a new account
+      description: Creates a new account in the database with the provided request
+        body.
       parameters:
       - description: Account data
         in: body
-        name: CreateAccountRequestDto
+        name: CreateAccountRequest
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateAccountRequestDto'
+          $ref: '#/definitions/CreateAccountRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Create a new account
+            $ref: '#/definitions/HTTPError'
+      summary: Create a new account.
       tags:
       - account
   /api/v1/account/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete an existing account record
+      description: Deletes an existing account record that matches the provided ID
+        including its associated data.
       parameters:
       - description: Account ID
+        example: '"0b6ecded-fa9d-4b39-a309-9ef501de15f4"'
         in: path
         name: id
         required: true
@@ -205,24 +201,26 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Delete an account
+            $ref: '#/definitions/HTTPError'
+      summary: Delete an existing account.
       tags:
       - account
     get:
       consumes:
       - application/json
-      description: Get account record by account ID.
+      description: Retrieves an existing account record that matches the provided
+        ID.
       parameters:
       - description: Account ID
+        example: '"0b6ecded-fa9d-4b39-a309-9ef501de15f4"'
         in: path
         name: id
         required: true
@@ -233,63 +231,66 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Get account by ID
+            $ref: '#/definitions/HTTPError'
+      summary: Retrieve an existing account.
       tags:
       - account
     patch:
       consumes:
       - application/json
-      description: Update an existing account record
+      description: Updates an existing account in the database with the provided request
+        body.
       parameters:
       - description: Account ID
+        example: '"0b6ecded-fa9d-4b39-a309-9ef501de15f4"'
         in: path
         name: id
         required: true
         type: string
       - description: Account data
         in: body
-        name: UpdateAccountRequestDto
+        name: UpdateAccountRequest
         required: true
         schema:
-          $ref: '#/definitions/dto.UpdateAccountRequestDto'
+          $ref: '#/definitions/UpdateAccountRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Update an account
+            $ref: '#/definitions/HTTPError'
+      summary: Update an existing account.
       tags:
       - account
   /api/v1/account/{id}/activate:
     patch:
       consumes:
       - application/json
-      description: Activate an existing account record
+      description: Activate an existing account record that matches the provided ID.
       parameters:
       - description: Account ID
+        example: '"0b6ecded-fa9d-4b39-a309-9ef501de15f4"'
         in: path
         name: id
         required: true
@@ -300,25 +301,27 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Activate an account
+            $ref: '#/definitions/HTTPError'
+      summary: Activate an existing account.
       tags:
       - account
   /api/v1/account/{id}/deactivate:
     patch:
       consumes:
       - application/json
-      description: Deactivate an existing account record
+      description: Deactivate an existing account record that matches the provided
+        ID.
       parameters:
       - description: Account ID
+        example: '"0b6ecded-fa9d-4b39-a309-9ef501de15f4"'
         in: path
         name: id
         required: true
@@ -329,16 +332,16 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.GetAccountResponseDto'
+            $ref: '#/definitions/GetAccountResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/errors.HTTPError'
+            $ref: '#/definitions/HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/errors.HTTPError'
-      summary: Deactivate an account
+            $ref: '#/definitions/HTTPError'
+      summary: Deactivate an existing account.
       tags:
       - account
 swagger: "2.0"

@@ -18,7 +18,7 @@ const docTemplate = `{
     "paths": {
         "/api/v1/account": {
             "post": {
-                "description": "Creates a new account",
+                "description": "Creates a new account in the database with the provided request body.",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,15 +28,15 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Create a new account",
+                "summary": "Create a new account.",
                 "parameters": [
                     {
                         "description": "Account data",
-                        "name": "CreateAccountRequestDto",
+                        "name": "CreateAccountRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateAccountRequestDto"
+                            "$ref": "#/definitions/CreateAccountRequest"
                         }
                     }
                 ],
@@ -44,19 +44,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
@@ -64,7 +64,7 @@ const docTemplate = `{
         },
         "/api/v1/account/{id}": {
             "get": {
-                "description": "Get account record by account ID.",
+                "description": "Retrieves an existing account record that matches the provided ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -74,10 +74,11 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Get account by ID",
+                "summary": "Retrieve an existing account.",
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "\"0b6ecded-fa9d-4b39-a309-9ef501de15f4\"",
                         "description": "Account ID",
                         "name": "id",
                         "in": "path",
@@ -88,31 +89,31 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Delete an existing account record",
+                "description": "Deletes an existing account record that matches the provided ID including its associated data.",
                 "consumes": [
                     "application/json"
                 ],
@@ -122,10 +123,11 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Delete an account",
+                "summary": "Delete an existing account.",
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "\"0b6ecded-fa9d-4b39-a309-9ef501de15f4\"",
                         "description": "Account ID",
                         "name": "id",
                         "in": "path",
@@ -136,25 +138,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
             },
             "patch": {
-                "description": "Update an existing account record",
+                "description": "Updates an existing account in the database with the provided request body.",
                 "consumes": [
                     "application/json"
                 ],
@@ -164,10 +166,11 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Update an account",
+                "summary": "Update an existing account.",
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "\"0b6ecded-fa9d-4b39-a309-9ef501de15f4\"",
                         "description": "Account ID",
                         "name": "id",
                         "in": "path",
@@ -175,11 +178,11 @@ const docTemplate = `{
                     },
                     {
                         "description": "Account data",
-                        "name": "UpdateAccountRequestDto",
+                        "name": "UpdateAccountRequest",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateAccountRequestDto"
+                            "$ref": "#/definitions/UpdateAccountRequest"
                         }
                     }
                 ],
@@ -187,19 +190,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
@@ -207,7 +210,7 @@ const docTemplate = `{
         },
         "/api/v1/account/{id}/activate": {
             "patch": {
-                "description": "Activate an existing account record",
+                "description": "Activate an existing account record that matches the provided ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -217,10 +220,11 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Activate an account",
+                "summary": "Activate an existing account.",
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "\"0b6ecded-fa9d-4b39-a309-9ef501de15f4\"",
                         "description": "Account ID",
                         "name": "id",
                         "in": "path",
@@ -231,19 +235,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
@@ -251,7 +255,7 @@ const docTemplate = `{
         },
         "/api/v1/account/{id}/deactivate": {
             "patch": {
-                "description": "Deactivate an existing account record",
+                "description": "Deactivate an existing account record that matches the provided ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -261,10 +265,11 @@ const docTemplate = `{
                 "tags": [
                     "account"
                 ],
-                "summary": "Deactivate an account",
+                "summary": "Deactivate an existing account.",
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "\"0b6ecded-fa9d-4b39-a309-9ef501de15f4\"",
                         "description": "Account ID",
                         "name": "id",
                         "in": "path",
@@ -275,19 +280,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GetAccountResponseDto"
+                            "$ref": "#/definitions/GetAccountResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/errors.HTTPError"
+                            "$ref": "#/definitions/HTTPError"
                         }
                     }
                 }
@@ -295,7 +300,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CreateAccountRequestDto": {
+        "CreateAccountRequest": {
             "type": "object",
             "required": [
                 "dateOfBirth",
@@ -308,36 +313,43 @@ const docTemplate = `{
             ],
             "properties": {
                 "active": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "example": true
                 },
                 "dateOfBirth": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2000-2-20"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "johndoe@example.com"
                 },
                 "firstName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "John"
                 },
                 "lastName": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doe"
                 },
                 "locations": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.CreateAddressRequestDto"
+                        "$ref": "#/definitions/CreateAddressRequest"
                     }
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 10
+                    "minLength": 10,
+                    "example": "t5eC9E6ldLmaf"
                 },
                 "phone": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "09066871243"
                 }
             }
         },
-        "dto.CreateAddressRequestDto": {
+        "CreateAddressRequest": {
             "type": "object",
             "required": [
                 "city",
@@ -349,164 +361,36 @@ const docTemplate = `{
             ],
             "properties": {
                 "city": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "San Pedro"
                 },
                 "country": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Philippines"
                 },
                 "district": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Laguna"
                 },
                 "postalCode": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "4023"
                 },
                 "state": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Calabarzon"
                 },
                 "street": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "365 Talon I Real 1740"
                 },
                 "unit": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Unit 206 Rm. 5"
                 }
             }
         },
-        "dto.GetAccountResponseDto": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "locations": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.LocationResponseDto"
-                    }
-                },
-                "person": {
-                    "$ref": "#/definitions/dto.PersonResponseDto"
-                }
-            }
-        },
-        "dto.LocationResponseDto": {
-            "type": "object",
-            "required": [
-                "city",
-                "country",
-                "district",
-                "postalCode",
-                "state",
-                "street"
-            ],
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "country": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "postalCode": {
-                    "type": "string"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "unit": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.PersonResponseDto": {
-            "type": "object",
-            "properties": {
-                "dateOfBirth": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "firstName": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "lastName": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.UpdateAccountRequestDto": {
-            "type": "object",
-            "properties": {
-                "dateOfBirth": {
-                    "type": "string"
-                },
-                "firstName": {
-                    "type": "string"
-                },
-                "lastName": {
-                    "type": "string"
-                },
-                "locations": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dto.UpdateAddressRequestDto"
-                    }
-                },
-                "phone": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.UpdateAddressRequestDto": {
-            "type": "object",
-            "properties": {
-                "city": {
-                    "type": "string"
-                },
-                "country": {
-                    "type": "string"
-                },
-                "district": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "postalCode": {
-                    "type": "string"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "street": {
-                    "type": "string"
-                },
-                "unit": {
-                    "type": "string"
-                }
-            }
-        },
-        "errors.Err": {
+        "Err": {
             "type": "object",
             "properties": {
                 "code": {
@@ -517,11 +401,107 @@ const docTemplate = `{
                 }
             }
         },
-        "errors.HTTPError": {
+        "GetAccountResponse": {
+            "type": "object",
+            "properties": {
+                "dateOfBirth": {
+                    "type": "string",
+                    "example": "2000-2-20"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@example.com"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "63237c24-c6f3-49bd-808b-e7764e75ebd1"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "09066871243"
+                }
+            }
+        },
+        "HTTPError": {
             "type": "object",
             "properties": {
                 "error": {
-                    "$ref": "#/definitions/errors.Err"
+                    "$ref": "#/definitions/Err"
+                }
+            }
+        },
+        "UpdateAccountRequest": {
+            "type": "object",
+            "properties": {
+                "dateOfBirth": {
+                    "type": "string",
+                    "example": "2000-2-20"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "locations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UpdateAddressRequest"
+                    }
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "09066871243"
+                }
+            }
+        },
+        "dto.UpdateAddressRequest": {
+            "type": "object",
+            "required": [
+                "street"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "example": "San Pedro"
+                },
+                "country": {
+                    "type": "string",
+                    "example": "Philippines"
+                },
+                "district": {
+                    "type": "string",
+                    "example": "Laguna"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "3d3e36e1-9533-4408-8677-9d693a9ed8d4"
+                },
+                "postalCode": {
+                    "type": "string",
+                    "example": "4023"
+                },
+                "state": {
+                    "type": "string",
+                    "example": "Calabarzon"
+                },
+                "street": {
+                    "type": "string",
+                    "example": "365 Talon I Real 1740"
+                },
+                "unit": {
+                    "type": "string",
+                    "example": "Unit 206 Rm. 5"
                 }
             }
         }

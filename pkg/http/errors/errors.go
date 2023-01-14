@@ -9,12 +9,12 @@ import (
 
 type HTTPError struct {
 	Error Err `json:"error"`
-}
+} // @name HTTPError
 
 type Err struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-}
+} // @name Err
 
 // NewHTTPError returns a new HTTP error which accepts an error parameter that will be mapped
 // to the corresponding application error.
