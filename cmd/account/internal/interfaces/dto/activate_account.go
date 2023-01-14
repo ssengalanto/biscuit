@@ -1,11 +1,11 @@
 package dto
 
-// ActivateAccountRequestDto - activate account request dto.
-type ActivateAccountRequestDto struct {
+// ActivateAccountRequest - activate account request dto.
+type ActivateAccountRequest struct {
 	ID string `json:"id" validate:"required,uuid"`
 }
 
-// ActivateAccountResponseDto - activate account response dto.
-type ActivateAccountResponseDto struct {
+// ActivateAccountResponse - activate account response dto.
+type ActivateAccountResponse struct {
 	ID string `json:"id"`
 }

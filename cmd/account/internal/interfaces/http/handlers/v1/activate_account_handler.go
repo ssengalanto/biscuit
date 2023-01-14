@@ -44,7 +44,7 @@ func (a *ActivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) 
 
 	id := chi.URLParam(r, "id")
 
-	actreq := dto.ActivateAccountRequestDto{ID: id}
+	actreq := dto.ActivateAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, a.log, actreq) {
 		return
 	}

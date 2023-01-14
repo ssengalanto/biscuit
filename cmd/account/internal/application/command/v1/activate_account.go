@@ -10,7 +10,7 @@ type ActivateAccountCommand struct {
 }
 
 // NewActivateAccountCommand creates a new command for account activation.
-func NewActivateAccountCommand(input dto.ActivateAccountRequestDto) *ActivateAccountCommand {
+func NewActivateAccountCommand(input dto.ActivateAccountRequest) *ActivateAccountCommand {
 	return &ActivateAccountCommand{
 		ID: input.ID,
 	}

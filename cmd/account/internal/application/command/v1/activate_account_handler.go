@@ -39,7 +39,7 @@ func (a *ActivateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.ActivateAccountResponseDto{}
+	empty := dto.ActivateAccountResponse{}
 
 	command, ok := request.(*ActivateAccountCommand)
 	if !ok {
@@ -71,7 +71,7 @@ func (a *ActivateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.ActivateAccountResponseDto{ID: command.ID}
+	response := dto.ActivateAccountResponse{ID: command.ID}
 
 	return response, err
 }
