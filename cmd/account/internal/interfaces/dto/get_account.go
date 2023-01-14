@@ -2,13 +2,13 @@ package dto
 
 import "time"
 
-// GetAccountRequestDto - get account request dto.
-type GetAccountRequestDto struct {
+// GetAccountRequest - get account request dto.
+type GetAccountRequest struct {
 	ID string `json:"id" validate:"required,uuid"`
 }
 
-// PersonResponseDto - person field response dto.
-type PersonResponseDto struct {
+// PersonResponse - person field response dto.
+type PersonResponse struct {
 	ID          string    `json:"id"`
 	FirstName   string    `json:"firstName"`
 	LastName    string    `json:"lastName"`
@@ -17,8 +17,8 @@ type PersonResponseDto struct {
 	DateOfBirth time.Time `json:"dateOfBirth"`
 }
 
-// LocationResponseDto - address field response dto.
-type LocationResponseDto struct {
+// LocationResponse - address field response dto.
+type LocationResponse struct {
 	ID         string `json:"id"`
 	Street     string `json:"street" validate:"required"`
 	Unit       string `json:"unit,omitempty"`
@@ -29,11 +29,11 @@ type LocationResponseDto struct {
 	PostalCode string `json:"postalCode" validate:"required"`
 }
 
-// GetAccountResponseDto - get account response dto.
-type GetAccountResponseDto struct {
-	ID        string                `json:"id"`
-	Email     string                `json:"email"`
-	Active    bool                  `json:"active"`
-	Person    PersonResponseDto     `json:"person"`
-	Locations []LocationResponseDto `json:"locations"`
+// GetAccountResponse - get account response dto.
+type GetAccountResponse struct {
+	ID        string             `json:"id"`
+	Email     string             `json:"email"`
+	Active    bool               `json:"active"`
+	Person    PersonResponse     `json:"person"`
+	Locations []LocationResponse `json:"locations"`
 }

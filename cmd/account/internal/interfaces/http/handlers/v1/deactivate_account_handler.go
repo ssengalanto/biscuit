@@ -34,7 +34,7 @@ func NewDeactivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) 
 // @Accept json
 // @Produce json
 // @Param id path string true "Account ID"
-// @Success 200 {object} dto.GetAccountResponseDto
+// @Success 200 {object} dto.GetAccountResponse
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account/{id}/deactivate [patch]
@@ -57,7 +57,7 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	getreq := dto.GetAccountRequestDto{ID: id}
+	getreq := dto.GetAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, d.log, getreq) {
 		return
 	}

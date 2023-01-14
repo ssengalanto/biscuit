@@ -36,7 +36,7 @@ func NewUpdateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Upd
 // @Produce json
 // @Param id path string true "Account ID"
 // @Param UpdateAccountRequestDto body dto.UpdateAccountRequestDto true "Account data"
-// @Success 200 {object} dto.GetAccountResponseDto
+// @Success 200 {object} dto.GetAccountResponse
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
 // @Router /api/v1/account/{id} [patch]
@@ -82,7 +82,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		json.MustEncodeError(w, errors.ErrInvalid)
 	}
 
-	q := qv1.NewGetAccountQuery(dto.GetAccountRequestDto{ID: resource.ID}) //nolint:gosimple //explicit
+	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: resource.ID}) //nolint:gosimple //explicit
 	response, err := u.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)

@@ -33,7 +33,7 @@ func NewGetAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *GetAcc
 // @Accept json
 // @Produce json
 // @Param id path string true "Account ID"
-// @Success 200 {object} dto.GetAccountResponseDto
+// @Success 200 {object} dto.GetAccountResponse
 // @Failure 400 {object} errors.HTTPError
 // @Failure 404 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
@@ -44,7 +44,7 @@ func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	request := dto.GetAccountRequestDto{ID: id}
+	request := dto.GetAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, c.log, request) {
 		return
 	}

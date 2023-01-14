@@ -40,7 +40,7 @@ func (g *GetAccountQueryHandler) Handle(
 	request any,
 ) (any, error) {
 	var result account.Entity
-	empty := dto.GetAccountResponseDto{}
+	empty := dto.GetAccountResponse{}
 
 	query, ok := request.(*GetAccountQuery)
 	if !ok {
@@ -74,11 +74,11 @@ func (g *GetAccountQueryHandler) Handle(
 	return transformResponse(result), err
 }
 
-func transformResponse(entity account.Entity) dto.GetAccountResponseDto {
-	var locations []dto.LocationResponseDto
+func transformResponse(entity account.Entity) dto.GetAccountResponse {
+	var locations []dto.LocationResponse
 
 	for _, addr := range *entity.Person.Address {
-		location := dto.LocationResponseDto{
+		location := dto.LocationResponse{
 			ID:         addr.ID.String(),
 			Street:     addr.Components.Street,
 			Unit:       addr.Components.Unit,
@@ -91,11 +91,11 @@ func transformResponse(entity account.Entity) dto.GetAccountResponseDto {
 		locations = append(locations, location)
 	}
 
-	return dto.GetAccountResponseDto{
+	return dto.GetAccountResponse{
 		ID:     entity.ID.String(),
 		Email:  entity.Email.String(),
 		Active: entity.Active,
-		Person: dto.PersonResponseDto{
+		Person: dto.PersonResponse{
 			ID:          entity.Person.ID.String(),
 			FirstName:   entity.Person.Details.FirstName,
 			LastName:    entity.Person.Details.LastName,

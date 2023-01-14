@@ -10,7 +10,7 @@ type GetAccountQuery struct {
 }
 
 // NewGetAccountQuery creates a new query for account retrieval.
-func NewGetAccountQuery(input dto.GetAccountRequestDto) *GetAccountQuery {
+func NewGetAccountQuery(input dto.GetAccountRequest) *GetAccountQuery {
 	return &GetAccountQuery{
 		ID: input.ID,
 	}
