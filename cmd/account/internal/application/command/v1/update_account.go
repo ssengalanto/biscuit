@@ -8,16 +8,16 @@ import (
 
 // UpdateAccountCommand contains required fields for updating account.
 type UpdateAccountCommand struct {
-	ID          string                         `json:"id"`
-	FirstName   *string                        `json:"firstName"`
-	LastName    *string                        `json:"lastName"`
-	Phone       *string                        `json:"phone"`
-	DateOfBirth *time.Time                     `json:"dateOfBirth"`
-	Locations   *[]dto.UpdateAddressRequestDto `json:"locations"`
+	ID          string                      `json:"id"`
+	FirstName   *string                     `json:"firstName"`
+	LastName    *string                     `json:"lastName"`
+	Phone       *string                     `json:"phone"`
+	DateOfBirth *time.Time                  `json:"dateOfBirth"`
+	Locations   *[]dto.UpdateAddressRequest `json:"locations"`
 }
 
 // NewUpdateAccountCommand creates a new command for updating account.
-func NewUpdateAccountCommand(accountID string, input dto.UpdateAccountRequestDto) *UpdateAccountCommand {
+func NewUpdateAccountCommand(accountID string, input dto.UpdateAccountRequest) *UpdateAccountCommand {
 	return &UpdateAccountCommand{
 		ID:          accountID,
 		FirstName:   input.FirstName,

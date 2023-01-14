@@ -41,7 +41,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.UpdateAccountResponseDto{}
+	empty := dto.UpdateAccountResponse{}
 
 	command, ok := request.(*UpdateAccountCommand)
 	if !ok {
@@ -76,7 +76,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.UpdateAccountResponseDto{ID: command.ID}
+	response := dto.UpdateAccountResponse{ID: command.ID}
 
 	return response, err
 }

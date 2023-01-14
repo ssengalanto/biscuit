@@ -2,17 +2,17 @@ package dto
 
 import "time"
 
-// UpdateAccountRequestDto - update account request dto.
-type UpdateAccountRequestDto struct {
-	FirstName   *string                    `json:"firstName"`
-	LastName    *string                    `json:"lastName"`
-	Phone       *string                    `json:"phone"`
-	DateOfBirth *time.Time                 `json:"dateOfBirth"`
-	Locations   *[]UpdateAddressRequestDto `json:"locations"`
+// UpdateAccountRequest - update account request dto.
+type UpdateAccountRequest struct {
+	FirstName   *string                 `json:"firstName"`
+	LastName    *string                 `json:"lastName"`
+	Phone       *string                 `json:"phone"`
+	DateOfBirth *time.Time              `json:"dateOfBirth"`
+	Locations   *[]UpdateAddressRequest `json:"locations"`
 }
 
-// UpdateAddressRequestDto - update address request dto.
-type UpdateAddressRequestDto struct {
+// UpdateAddressRequest - update address request dto.
+type UpdateAddressRequest struct {
 	ID         string  `json:"id"`
 	Street     *string `json:"street"`
 	Unit       *string `json:"unit"`
@@ -23,7 +23,7 @@ type UpdateAddressRequestDto struct {
 	PostalCode *string `json:"postalCode"`
 }
 
-// UpdateAccountResponseDto - update account response dto.
-type UpdateAccountResponseDto struct {
+// UpdateAccountResponse - update account response dto.
+type UpdateAccountResponse struct {
 	ID string `json:"id"`
 }

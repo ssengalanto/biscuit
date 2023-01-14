@@ -35,7 +35,7 @@ func NewUpdateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Upd
 // @Accept json
 // @Produce json
 // @Param id path string true "Account ID"
-// @Param UpdateAccountRequestDto body dto.UpdateAccountRequestDto true "Account data"
+// @Param UpdateAccountRequest body dto.UpdateAccountRequest true "Account data"
 // @Success 200 {object} dto.GetAccountResponse
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
@@ -46,7 +46,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	var request dto.UpdateAccountRequestDto
+	var request dto.UpdateAccountRequest
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
@@ -61,7 +61,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	cmd := cmdv1.NewUpdateAccountCommand(
 		id,
-		dto.UpdateAccountRequestDto{
+		dto.UpdateAccountRequest{
 			FirstName:   request.FirstName,
 			LastName:    request.LastName,
 			Phone:       request.Phone,
@@ -76,7 +76,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resource, ok := rr.(dto.UpdateAccountResponseDto)
+	resource, ok := rr.(dto.UpdateAccountResponse)
 	if !ok {
 		u.log.Error("invalid resource", map[string]any{"resource": resource})
 		json.MustEncodeError(w, errors.ErrInvalid)
