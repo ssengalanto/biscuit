@@ -44,7 +44,7 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 
 	id := chi.URLParam(r, "id")
 
-	deactreq := dto.DeactivateAccountRequestDto{ID: id}
+	deactreq := dto.DeactivateAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, d.log, deactreq) {
 		return
 	}

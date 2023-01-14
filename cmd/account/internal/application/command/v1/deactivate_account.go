@@ -10,7 +10,7 @@ type DeactivateAccountCommand struct {
 }
 
 // NewDeactivateAccountCommand creates a new command for account deactivation.
-func NewDeactivateAccountCommand(input dto.DeactivateAccountRequestDto) *DeactivateAccountCommand {
+func NewDeactivateAccountCommand(input dto.DeactivateAccountRequest) *DeactivateAccountCommand {
 	return &DeactivateAccountCommand{
 		ID: input.ID,
 	}

@@ -1,11 +1,11 @@
 package dto
 
-// DeactivateAccountRequestDto - deactivate account request dto.
-type DeactivateAccountRequestDto struct {
+// DeactivateAccountRequest - deactivate account request dto.
+type DeactivateAccountRequest struct {
 	ID string `json:"id" validate:"required,uuid"`
 }
 
-// DeactivateAccountResponseDto - deactivate account response dto.
-type DeactivateAccountResponseDto struct {
+// DeactivateAccountResponse - deactivate account response dto.
+type DeactivateAccountResponse struct {
 	ID string `json:"id"`
 }
