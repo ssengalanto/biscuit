@@ -39,7 +39,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.DeleteAccountResponseDto{}
+	empty := dto.DeleteAccountResponse{}
 
 	command, ok := request.(*DeleteAccountCommand)
 	if !ok {
@@ -64,7 +64,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.DeleteAccountRequestDto{ID: command.ID}
+	response := dto.DeleteAccountRequest{ID: command.ID}
 
 	return response, err
 }

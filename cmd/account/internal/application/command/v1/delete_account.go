@@ -10,7 +10,7 @@ type DeleteAccountCommand struct {
 }
 
 // NewDeleteAccountCommand creates a new command for account deletion.
-func NewDeleteAccountCommand(input dto.DeleteAccountRequestDto) *DeleteAccountCommand {
+func NewDeleteAccountCommand(input dto.DeleteAccountRequest) *DeleteAccountCommand {
 	return &DeleteAccountCommand{
 		ID: input.ID,
 	}

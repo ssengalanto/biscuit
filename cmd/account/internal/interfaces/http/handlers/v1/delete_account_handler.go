@@ -57,7 +57,7 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	delreq := dto.DeleteAccountRequestDto{ID: id}
+	delreq := dto.DeleteAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, c.log, delreq) {
 		return
 	}
