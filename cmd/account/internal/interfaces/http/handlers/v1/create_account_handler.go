@@ -33,7 +33,7 @@ func NewCreateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *Cre
 // @Description Creates a new account
 // @Accept json
 // @Produce json
-// @Param CreateAccountRequestDto body dto.CreateAccountRequestDto true "Account data"
+// @Param CreateAccountRequest body dto.CreateAccountRequest true "Account data"
 // @Success 201 {object} dto.GetAccountResponseDto
 // @Failure 400 {object} errors.HTTPError
 // @Failure 500 {object} errors.HTTPError
@@ -42,7 +42,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()
 
-	var request dto.CreateAccountRequestDto
+	var request dto.CreateAccountRequest
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
@@ -55,7 +55,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cmd := cmdv1.NewCreateAccountCommand(dto.CreateAccountRequestDto{
+	cmd := cmdv1.NewCreateAccountCommand(dto.CreateAccountRequest{
 		Email:       request.Email,
 		Password:    request.Password,
 		Active:      request.Active,
@@ -72,7 +72,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resource, ok := rr.(dto.CreateAccountResponseDto)
+	resource, ok := rr.(dto.CreateAccountResponse)
 	if !ok {
 		c.log.Error("invalid resource", map[string]any{"resource": resource})
 		json.MustEncodeError(w, errors.ErrInvalid)

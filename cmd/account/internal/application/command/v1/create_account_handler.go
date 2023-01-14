@@ -41,7 +41,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.CreateAccountResponseDto{}
+	empty := dto.CreateAccountResponse{}
 	entity := account.Entity{}
 
 	command, ok := request.(*CreateAccountCommand)
@@ -75,7 +75,7 @@ func (c *CreateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.CreateAccountResponseDto{ID: acct.ID.String()}
+	response := dto.CreateAccountResponse{ID: acct.ID.String()}
 	return response, err
 }
 
