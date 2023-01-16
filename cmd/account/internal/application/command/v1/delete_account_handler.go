@@ -46,7 +46,6 @@ func (d *DeleteAccountCommandHandler) Handle(
 		d.log.Error("invalid command", map[string]any{"command": command})
 		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
-	d.log.Info(fmt.Sprintf("executing %s", d.Name()), nil)
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {

@@ -47,7 +47,6 @@ func (g *GetAccountQueryHandler) Handle(
 		g.log.Error("invalid query", map[string]any{"query": query})
 		return nil, fmt.Errorf("%w: query", errors.ErrInvalid)
 	}
-	g.log.Info(fmt.Sprintf("executing %s", g.Name()), nil)
 
 	cachedAccount, err := g.cache.Get(ctx, query.ID)
 	if err != nil {

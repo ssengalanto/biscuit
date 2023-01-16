@@ -48,7 +48,6 @@ func (u *UpdateAccountCommandHandler) Handle(
 		u.log.Error("invalid command", map[string]any{"command": command})
 		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
 	}
-	u.log.Info(fmt.Sprintf("executing %s", u.Name()), nil)
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
