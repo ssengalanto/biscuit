@@ -5,7 +5,7 @@ definitions:
         example: true
         type: boolean
       dateOfBirth:
-        example: "2000-2-20"
+        example: "2000-11-12T13:14:15Z"
         type: string
       email:
         example: johndoe@example.com
@@ -77,7 +77,7 @@ definitions:
   GetAccountResponse:
     properties:
       dateOfBirth:
-        example: "2000-2-20"
+        example: "2000-11-12T13:14:15Z"
         type: string
       email:
         example: johndoe@example.com
@@ -103,7 +103,7 @@ definitions:
   UpdateAccountRequest:
     properties:
       dateOfBirth:
-        example: "2000-2-20"
+        example: "2000-11-12T13:14:15Z"
         type: string
       firstName:
         example: John

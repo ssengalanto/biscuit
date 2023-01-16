@@ -318,7 +318,7 @@ const docTemplate = `{
                 },
                 "dateOfBirth": {
                     "type": "string",
-                    "example": "2000-2-20"
+                    "example": "2000-11-12T13:14:15Z"
                 },
                 "email": {
                     "type": "string",
@@ -406,7 +406,7 @@ const docTemplate = `{
             "properties": {
                 "dateOfBirth": {
                     "type": "string",
-                    "example": "2000-2-20"
+                    "example": "2000-11-12T13:14:15Z"
                 },
                 "email": {
                     "type": "string",
@@ -443,7 +443,7 @@ const docTemplate = `{
             "properties": {
                 "dateOfBirth": {
                     "type": "string",
-                    "example": "2000-2-20"
+                    "example": "2000-11-12T13:14:15Z"
                 },
                 "firstName": {
                     "type": "string",

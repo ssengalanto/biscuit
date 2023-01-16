@@ -14,7 +14,7 @@ type PersonResponse struct {
 	LastName    string    `json:"lastName" example:"Doe"`
 	Email       string    `json:"email" example:"johndoe@example.com"`
 	Phone       string    `json:"phone" example:"09066871243"`
-	DateOfBirth time.Time `json:"dateOfBirth" example:"2000-2-20"`
+	DateOfBirth time.Time `json:"dateOfBirth" example:"2000-11-12T13:14:15Z"`
 } // @name GetAccountResponse
 
 // LocationResponse - address field response dto.

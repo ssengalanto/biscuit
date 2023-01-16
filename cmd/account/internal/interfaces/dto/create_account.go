@@ -10,7 +10,7 @@ type CreateAccountRequest struct {
 	FirstName   string                 `json:"firstName" validate:"required" example:"John"`
 	LastName    string                 `json:"lastName" validate:"required" example:"Doe"`
 	Phone       string                 `json:"phone" validate:"required,numeric" example:"09066871243"`
-	DateOfBirth time.Time              `json:"dateOfBirth" validate:"required" example:"2000-2-20"`
+	DateOfBirth time.Time              `json:"dateOfBirth" validate:"required" example:"2000-11-12T13:14:15Z"`
 	Locations   []CreateAddressRequest `json:"locations" validate:"required"`
 } // @name CreateAccountRequest
 

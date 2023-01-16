@@ -7,7 +7,7 @@ type UpdateAccountRequest struct {
 	FirstName   *string                 `json:"firstName" example:"John"`
 	LastName    *string                 `json:"lastName" example:"Doe"`
 	Phone       *string                 `json:"phone" example:"09066871243"`
-	DateOfBirth *time.Time              `json:"dateOfBirth" example:"2000-2-20"`
+	DateOfBirth *time.Time              `json:"dateOfBirth" example:"2000-11-12T13:14:15Z"`
 	Locations   *[]UpdateAddressRequest `json:"locations"`
 } // @name UpdateAccountRequest
 
