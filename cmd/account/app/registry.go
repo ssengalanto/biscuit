@@ -10,13 +10,14 @@ import (
 	cache "github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/cache/redis"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
 	httphv1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http/handlers/v1"
+	"github.com/ssengalanto/biscuit/pkg/behaviours"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 	"github.com/ssengalanto/midt"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// RegisterHTTPHandlers - http registry.
-func RegisterHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mux {
+// registerHTTPHandlers registers all http handlers in router.
+func registerHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mux {
 	r := http.NewRouter()
 	r.Mount("/swagger/docs", httpSwagger.WrapHandler)
 
@@ -45,8 +46,8 @@ func RegisterHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mu
 	return r
 }
 
-// RegisterMediatorHandlers - mediator registry.
-func RegisterMediatorHandlers(
+// registerMediatorHandlers registers all request, notification and pipeline behaviour handlers in the registry.
+func registerMediatorHandlers(
 	logger interfaces.Logger,
 	repository account.Repository,
 	rdb redis.UniversalClient,
@@ -54,43 +55,63 @@ func RegisterMediatorHandlers(
 	m := midt.New()
 	c := cache.New(logger, rdb)
 
+	registerRequestHandlers(logger, repository, c, m)
+	registerPipelineBehaviours(logger, m)
+
+	return m
+}
+
+// registerRequestHandlers registers all request handlers in the registry.
+func registerRequestHandlers(
+	logger interfaces.Logger,
+	repository account.Repository,
+	cache account.Cache,
+	m *midt.Midt,
+) {
 	// v1 commands
-	createAccountCommandHandler := cmdv1.NewCreateAccountCommandHandler(logger, repository, c)
+	createAccountCommandHandler := cmdv1.NewCreateAccountCommandHandler(logger, repository, cache)
 	err := m.RegisterRequestHandler(createAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
 
-	updateAccountCommandHandler := cmdv1.NewUpdateAccountCommandHandler(logger, repository, c)
+	updateAccountCommandHandler := cmdv1.NewUpdateAccountCommandHandler(logger, repository, cache)
 	err = m.RegisterRequestHandler(updateAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
 
-	activateAccountCommandHandler := cmdv1.NewActivateAccountCommandHandler(logger, repository, c)
+	activateAccountCommandHandler := cmdv1.NewActivateAccountCommandHandler(logger, repository, cache)
 	err = m.RegisterRequestHandler(activateAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
 
-	deactivateAccountCommandHandler := cmdv1.NewDeactivateAccountCommandHandler(logger, repository, c)
+	deactivateAccountCommandHandler := cmdv1.NewDeactivateAccountCommandHandler(logger, repository, cache)
 	err = m.RegisterRequestHandler(deactivateAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
 
-	deleteAccountCommandHandler := cmdv1.NewDeleteAccountCommandHandler(logger, repository, c)
+	deleteAccountCommandHandler := cmdv1.NewDeleteAccountCommandHandler(logger, repository, cache)
 	err = m.RegisterRequestHandler(deleteAccountCommandHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
 
 	// v1 queries
-	getAccountQueryHandler := qv1.NewGetAccountQueryHandler(logger, repository, c)
+	getAccountQueryHandler := qv1.NewGetAccountQueryHandler(logger, repository, cache)
 	err = m.RegisterRequestHandler(getAccountQueryHandler)
 	if err != nil {
 		logger.Fatal(err.Error(), nil)
 	}
+}
 
-	return m
+// registerPipelineBehaviours registers all pipeline behaviour in the registry.
+func registerPipelineBehaviours(logger interfaces.Logger, m *midt.Midt) {
+	loggerBehaviour := behaviours.NewLoggerBehaviour(logger)
+	err := m.RegisterPipelineBehaviour(loggerBehaviour)
+	if err != nil {
+		logger.Fatal(err.Error(), nil)
+	}
 }
