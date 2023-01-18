@@ -66,7 +66,7 @@ func (p Password) Hash() (Password, error) {
 	return Password(hashed), nil
 }
 
-// Check checks if the provided password is correct or not.
+// Check checks if the provided password matches the hashed password.
 func (p Password) Check(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(p), []byte(password))
 }

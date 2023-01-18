@@ -101,10 +101,10 @@ func (e *Entity) UpdatePersonDetails(input person.UpdateDetailsInput) error {
 	return nil
 }
 
-// UpdateAddress takes a slice of struct parameter that contains the address components
+// UpdatePersonAddress takes a slice of struct parameter that contains the address components
 // to be used for the update. If validation failed it will return an error
 // otherwise it will update the corresponding fields in address entity.
-func (e *Entity) UpdateAddress(inputs []UpdateAddressInput) error {
+func (e *Entity) UpdatePersonAddress(inputs []UpdateAddressInput) error {
 	addrs := *e.Person.Address
 
 	for _, input := range inputs {
@@ -133,7 +133,6 @@ func (e *Entity) HashPassword() error {
 	}
 
 	e.Password = hashed
-
 	return nil
 }
 

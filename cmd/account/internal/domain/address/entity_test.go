@@ -60,8 +60,8 @@ func TestEntity_UpdateComponents(t *testing.T) {
 func newAddress() address.Entity {
 	addr := gofakeit.Address()
 	return address.New(uuid.New(), address.Components{
-		Street:     addr.Address,
-		Unit:       addr.Address,
+		Street:     addr.Street,
+		Unit:       addr.Street,
 		City:       addr.City,
 		District:   addr.City,
 		State:      addr.State,
