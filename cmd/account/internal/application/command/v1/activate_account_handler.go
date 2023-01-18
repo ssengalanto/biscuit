@@ -44,13 +44,13 @@ func (a *ActivateAccountCommandHandler) Handle(
 	command, ok := request.(*ActivateAccountCommand)
 	if !ok {
 		a.log.Error("invalid command", map[string]any{"command": command})
-		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
+		return empty, errors.ErrInternal
 	}
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
 		a.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return empty, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, command.ID)
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
 	}
 
 	acct, err := a.accountRepository.FindByID(ctx, id)

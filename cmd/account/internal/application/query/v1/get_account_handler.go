@@ -45,7 +45,7 @@ func (g *GetAccountQueryHandler) Handle(
 	query, ok := request.(*GetAccountQuery)
 	if !ok {
 		g.log.Error("invalid query", map[string]any{"query": query})
-		return nil, fmt.Errorf("%w: query", errors.ErrInvalid)
+		return empty, errors.ErrInternal
 	}
 
 	cachedAccount, err := g.cache.Get(ctx, query.ID)
@@ -60,7 +60,7 @@ func (g *GetAccountQueryHandler) Handle(
 	id, err := uuid.Parse(query.ID)
 	if err != nil {
 		g.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
-		return nil, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, query.ID)
+		return nil, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, query.ID)
 	}
 
 	result, err = g.accountRepository.FindByID(ctx, id)

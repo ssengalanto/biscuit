@@ -47,7 +47,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
 		c.log.Error("invalid command", map[string]any{"command": command})
-		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
+		return empty, errors.ErrInternal
 	}
 
 	acct, err := c.createAccount(command)
@@ -85,7 +85,7 @@ func (c *CreateAccountCommandHandler) createAccount(cmd *CreateAccountCommand) (
 	err := acct.IsValid()
 	if err != nil {
 		c.log.Error("account is invalid", map[string]any{"account": acct, "error": err})
-		return empty, fmt.Errorf("%w: account", errors.ErrInvalid)
+		return empty, err
 	}
 
 	err = acct.HashPassword()
@@ -107,7 +107,7 @@ func (c *CreateAccountCommandHandler) createPerson(
 	err := pers.IsValid()
 	if err != nil {
 		c.log.Error("person is invalid", map[string]any{"person": pers, "error": err})
-		return empty, fmt.Errorf("%w: person", errors.ErrInvalid)
+		return empty, err
 	}
 
 	return pers, nil
@@ -118,8 +118,6 @@ func (c *CreateAccountCommandHandler) createAddresses(
 	cmd *CreateAccountCommand,
 ) ([]address.Entity, error) {
 	var addrs []address.Entity
-
-	c.log.Debug("entity", map[string]any{"entity": cmd.Locations})
 
 	for _, location := range cmd.Locations {
 		component := address.Components{
@@ -136,7 +134,7 @@ func (c *CreateAccountCommandHandler) createAddresses(
 		err := addr.IsValid()
 		if err != nil {
 			c.log.Error("address is invalid", map[string]any{"address": addr, "error": err})
-			return nil, fmt.Errorf("%w: person", errors.ErrInvalid)
+			return nil, err
 		}
 
 		addrs = append(addrs, addr)

@@ -46,13 +46,13 @@ func (u *UpdateAccountCommandHandler) Handle(
 	command, ok := request.(*UpdateAccountCommand)
 	if !ok {
 		u.log.Error("invalid command", map[string]any{"command": command})
-		return empty, fmt.Errorf("%w: command", errors.ErrInvalid)
+		return empty, errors.ErrInternal
 	}
 
 	id, err := uuid.Parse(command.ID)
 	if err != nil {
 		u.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return empty, fmt.Errorf("%w: uuid %s", errors.ErrInvalid, command.ID)
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
 	}
 
 	res, err := u.accountRepository.FindByID(ctx, id)
@@ -86,7 +86,7 @@ func (u *UpdateAccountCommandHandler) updateAccount(
 ) (account.Entity, error) {
 	empty := account.Entity{}
 
-	err := acct.Person.UpdateDetails(person.UpdateDetailsInput{
+	err := acct.UpdatePersonDetails(person.UpdateDetailsInput{
 		FirstName:   cmd.FirstName,
 		LastName:    cmd.LastName,
 		Phone:       cmd.Phone,
@@ -114,7 +114,7 @@ func (u *UpdateAccountCommandHandler) updateAccount(
 		addrInputs = append(addrInputs, input)
 	}
 
-	addrerr := acct.UpdateAddress(addrInputs)
+	addrerr := acct.UpdatePersonAddress(addrInputs)
 	if addrerr != nil {
 		u.log.Error(
 			"address update failed",
