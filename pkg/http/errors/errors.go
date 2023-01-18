@@ -14,6 +14,7 @@ type HTTPError struct {
 type Err struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
+	Reason  string `json:"reason"`
 } // @name Err
 
 // NewHTTPError returns a new HTTP error which accepts an error parameter that will be mapped
@@ -42,6 +43,7 @@ func NewHTTPError(err error) *HTTPError {
 		Error: Err{
 			Code:    code,
 			Message: http.StatusText(code),
+			Reason:  err.Error(),
 		},
 	}
 

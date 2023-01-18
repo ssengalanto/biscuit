@@ -70,7 +70,12 @@ func structErrMsg(err error) string {
 
 	idx := 0
 	for _, field := range fieldErrs {
-		msg := fmt.Sprintf("`%s` field with value of `%v` failed on `%s` tag", field.key, field.value, field.tag)
+		msg := fmt.Sprintf(
+			"`%s` field with value of `%v` failed on `%s` tag validation",
+			field.key,
+			field.value,
+			field.tag,
+		)
 
 		if idx >= 1 && idx != len(fieldErrs) {
 			buf.WriteString(", " + msg)

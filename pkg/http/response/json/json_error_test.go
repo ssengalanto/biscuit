@@ -69,7 +69,12 @@ func TestEncodeError(t *testing.T) {
 			require.Equal(
 				t,
 				string(data),
-				fmt.Sprintf(`{"error":{"code":%d,"message":"%s"}}`, tc.httperror, http.StatusText(tc.httperror)),
+				fmt.Sprintf(
+					`{"error":{"code":%d,"message":"%s","reason":"%s"}}`,
+					tc.httperror,
+					http.StatusText(tc.httperror),
+					tc.apperror.Error(),
+				),
 			)
 		})
 	}
