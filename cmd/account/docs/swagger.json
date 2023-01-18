@@ -386,6 +386,9 @@
                 },
                 "message": {
                     "type": "string"
+                },
+                "reason": {
+                    "type": "string"
                 }
             }
         },

@@ -398,6 +398,9 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string"
+                },
+                "reason": {
+                    "type": "string"
                 }
             }
         },
