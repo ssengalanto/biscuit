@@ -83,9 +83,12 @@ func TestEmail_Update(t *testing.T) {
 
 func TestEmail_String(t *testing.T) {
 	t.Parallel()
-	email := account.Email(gofakeit.Email()).String()
-	kind := reflect.TypeOf(email).String()
-	require.Equal(t, "string", kind)
+	t.Run("it should convert email to string", func(t *testing.T) {
+		t.Parallel()
+		email := account.Email(gofakeit.Email()).String()
+		kind := reflect.TypeOf(email).String()
+		require.Equal(t, "string", kind)
+	})
 }
 
 func TestPassword_IsValid(t *testing.T) {
@@ -194,9 +197,12 @@ func TestPassword_Check(t *testing.T) {
 
 func TestPassword_String(t *testing.T) {
 	t.Parallel()
-	password := account.Password(createValidPassword()).String()
-	kind := reflect.TypeOf(password).String()
-	require.Equal(t, "string", kind)
+	t.Run("it should convert password to string", func(t *testing.T) {
+		t.Parallel()
+		password := account.Password(createValidPassword()).String()
+		kind := reflect.TypeOf(password).String()
+		require.Equal(t, "string", kind)
+	})
 }
 
 func createValidPassword() string {
