@@ -10,8 +10,6 @@ import (
 	"github.com/google/uuid"
 	v1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
-	acctmock "github.com/ssengalanto/biscuit/cmd/account/internal/mock"
-	"github.com/ssengalanto/biscuit/pkg/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -31,7 +29,7 @@ func TestNewActivateAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new activate account handler instance", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := newCreateDepedencies(ctrl)
+		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
@@ -42,7 +40,7 @@ func TestActivateAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := newCreateDepedencies(ctrl)
+		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
 		n := hdlr.Name()
 		assert.Equal(t, fmt.Sprintf("%T", &v1.ActivateAccountCommand{}), n)
@@ -53,7 +51,7 @@ func TestActivateAccountCommandHandler_Handle(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
-	logger, repository, cache := newCreateDepedencies(ctrl)
+	logger, repository, cache := createDepedencies(ctrl)
 	hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
 
 	t.Run("it should return the correct response", func(t *testing.T) {
@@ -91,11 +89,4 @@ func TestActivateAccountCommandHandler_Handle(t *testing.T) {
 		assert.True(t, ok)
 		assert.Equal(t, "", r.ID)
 	})
-}
-
-func newCreateDepedencies(ctrl *gomock.Controller) (*mock.MockLogger, *acctmock.MockRepository, *acctmock.MockCache) {
-	logger := mock.NewMockLogger(ctrl)
-	repository := acctmock.NewMockRepository(ctrl)
-	cache := acctmock.NewMockCache(ctrl)
-	return logger, repository, cache
 }
