@@ -22,7 +22,7 @@ func TestNewAccountRepository(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mock.NewLogger(ctrl)
+	logger := mock.NewMockLogger(ctrl)
 
 	repo := pgsql.NewAccountRepository(logger, db)
 	assert.NotNil(t, repo)
@@ -63,7 +63,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 
-			logger := mock.NewLogger(ctrl)
+			logger := mock.NewMockLogger(ctrl)
 			repo := pgsql.NewAccountRepository(logger, db)
 
 			query := pgsql.MustBeValidAccountQuery(pgsql.QueryExists)
@@ -87,7 +87,7 @@ func TestAccountRepository_Create(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mock.NewLogger(ctrl)
+	logger := mock.NewMockLogger(ctrl)
 	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
@@ -147,7 +147,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mock.NewLogger(ctrl)
+	logger := mock.NewMockLogger(ctrl)
 	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
@@ -184,7 +184,7 @@ func TestAccountRepository_Update(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mock.NewLogger(ctrl)
+	logger := mock.NewMockLogger(ctrl)
 	repo := pgsql.NewAccountRepository(logger, db)
 
 	dbmock.ExpectBegin()
@@ -243,7 +243,7 @@ func TestAccountRepository_DeleteByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	logger := mock.NewLogger(ctrl)
+	logger := mock.NewMockLogger(ctrl)
 	repo := pgsql.NewAccountRepository(logger, db)
 
 	deleteAccountByIDQuery := pgsql.MustBeValidAccountQuery(pgsql.QueryDeleteAccountByID)
