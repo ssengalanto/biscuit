@@ -1,7 +1,6 @@
 package account_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -22,7 +21,7 @@ func TestNew(t *testing.T) {
 			gofakeit.Password(true, true, true, true, false, 10),
 			gofakeit.Bool(),
 		)
-		assert.NotNil(t, acct, "entity should not be nil")
+		assert.NotNil(t, acct)
 	})
 }
 
@@ -33,10 +32,10 @@ func TestEntity_IsActive(t *testing.T) {
 		entity := newAccountEntity()
 
 		entity.Deactivate()
-		assert.False(t, entity.IsActive(), "active state should be `false`")
+		assert.False(t, entity.IsActive())
 
 		entity.Activate()
-		assert.True(t, entity.IsActive(), "active state should be `true`")
+		assert.True(t, entity.IsActive())
 	})
 }
 
@@ -46,7 +45,7 @@ func TestEntity_Activate(t *testing.T) {
 		t.Parallel()
 		entity := newAccountEntity()
 		entity.Activate()
-		assert.True(t, entity.IsActive(), "active state should be `true`")
+		assert.True(t, entity.IsActive())
 	})
 }
 
@@ -56,7 +55,7 @@ func TestEntity_Deactivate(t *testing.T) {
 		t.Parallel()
 		entity := newAccountEntity()
 		entity.Deactivate()
-		assert.False(t, entity.IsActive(), "Entity.Active should be `false`")
+		assert.False(t, entity.IsActive())
 	})
 }
 
@@ -66,7 +65,7 @@ func TestEntity_LoginTimestamp(t *testing.T) {
 		t.Parallel()
 		entity := newAccountEntity()
 		entity.LoginTimestamp()
-		assert.False(t, entity.LastLoginAt.IsZero(), "timestamp should not have zero value")
+		assert.False(t, entity.LastLoginAt.IsZero())
 	})
 }
 
@@ -81,18 +80,16 @@ func TestEntity_UpdateEmail(t *testing.T) {
 			name:    "it should update the email successfully",
 			payload: gofakeit.Email(),
 			assert: func(t *testing.T, expected account.Email, actual account.Email, err error) {
-				errMsg := fmt.Sprintf("update email should succeed: %s", err)
-				assert.Equal(t, expected, actual, errMsg)
-				require.NoError(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
 			name:    "it should fail to update the email",
 			payload: "invalid-email",
 			assert: func(t *testing.T, expected account.Email, actual account.Email, err error) {
-				errMsg := fmt.Sprintf("update email should fail: %s", err)
-				assert.NotEqual(t, expected, actual, errMsg)
-				require.Error(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
@@ -117,18 +114,16 @@ func TestEntity_UpdatePassword(t *testing.T) {
 			name:    "it should update the password successfully",
 			payload: gofakeit.Password(true, true, true, true, false, 10),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
-				errMsg := fmt.Sprintf("update password should succeed: %s", err)
-				assert.Equal(t, expected, actual, errMsg)
-				require.NoError(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
 			name:    "it should fail to update the password",
 			payload: gofakeit.Password(true, true, true, true, false, 5),
 			assert: func(t *testing.T, expected account.Password, actual account.Password, err error) {
-				errMsg := fmt.Sprintf("update password should fail: %s", err)
-				assert.NotEqual(t, expected, actual, errMsg)
-				require.Error(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
@@ -171,9 +166,8 @@ func TestEntity_UpdateDetails(t *testing.T) {
 				DateOfBirth: &update.DateOfBirth,
 			},
 			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
-				errMsg := fmt.Sprintf("update person details should succeed: %s", err)
-				assert.Equal(t, expected, actual, errMsg)
-				require.NoError(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
@@ -187,9 +181,8 @@ func TestEntity_UpdateDetails(t *testing.T) {
 				DateOfBirth: &update.DateOfBirth,
 			},
 			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
-				errMsg := fmt.Sprintf("update person details should fail: %s", err)
-				assert.NotEqual(t, expected, actual, errMsg)
-				require.Error(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
@@ -222,18 +215,16 @@ func TestEntity_UpdatePersonAvatar(t *testing.T) {
 			name:    "it should update the avatar successfully",
 			payload: gofakeit.URL(),
 			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
-				errMsg := fmt.Sprintf("update avatar should succeed: %s", err)
-				assert.Equal(t, expected, actual, errMsg)
-				require.NoError(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
 			name:    "it should fail to update the avatar",
 			payload: "invalid-avatar",
 			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
-				errMsg := fmt.Sprintf("update avatar should fail: %s", err)
-				assert.NotEqual(t, expected, actual, errMsg)
-				require.Error(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
@@ -275,9 +266,8 @@ func TestEntity_UpdatePersonAddress(t *testing.T) {
 				},
 			},
 			assert: func(t *testing.T, expected []address.Entity, actual []address.Entity, err error) {
-				errMsg := fmt.Sprintf("update avatar should succeed: %s", err)
-				assert.Equal(t, expected, actual, errMsg)
-				require.NoError(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 	}
@@ -340,14 +330,21 @@ func TestEntity_IsValid(t *testing.T) {
 			name:   "it should be a valid account",
 			entity: newAccountEntity(),
 			assert: func(t *testing.T, err error) {
-				require.NoError(t, err, "account should be valid")
+				require.NoError(t, err)
 			},
 		},
 		{
-			name:   "it should be an invalid account",
-			entity: account.Entity{},
+			name:   "it should have an invalid email",
+			entity: account.New("invalid", gofakeit.Password(true, true, true, true, false, 10), true),
 			assert: func(t *testing.T, err error) {
-				require.Error(t, err, "account should be invalid")
+				require.Error(t, err)
+			},
+		},
+		{
+			name:   "it should have an invalid password",
+			entity: account.New(gofakeit.Email(), "invalid", true),
+			assert: func(t *testing.T, err error) {
+				require.Error(t, err)
 			},
 		},
 	}
@@ -362,7 +359,6 @@ func TestEntity_IsValid(t *testing.T) {
 
 func TestAggregateAccount(t *testing.T) {
 	t.Parallel()
-
 	t.Run("it should aggregate account, person and addresses", func(t *testing.T) {
 		t.Parallel()
 
