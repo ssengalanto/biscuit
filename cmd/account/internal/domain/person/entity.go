@@ -41,6 +41,7 @@ func New(accountID uuid.UUID, firstName, lastName, email, phone string, dateOfBi
 	}
 }
 
+// UpdateDetails partially updates the person Details.
 func (e *Entity) UpdateDetails(input UpdateDetailsInput) error {
 	details := e.Details
 

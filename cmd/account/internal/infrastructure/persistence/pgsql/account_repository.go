@@ -95,7 +95,7 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			a.log.Error(fmt.Sprintf("no record found for account with id of `%s`", id), map[string]any{"error": err})
-			return entity, fmt.Errorf("%w: account with ID of `%s`", apperr.ErrNotFound, id)
+			return entity, fmt.Errorf("%w: account with id of `%s`", apperr.ErrNotFound, id)
 		}
 		a.log.Error(fmt.Sprintf("account record with id of `%s` retrieval failed", id), map[string]any{"error": err})
 		return entity, err
@@ -130,7 +130,7 @@ func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) e
 	err := updateAccount(ctx, tx, entity)
 	if err != nil {
 		a.log.Error(
-			fmt.Sprintf("updating account record with id of `%s` failed", entity.ID),
+			fmt.Sprintf("updating account record with ID of `%s` failed", entity.ID),
 			map[string]any{"payload": entity, "error": err},
 		)
 		return err
@@ -139,7 +139,7 @@ func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) e
 	err = updatePerson(ctx, tx, *entity.Person)
 	if err != nil {
 		a.log.Error(
-			fmt.Sprintf("updating person record with id of `%s` failed", entity.Person.ID),
+			fmt.Sprintf("updating person record with ID of `%s` failed", entity.Person.ID),
 			map[string]any{"payload": entity, "error": err},
 		)
 		return err
@@ -149,7 +149,7 @@ func (a *AccountRepository) Update(ctx context.Context, entity account.Entity) e
 	if err != nil {
 		a.log.Error(
 			// TODO: replace real value
-			fmt.Sprintf("updating address record with id of `%s` failed", "0"),
+			fmt.Sprintf("updating address record with ID of `%s` failed", "0"),
 			map[string]any{"payload": entity, "error": err},
 		)
 		return err
