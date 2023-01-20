@@ -87,14 +87,6 @@ func TestEmail_String(t *testing.T) {
 	require.Equal(t, "string", kind, "type should be `string`")
 }
 
-func createValidPassword() string {
-	return gofakeit.Password(true, true, true, true, false, 10)
-}
-
-func createInvalidPassword() string {
-	return gofakeit.Password(true, true, true, true, false, 5)
-}
-
 func TestPassword_IsValid(t *testing.T) {
 	testCases := []struct {
 		name    string
@@ -170,4 +162,12 @@ func TestPassword_String(t *testing.T) {
 	password := account.Password(createValidPassword()).String()
 	kind := reflect.TypeOf(password).String()
 	require.Equal(t, "string", kind, "type should be `string`")
+}
+
+func createValidPassword() string {
+	return gofakeit.Password(true, true, true, true, false, 10)
+}
+
+func createInvalidPassword() string {
+	return gofakeit.Password(true, true, true, true, false, 5)
 }

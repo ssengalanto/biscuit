@@ -118,7 +118,7 @@ func (a *AccountRepository) FindByID(ctx context.Context, id uuid.UUID) (account
 
 	tx.Commit() //nolint:errcheck //unnecessary
 
-	entity = buildAccountEntity(acc, p, addrs)
+	entity = account.AggregateAccount(acc, p, addrs)
 	return entity, nil
 }
 
@@ -453,13 +453,4 @@ func handleRowsAffected(n int64, err error) error {
 	}
 
 	return nil
-}
-
-// buildAccountEntity aggregates Account, Person and Address records.
-func buildAccountEntity(account account.Entity, person person.Entity, address []address.Entity) account.Entity {
-	entity := account
-	entity.Person = &person
-	entity.Person.Address = &address
-
-	return entity
 }

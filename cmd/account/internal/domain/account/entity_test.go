@@ -360,16 +360,35 @@ func TestEntity_IsValid(t *testing.T) {
 	}
 }
 
-func newAccountEntity() account.Entity {
-	var entity account.Entity
+func TestAggregateAccount(t *testing.T) {
+	t.Parallel()
 
-	acct := account.New(
+	t.Run("it should aggregate account, person and addresses", func(t *testing.T) {
+		t.Parallel()
+
+		acct := newAccount()
+		pers := newPerson()
+		addrs := newAddress()
+
+		expected := acct
+		expected.Person = &pers
+		expected.Person.Address = &addrs
+
+		entity := account.AggregateAccount(acct, pers, addrs)
+		require.Equal(t, expected, entity)
+	})
+}
+
+func newAccount() account.Entity {
+	return account.New(
 		gofakeit.Email(),
 		gofakeit.Password(true, true, true, true, false, 10),
 		gofakeit.Bool(),
 	)
+}
 
-	pers := person.New(
+func newPerson() person.Entity {
+	return person.New(
 		uuid.New(),
 		gofakeit.FirstName(),
 		gofakeit.LastName(),
@@ -377,8 +396,11 @@ func newAccountEntity() account.Entity {
 		gofakeit.Phone(),
 		gofakeit.Date(),
 	)
+}
 
+func newAddress() []address.Entity {
 	a := gofakeit.Address()
+
 	var addrs []address.Entity
 	addr := address.New(uuid.New(), address.Components{
 		Street:     a.Street,
@@ -391,9 +413,12 @@ func newAccountEntity() account.Entity {
 	})
 	addrs = append(addrs, addr)
 
-	entity = acct
-	entity.Person = &pers
-	entity.Person.Address = &addrs
+	return addrs
+}
 
-	return entity
+func newAccountEntity() account.Entity {
+	acct := newAccount()
+	pers := newPerson()
+	addrs := newAddress()
+	return account.AggregateAccount(acct, pers, addrs)
 }

@@ -161,3 +161,12 @@ func (e *Entity) IsValid() error {
 
 	return err
 }
+
+// AggregateAccount aggregates account, person and address entities.
+func AggregateAccount(account Entity, person person.Entity, address []address.Entity) Entity {
+	entity := account
+	entity.Person = &person
+	entity.Person.Address = &address
+
+	return entity
+}

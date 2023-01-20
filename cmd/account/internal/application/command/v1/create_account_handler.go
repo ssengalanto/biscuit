@@ -42,7 +42,6 @@ func (c *CreateAccountCommandHandler) Handle(
 	request any,
 ) (any, error) {
 	empty := dto.CreateAccountResponse{}
-	entity := account.Entity{}
 
 	command, ok := request.(*CreateAccountCommand)
 	if !ok {
@@ -65,9 +64,7 @@ func (c *CreateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	entity = acct
-	entity.Person = &pers
-	entity.Person.Address = &addrs
+	entity := account.AggregateAccount(acct, pers, addrs)
 
 	err = c.accountRepository.Create(ctx, entity)
 	if err != nil {
