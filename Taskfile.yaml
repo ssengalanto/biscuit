@@ -32,6 +32,7 @@ tasks:
       - brew install golang-migrate
       - brew install pre-commit
       - go install github.com/swaggo/swag/cmd/swag@latest
+      - go install github.com/golang/mock/mockgen@v1.6.0
       - pre-commit install
 
   swag:gen:
