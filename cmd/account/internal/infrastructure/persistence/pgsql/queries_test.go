@@ -14,7 +14,7 @@ func TestMustBeValidAccountQuery(t *testing.T) {
 		assert func(t *testing.T)
 	}{
 		{
-			name: "valid query",
+			name: "it should be a valid query",
 			assert: func(t *testing.T) {
 				require.NotPanics(t, func() {
 					pgsql.MustBeValidAccountQuery(pgsql.QueryCreateAccount)
@@ -22,7 +22,7 @@ func TestMustBeValidAccountQuery(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid query",
+			name: "it should be an invalid query",
 			assert: func(t *testing.T) {
 				s := "invalid"
 				errMsg := fmt.Sprintf("%s: `%s` doesn't exists in account queries", pgsql.ErrInvalidQuery.Error(), s)

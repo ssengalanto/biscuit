@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/persistence/pgsql"
 	"github.com/ssengalanto/biscuit/pkg/mock"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,7 +25,7 @@ func TestNewAccountRepository(t *testing.T) {
 	logger := mock.NewLogger(ctrl)
 
 	repo := pgsql.NewAccountRepository(logger, db)
-	require.NotNil(t, repo)
+	assert.NotNil(t, repo)
 }
 
 func TestAccountRepository_Exists(t *testing.T) {
@@ -40,7 +41,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 			rows:    sqlmock.NewRows([]string{"count"}).AddRow(1),
 			assert: func(t *testing.T, result bool, err error) {
 				require.NoError(t, err)
-				require.True(t, result)
+				assert.True(t, result)
 			},
 		},
 		{
@@ -49,7 +50,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 			rows:    sqlmock.NewRows([]string{"count"}).AddRow(0),
 			assert: func(t *testing.T, result bool, err error) {
 				require.NoError(t, err)
-				require.False(t, result)
+				assert.False(t, result)
 			},
 		},
 	}
@@ -170,7 +171,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 
 	result, err := repo.FindByID(context.Background(), entity.ID)
 	require.NoError(t, err)
-	require.Equal(t, result, entity)
+	assert.Equal(t, result, entity)
 }
 
 func TestAccountRepository_Update(t *testing.T) {
