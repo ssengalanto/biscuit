@@ -12,6 +12,8 @@ includes:
     taskfile: ./tasks/Docker.yaml
   pg:
     taskfile: ./tasks/Pgsql.yaml
+  mock:
+    taskfile: ./tasks/Mock.yaml
 
 vars:
   PACKAGES:

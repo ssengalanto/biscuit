@@ -1,0 +1,37 @@
+version: "3"
+
+tasks:
+  logger:
+    desc: Generate a mock using Logger interface.
+    cmds:
+      - echo 'Generating mock logger...'
+      - mockgen -destination pkg/mock/logger.go -package mock github.com/ssengalanto/biscuit/pkg/interfaces Logger
+    silent: true
+
+  config:
+    desc: Generate a mock using Config interface.
+    cmds:
+      - echo 'Generating mock config...'
+      - mockgen -destination pkg/mock/config.go -package mock github.com/ssengalanto/biscuit/pkg/interfaces Config
+    silent: true
+
+  mediator:
+    desc: Generate a mock using Mediator interface.
+    cmds:
+      - echo 'Generating mock mediator...'
+      - mockgen -destination pkg/mock/mediator.go -package mock github.com/ssengalanto/biscuit/pkg/interfaces Mediator
+    silent: true
+
+  account:repo:
+    desc: Generate a mock using account Repository interface.
+    cmds:
+      - echo 'Generating mock account repository...'
+      - cd ./cmd/account/internal && mockgen -destination mock/repository.go -package mock github.com/ssengalanto/biscuit/cmd/account/internal/domain/account Repository
+    silent: true
+
+  account:cache:
+    desc: Generate a mock using account Cache interface.
+    cmds:
+      - echo 'Generating mock account cache...'
+      - cd ./cmd/account/internal && mockgen -destination mock/cache.go -package mock github.com/ssengalanto/biscuit/cmd/account/internal/domain/account Cache
+    silent: true
