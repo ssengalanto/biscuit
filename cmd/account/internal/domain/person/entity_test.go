@@ -1,21 +1,26 @@
 package person_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
-	entity := newPersonEntity()
-	require.NotNilf(t, entity, "entity should not be nil")
+	t.Parallel()
+	t.Run("it should create a new person", func(t *testing.T) {
+		t.Parallel()
+		entity := newPersonEntity()
+		assert.NotNil(t, entity)
+	})
 }
 
 func TestEntity_UpdateDetails(t *testing.T) {
+	t.Parallel()
 	update := person.Details{
 		FirstName:   gofakeit.FirstName(),
 		LastName:    gofakeit.LastName(),
@@ -32,7 +37,7 @@ func TestEntity_UpdateDetails(t *testing.T) {
 		assert  func(t *testing.T, expected person.Details, actual person.Details, err error)
 	}{
 		{
-			name: "update person details success",
+			name: "it should update the person details successfully",
 			entity: person.Entity{
 				ID:        uuid.New(),
 				AccountID: uuid.New(),
@@ -53,13 +58,12 @@ func TestEntity_UpdateDetails(t *testing.T) {
 				DateOfBirth: &update.DateOfBirth,
 			},
 			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
-				errMsg := fmt.Sprintf("update person details should succeed: %s", err)
-				require.Equal(t, expected, actual, errMsg)
-				require.Nil(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
-			name: "update person details failed",
+			name: "it should fail to update the person details",
 			entity: person.Entity{
 				ID:        uuid.New(),
 				AccountID: uuid.New(),
@@ -80,14 +84,14 @@ func TestEntity_UpdateDetails(t *testing.T) {
 				DateOfBirth: &update.DateOfBirth,
 			},
 			assert: func(t *testing.T, expected person.Details, actual person.Details, err error) {
-				errMsg := fmt.Sprintf("update person details should fail: %s", err)
-				require.NotEqual(t, expected, actual, errMsg)
-				require.NotNil(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			entity := tc.entity
 			err := entity.UpdateDetails(tc.details)
 			details := entity.Details
@@ -105,37 +109,54 @@ func TestEntity_UpdateDetails(t *testing.T) {
 }
 
 func TestEntity_UpdateAvatar(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
 		assert  func(t *testing.T, expected person.Avatar, actual person.Avatar, err error)
 	}{
 		{
-			name:    "update avatar success",
+			name:    "it should update the avatar successfully",
 			payload: gofakeit.URL(),
 			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
-				errMsg := fmt.Sprintf("update avatar should succeed: %s", err)
-				require.Equal(t, expected, actual, errMsg)
-				require.Nil(t, err, errMsg)
+				assert.Equal(t, expected, actual)
+				require.NoError(t, err)
 			},
 		},
 		{
-			name:    "update avatar failed",
+			name:    "it should fail to update the avatar",
 			payload: "invalid-avatar",
 			assert: func(t *testing.T, expected person.Avatar, actual person.Avatar, err error) {
-				errMsg := fmt.Sprintf("update avatar should fail: %s", err)
-				require.NotEqual(t, expected, actual, errMsg)
-				require.NotNil(t, err, errMsg)
+				assert.NotEqual(t, expected, actual)
+				require.Error(t, err)
 			},
 		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			entity := newPersonEntity()
 			err := entity.UpdateAvatar(tc.payload)
 			tc.assert(t, entity.Avatar, person.Avatar(tc.payload), err)
 		})
 	}
+}
+
+func Test_IsValid(t *testing.T) {
+	t.Parallel()
+	t.Run("it should be a valid person", func(t *testing.T) {
+		t.Parallel()
+		entity := newPersonEntity()
+		err := entity.IsValid()
+		require.NoError(t, err)
+	})
+	t.Run("it should be an invalid person", func(t *testing.T) {
+		t.Parallel()
+		entity := newPersonEntity()
+		entity.Details.FirstName = ""
+		err := entity.IsValid()
+		require.Error(t, err)
+	})
 }
 
 func newPersonEntity() person.Entity {
