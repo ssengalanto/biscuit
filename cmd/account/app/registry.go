@@ -66,7 +66,7 @@ func registerRequestHandlers(
 	logger interfaces.Logger,
 	repository account.Repository,
 	cache account.Cache,
-	m *midt.Midt,
+	m midt.Mediator,
 ) {
 	// v1 commands
 	createAccountCommandHandler := cmdv1.NewCreateAccountCommandHandler(logger, repository, cache)
@@ -108,7 +108,7 @@ func registerRequestHandlers(
 }
 
 // registerPipelineBehaviours registers all pipeline behaviour in the registry.
-func registerPipelineBehaviours(logger interfaces.Logger, m *midt.Midt) {
+func registerPipelineBehaviours(logger interfaces.Logger, m midt.Mediator) {
 	loggerBehaviour := behaviours.NewLoggerBehaviour(logger)
 	err := m.RegisterPipelineBehaviour(loggerBehaviour)
 	if err != nil {
