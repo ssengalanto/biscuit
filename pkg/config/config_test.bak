@@ -1,0 +1,72 @@
+package config_test
+
+import (
+	"testing"
+
+	"github.com/ssengalanto/biscuit/pkg/config"
+	"github.com/ssengalanto/biscuit/pkg/constants"
+	"github.com/ssengalanto/biscuit/pkg/interfaces"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestNew(t *testing.T) {
+	testCases := []struct {
+		name       string
+		env        string
+		configType string
+		assert     func(t *testing.T, result interfaces.Config, err error)
+	}{
+		{
+			name:       "it should build for dev environment",
+			env:        constants.Dev,
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				assert.NotNil(t, result)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name:       "it should build for test environment",
+			env:        constants.Test,
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				assert.NotNil(t, result)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name:       "it should build for prod environment",
+			env:        constants.Prod,
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				assert.NotNil(t, result)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name:       "invalid env",
+			env:        "invalid",
+			configType: constants.ViperConfigType,
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				assert.Nil(t, result)
+				require.Error(t, err)
+			},
+		},
+		{
+			name:       "invalid config type",
+			env:        constants.Dev,
+			configType: "invalid",
+			assert: func(t *testing.T, result interfaces.Config, err error) {
+				assert.Nil(t, result)
+				require.Error(t, err)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			cfg, err := config.New(tc.env, tc.configType)
+			tc.assert(t, cfg, err)
+		})
+	}
+}
