@@ -15,9 +15,7 @@ import (
 )
 
 func TestNewActivateAccountCommand(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new activate account command instance", func(t *testing.T) {
-		t.Parallel()
 		input := dto.ActivateAccountRequest{ID: gofakeit.UUID()}
 		cmd := v1.NewActivateAccountCommand(input)
 		assert.NotNil(t, cmd)
@@ -25,9 +23,7 @@ func TestNewActivateAccountCommand(t *testing.T) {
 }
 
 func TestNewActivateAccountCommandHandler(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new activate account handler instance", func(t *testing.T) {
-		t.Parallel()
 		ctrl := gomock.NewController(t)
 		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
@@ -36,9 +32,7 @@ func TestNewActivateAccountCommandHandler(t *testing.T) {
 }
 
 func TestActivateAccountCommandHandler_Name(t *testing.T) {
-	t.Parallel()
 	t.Run("it should return the correct handler name", func(t *testing.T) {
-		t.Parallel()
 		ctrl := gomock.NewController(t)
 		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
@@ -48,14 +42,12 @@ func TestActivateAccountCommandHandler_Name(t *testing.T) {
 }
 
 func TestActivateAccountCommandHandler_Handle(t *testing.T) {
-	t.Parallel()
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	logger, repository, cache := createDepedencies(ctrl)
 	hdlr := v1.NewActivateAccountCommandHandler(logger, repository, cache)
 
 	t.Run("it should return the correct response", func(t *testing.T) {
-		t.Parallel()
 		id := uuid.New()
 		repository.EXPECT().FindByID(ctx, gomock.Eq(id))
 		repository.EXPECT().Update(ctx, gomock.Any())
@@ -68,7 +60,6 @@ func TestActivateAccountCommandHandler_Handle(t *testing.T) {
 		assert.Equal(t, id.String(), r.ID)
 	})
 	t.Run("it should return an error when an invalid uuid is provided", func(t *testing.T) {
-		t.Parallel()
 		id := "invalid"
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 		res, err := hdlr.Handle(ctx, &v1.ActivateAccountCommand{ID: id})
@@ -79,7 +70,6 @@ func TestActivateAccountCommandHandler_Handle(t *testing.T) {
 		assert.Equal(t, "", r.ID)
 	})
 	t.Run("it should return an error when an invalid command is provided", func(t *testing.T) {
-		t.Parallel()
 		req := struct{}{}
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 		res, err := hdlr.Handle(ctx, &req)

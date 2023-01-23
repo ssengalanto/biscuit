@@ -14,9 +14,7 @@ import (
 )
 
 func TestNewCreateAccountCommand(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new create account command instance", func(t *testing.T) {
-		t.Parallel()
 		input := newCreateAccountRequest()
 		cmd := v1.NewCreateAccountCommand(input)
 		assert.NotNil(t, cmd)
@@ -24,9 +22,7 @@ func TestNewCreateAccountCommand(t *testing.T) {
 }
 
 func TestNewCreateAccountCommandHandler(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new create account handler instance", func(t *testing.T) {
-		t.Parallel()
 		ctrl := gomock.NewController(t)
 		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
@@ -35,9 +31,7 @@ func TestNewCreateAccountCommandHandler(t *testing.T) {
 }
 
 func TestCreateAccountCommandHandler_Name(t *testing.T) {
-	t.Parallel()
 	t.Run("it should return the correct handler name", func(t *testing.T) {
-		t.Parallel()
 		ctrl := gomock.NewController(t)
 		logger, repository, cache := createDepedencies(ctrl)
 		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
@@ -47,12 +41,10 @@ func TestCreateAccountCommandHandler_Name(t *testing.T) {
 }
 
 func TestCreateAccountCommandHandler_Handle(t *testing.T) {
-	t.Parallel()
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	logger, repository, cache := createDepedencies(ctrl)
 	hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
-
 	t.Run("it should return the correct response", func(t *testing.T) {
 		req := newCreateAccountRequest()
 		repository.EXPECT().Create(ctx, gomock.Any())
@@ -72,7 +64,6 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		assert.True(t, ok)
 	})
 	t.Run("it should return an error when an invalid command is provided", func(t *testing.T) {
-		t.Parallel()
 		req := struct{}{}
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 		res, err := hdlr.Handle(ctx, &req)
@@ -83,7 +74,6 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		assert.Equal(t, "", r.ID)
 	})
 	t.Run("it should return an error when an invalid account is provided", func(t *testing.T) {
-		t.Parallel()
 		req := newCreateAccountRequest()
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 		res, err := hdlr.Handle(ctx, &v1.CreateAccountCommand{
@@ -103,7 +93,6 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		assert.Equal(t, "", r.ID)
 	})
 	t.Run("it should return an error when an invalid person is provided", func(t *testing.T) {
-		t.Parallel()
 		req := newCreateAccountRequest()
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
 		res, err := hdlr.Handle(ctx, &v1.CreateAccountCommand{
