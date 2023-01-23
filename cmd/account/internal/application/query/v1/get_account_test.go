@@ -9,6 +9,7 @@ import (
 	"github.com/golang/mock/gomock"
 	v1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -46,18 +47,18 @@ func TestGetAccountCommandHandler_Handle(t *testing.T) {
 	logger, repository, cache := createDepedencies(ctrl)
 	hdlr := v1.NewGetAccountQueryHandler(logger, repository, cache)
 
-	// t.Run("it should return the correct response", func(t *testing.T) {
-	//	id := uuid.New()
-	//	cache.EXPECT().Get(ctx, gomock.Any())
-	//	repository.EXPECT().FindByID(ctx, gomock.Any())
-	//	cache.EXPECT().Set(ctx, gomock.Any(), gomock.Any())
-	//	res, err := hdlr.Handle(ctx, &v1.GetAccountQuery{ID: id.String()})
-	//	require.NoError(t, err)
-	//
-	//	r, ok := res.(dto.GetAccountResponse)
-	//	assert.True(t, ok)
-	//	assert.Equal(t, id.String(), r.ID)
-	// })
+	t.Run("it should return the correct response", func(t *testing.T) {
+		entity := mock.NewAccountEntity()
+		cache.EXPECT().Get(ctx, gomock.Any())
+		repository.EXPECT().FindByID(ctx, gomock.Any()).Return(entity, nil)
+		cache.EXPECT().Set(ctx, gomock.Any(), gomock.Any())
+		res, err := hdlr.Handle(ctx, &v1.GetAccountQuery{ID: entity.ID.String()})
+		require.NoError(t, err)
+
+		r, ok := res.(dto.GetAccountResponse)
+		assert.True(t, ok)
+		assert.Equal(t, entity.ID.String(), r.ID)
+	})
 	t.Run("it should return an error when an invalid uuid is provided", func(t *testing.T) {
 		id := "invalid"
 		cache.EXPECT().Get(ctx, gomock.Any())
