@@ -55,12 +55,12 @@ func (u *UpdateAccountCommandHandler) Handle(
 		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
 	}
 
-	res, err := u.accountRepository.FindByID(ctx, id)
+	acct, err := u.accountRepository.FindByID(ctx, id)
 	if err != nil {
 		return empty, err
 	}
 
-	acct, err := u.updateAccount(&res, command)
+	err = u.updateAccount(&acct, command)
 	if err != nil {
 		return empty, err
 	}
@@ -83,9 +83,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 func (u *UpdateAccountCommandHandler) updateAccount(
 	acct *account.Entity,
 	cmd *UpdateAccountCommand,
-) (account.Entity, error) {
-	empty := account.Entity{}
-
+) error {
 	err := acct.UpdatePersonDetails(person.UpdateDetailsInput{
 		FirstName:   cmd.FirstName,
 		LastName:    cmd.LastName,
@@ -94,11 +92,26 @@ func (u *UpdateAccountCommandHandler) updateAccount(
 	})
 	if err != nil {
 		u.log.Error("person update failed", map[string]any{"command": cmd, "error": err})
-		return empty, err
+		return err
 	}
 
+	if cmd.Locations != nil {
+		err = u.updateAddress(acct, *cmd.Locations)
+		if err != nil {
+			u.log.Error(
+				"address update failed",
+				map[string]any{"command": cmd, "error": err},
+			)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (u UpdateAccountCommandHandler) updateAddress(acct *account.Entity, addrs []dto.UpdateAddressRequest) error {
 	var addrInputs []account.UpdateAddressInput
-	for _, addr := range *cmd.Locations {
+	for _, addr := range addrs {
 		input := account.UpdateAddressInput{
 			ID: addr.ID,
 			Components: address.UpdateComponentsInput{
@@ -114,14 +127,10 @@ func (u *UpdateAccountCommandHandler) updateAccount(
 		addrInputs = append(addrInputs, input)
 	}
 
-	addrerr := acct.UpdatePersonAddress(addrInputs)
-	if addrerr != nil {
-		u.log.Error(
-			"address update failed",
-			map[string]any{"command": cmd, "input": addrInputs, "error": err},
-		)
-		return empty, err
+	err := acct.UpdatePersonAddress(addrInputs)
+	if err != nil {
+		return err
 	}
 
-	return *acct, nil
+	return nil
 }
