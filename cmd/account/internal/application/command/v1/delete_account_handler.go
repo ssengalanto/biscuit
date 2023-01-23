@@ -63,7 +63,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.DeleteAccountRequest{ID: command.ID}
+	response := dto.DeleteAccountResponse{ID: command.ID}
 
 	return response, err
 }
