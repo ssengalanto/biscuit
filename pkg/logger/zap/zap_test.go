@@ -1,7 +1,6 @@
 package zap_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
@@ -19,21 +18,35 @@ func TestNew(t *testing.T) {
 		assert func(t *testing.T, result *zap.Logger, err error)
 	}{
 		{
-			name: "valid env",
+			name: "it should build for development environment",
 			env:  constants.Dev,
 			assert: func(t *testing.T, result *zap.Logger, err error) {
-				errMsg := fmt.Sprintf("creating new instance should succeed: %s", err)
-				require.NotNil(t, result, errMsg)
-				require.Nil(t, err, errMsg)
+				assert.NotNil(t, result)
+				require.NoError(t, err)
 			},
 		},
 		{
-			name: "invalid env",
+			name: "it should build for test environment",
+			env:  constants.Test,
+			assert: func(t *testing.T, result *zap.Logger, err error) {
+				assert.NotNil(t, result)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name: "it should build for prod environment",
+			env:  constants.Prod,
+			assert: func(t *testing.T, result *zap.Logger, err error) {
+				assert.NotNil(t, result)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name: "it should fail to build due to an invalid env",
 			env:  "invalid",
 			assert: func(t *testing.T, result *zap.Logger, err error) {
-				errMsg := fmt.Sprintf("creating new instance should fail: %s", err)
-				require.Nil(t, result, errMsg)
-				require.NotNil(t, err, errMsg)
+				assert.Nil(t, result)
+				require.Error(t, err)
 			},
 		},
 	}
