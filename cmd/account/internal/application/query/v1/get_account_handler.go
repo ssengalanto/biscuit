@@ -60,7 +60,7 @@ func (g *GetAccountQueryHandler) Handle(
 	id, err := uuid.Parse(query.ID)
 	if err != nil {
 		g.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
-		return nil, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, query.ID)
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, query.ID)
 	}
 
 	result, err = g.accountRepository.FindByID(ctx, id)
