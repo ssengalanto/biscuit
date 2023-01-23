@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -29,7 +29,7 @@ func TestEntity_IsActive(t *testing.T) {
 	t.Parallel()
 	t.Run("it should return the account active state correctly", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 
 		entity.Deactivate()
 		assert.False(t, entity.IsActive())
@@ -43,7 +43,7 @@ func TestEntity_Activate(t *testing.T) {
 	t.Parallel()
 	t.Run("it should activate the account", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 		entity.Activate()
 		assert.True(t, entity.IsActive())
 	})
@@ -53,7 +53,7 @@ func TestEntity_Deactivate(t *testing.T) {
 	t.Parallel()
 	t.Run("it should deactivate the account", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 		entity.Deactivate()
 		assert.False(t, entity.IsActive())
 	})
@@ -63,7 +63,7 @@ func TestEntity_LoginTimestamp(t *testing.T) {
 	t.Parallel()
 	t.Run("it should set the last login at with current timestamp", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 		entity.LoginTimestamp()
 		assert.False(t, entity.LastLoginAt.IsZero())
 	})
@@ -96,7 +96,7 @@ func TestEntity_UpdateEmail(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			entity := newAccountEntity()
+			entity := mock.NewAccountEntity()
 			err := entity.UpdateEmail(tc.payload)
 			tc.assert(t, entity.Email, account.Email(tc.payload), err)
 		})
@@ -130,7 +130,7 @@ func TestEntity_UpdatePassword(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			entity := newAccountEntity()
+			entity := mock.NewAccountEntity()
 			err := entity.UpdatePassword(tc.payload)
 			tc.assert(t, entity.Password, account.Password(tc.payload), err)
 		})
@@ -139,7 +139,7 @@ func TestEntity_UpdatePassword(t *testing.T) {
 
 func TestEntity_UpdateDetails(t *testing.T) {
 	t.Parallel()
-	entity := newAccountEntity()
+	entity := mock.NewAccountEntity()
 	update := person.Details{
 		FirstName:   gofakeit.FirstName(),
 		LastName:    gofakeit.LastName(),
@@ -231,7 +231,7 @@ func TestEntity_UpdatePersonAvatar(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			entity := newAccountEntity()
+			entity := mock.NewAccountEntity()
 			err := entity.UpdatePersonAvatar(tc.payload)
 			tc.assert(t, entity.Person.Avatar, person.Avatar(tc.payload), err)
 		})
@@ -240,7 +240,7 @@ func TestEntity_UpdatePersonAvatar(t *testing.T) {
 
 func TestEntity_UpdatePersonAddress(t *testing.T) {
 	t.Parallel()
-	entity := newAccountEntity()
+	entity := mock.NewAccountEntity()
 	addr := gofakeit.Address()
 	testCases := []struct {
 		name    string
@@ -297,7 +297,7 @@ func TestEntity_HashPassword(t *testing.T) {
 	t.Parallel()
 	t.Run("it should hash the password", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 		err := entity.HashPassword()
 		require.NoError(t, err)
 	})
@@ -307,7 +307,7 @@ func TestEntity_CheckPassword(t *testing.T) {
 	t.Parallel()
 	t.Run("it should match the password", func(t *testing.T) {
 		t.Parallel()
-		entity := newAccountEntity()
+		entity := mock.NewAccountEntity()
 		pw := entity.Password.String()
 
 		err := entity.HashPassword()
@@ -328,7 +328,7 @@ func TestEntity_IsValid(t *testing.T) {
 	}{
 		{
 			name:   "it should be a valid account",
-			entity: newAccountEntity(),
+			entity: mock.NewAccountEntity(),
 			assert: func(t *testing.T, err error) {
 				require.NoError(t, err)
 			},
@@ -362,9 +362,9 @@ func TestAggregateAccount(t *testing.T) {
 	t.Run("it should aggregate account, person and addresses", func(t *testing.T) {
 		t.Parallel()
 
-		acct := newAccount()
-		pers := newPerson()
-		addrs := newAddress()
+		acct := mock.NewAccount()
+		pers := mock.NewPerson()
+		addrs := mock.NewAddresses()
 
 		expected := acct
 		expected.Person = &pers
@@ -373,48 +373,4 @@ func TestAggregateAccount(t *testing.T) {
 		entity := account.AggregateAccount(acct, pers, addrs)
 		require.Equal(t, expected, entity)
 	})
-}
-
-func newAccount() account.Entity {
-	return account.New(
-		gofakeit.Email(),
-		gofakeit.Password(true, true, true, true, false, 10),
-		gofakeit.Bool(),
-	)
-}
-
-func newPerson() person.Entity {
-	return person.New(
-		uuid.New(),
-		gofakeit.FirstName(),
-		gofakeit.LastName(),
-		gofakeit.Email(),
-		gofakeit.Phone(),
-		gofakeit.Date(),
-	)
-}
-
-func newAddress() []address.Entity {
-	a := gofakeit.Address()
-
-	var addrs []address.Entity
-	addr := address.New(uuid.New(), address.Components{
-		Street:     a.Street,
-		Unit:       a.Street,
-		City:       a.City,
-		District:   a.City,
-		State:      a.State,
-		Country:    a.Country,
-		PostalCode: a.Zip,
-	})
-	addrs = append(addrs, addr)
-
-	return addrs
-}
-
-func newAccountEntity() account.Entity {
-	acct := newAccount()
-	pers := newPerson()
-	addrs := newAddress()
-	return account.AggregateAccount(acct, pers, addrs)
 }

@@ -2,62 +2,8 @@ package pgsql_test
 
 import (
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
 )
-
-// newAccountEntity creates a new account.Entity with mock values.
-func newAccountEntity() account.Entity {
-	accountID := uuid.New()
-	personID := uuid.New()
-	email := gofakeit.Email()
-
-	return account.Entity{
-		ID:          accountID,
-		Email:       account.Email(email),
-		Password:    account.Password(gofakeit.Password(true, true, true, true, false, 10)),
-		Active:      gofakeit.Bool(),
-		LastLoginAt: gofakeit.Date(),
-		Person: &person.Entity{
-			ID:        personID,
-			AccountID: accountID,
-			Details: person.Details{
-				FirstName:   gofakeit.FirstName(),
-				LastName:    gofakeit.LastName(),
-				Email:       email,
-				Phone:       gofakeit.Phone(),
-				DateOfBirth: gofakeit.Date(),
-			},
-			Avatar: person.Avatar(gofakeit.URL()),
-			Address: &[]address.Entity{
-				newAddressEntity(personID),
-				newAddressEntity(personID),
-			},
-		},
-	}
-}
-
-// newAccountEntity creates a new address.Entity with mock values.
-func newAddressEntity(personID uuid.UUID) address.Entity {
-	addr := gofakeit.Address()
-
-	return address.Entity{
-		ID:       uuid.New(),
-		PersonID: personID,
-		Components: address.Components{
-			Street:     addr.Address,
-			Unit:       addr.Address,
-			City:       addr.City,
-			District:   addr.City,
-			State:      addr.State,
-			Country:    addr.Country,
-			PostalCode: addr.Zip,
-		},
-	}
-}
 
 // createAccountRow creates a new mock Account record.
 func createAccountRow(entity account.Entity) *sqlmock.Rows {

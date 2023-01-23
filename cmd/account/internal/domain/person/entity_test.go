@@ -6,6 +6,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,7 +15,7 @@ func TestNew(t *testing.T) {
 	t.Parallel()
 	t.Run("it should create a new person", func(t *testing.T) {
 		t.Parallel()
-		entity := newPersonEntity()
+		entity := mock.NewPerson()
 		assert.NotNil(t, entity)
 	})
 }
@@ -135,7 +136,7 @@ func TestEntity_UpdateAvatar(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			entity := newPersonEntity()
+			entity := mock.NewPerson()
 			err := entity.UpdateAvatar(tc.payload)
 			tc.assert(t, entity.Avatar, person.Avatar(tc.payload), err)
 		})
@@ -146,26 +147,15 @@ func Test_IsValid(t *testing.T) {
 	t.Parallel()
 	t.Run("it should be a valid person", func(t *testing.T) {
 		t.Parallel()
-		entity := newPersonEntity()
+		entity := mock.NewPerson()
 		err := entity.IsValid()
 		require.NoError(t, err)
 	})
 	t.Run("it should be an invalid person", func(t *testing.T) {
 		t.Parallel()
-		entity := newPersonEntity()
+		entity := mock.NewPerson()
 		entity.Details.FirstName = ""
 		err := entity.IsValid()
 		require.Error(t, err)
 	})
-}
-
-func newPersonEntity() person.Entity {
-	return person.New(
-		uuid.New(),
-		gofakeit.FirstName(),
-		gofakeit.LastName(),
-		gofakeit.Email(),
-		gofakeit.Phone(),
-		gofakeit.Date(),
-	)
 }

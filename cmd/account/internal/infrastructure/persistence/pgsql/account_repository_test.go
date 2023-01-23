@@ -9,6 +9,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/persistence/pgsql"
+	mockent "github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/ssengalanto/biscuit/pkg/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -77,7 +78,7 @@ func TestAccountRepository_Exists(t *testing.T) {
 }
 
 func TestAccountRepository_Create(t *testing.T) {
-	entity := newAccountEntity()
+	entity := mockent.NewAccountEntity()
 	*entity.Person.Address = nil
 
 	db, dbmock, err := mock.NewSqlDb()
@@ -138,7 +139,7 @@ func TestAccountRepository_Create(t *testing.T) {
 }
 
 func TestAccountRepository_FindByID(t *testing.T) {
-	entity := newAccountEntity()
+	entity := mockent.NewAccountEntity()
 
 	db, dbmock, err := mock.NewSqlDb()
 	require.NoError(t, err)
@@ -175,7 +176,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 }
 
 func TestAccountRepository_Update(t *testing.T) {
-	entity := newAccountEntity()
+	entity := mockent.NewAccountEntity()
 
 	db, dbmock, err := mock.NewSqlDb()
 	require.NoError(t, err)
@@ -234,7 +235,7 @@ func TestAccountRepository_Update(t *testing.T) {
 }
 
 func TestAccountRepository_DeleteByID(t *testing.T) {
-	entity := newAccountEntity()
+	entity := mockent.NewAccountEntity()
 
 	db, dbmock, err := mock.NewSqlDb()
 	require.NoError(t, err)

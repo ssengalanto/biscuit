@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
+	"github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -14,7 +14,7 @@ func TestNew(t *testing.T) {
 	t.Parallel()
 	t.Run("it should create a new address", func(t *testing.T) {
 		t.Parallel()
-		entity := newAddress()
+		entity := mock.NewAddress()
 		assert.NotNil(t, entity)
 	})
 }
@@ -33,7 +33,7 @@ func TestEntity_UpdateComponents(t *testing.T) {
 			Country:    &addr.Country,
 			PostalCode: &addr.Zip,
 		}
-		entity := newAddress()
+		entity := mock.NewAddress()
 		err := entity.UpdateComponents(payload)
 		assert.Equal(t, entity.Components, address.Components{
 			Street:     *payload.Street,
@@ -52,28 +52,15 @@ func Test_IsValid(t *testing.T) {
 	t.Parallel()
 	t.Run("it should be a valid address", func(t *testing.T) {
 		t.Parallel()
-		entity := newAddress()
+		entity := mock.NewAddress()
 		err := entity.IsValid()
 		require.NoError(t, err)
 	})
 	t.Run("it should be an invalid address", func(t *testing.T) {
 		t.Parallel()
-		entity := newAddress()
+		entity := mock.NewAddress()
 		entity.Components.Street = ""
 		err := entity.IsValid()
 		require.Error(t, err)
-	})
-}
-
-func newAddress() address.Entity {
-	addr := gofakeit.Address()
-	return address.New(uuid.New(), address.Components{
-		Street:     addr.Street,
-		Unit:       addr.Street,
-		City:       addr.City,
-		District:   addr.City,
-		State:      addr.State,
-		Country:    addr.Country,
-		PostalCode: addr.Zip,
 	})
 }
