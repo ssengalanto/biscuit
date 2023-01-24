@@ -24,7 +24,7 @@ func TestNewCreateAccountCommand(t *testing.T) {
 func TestNewCreateAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new create account handler instance", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDependencies(ctrl)
 		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
@@ -33,7 +33,7 @@ func TestNewCreateAccountCommandHandler(t *testing.T) {
 func TestCreateAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDependencies(ctrl)
 		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
 		n := hdlr.Name()
 		assert.Equal(t, fmt.Sprintf("%T", &v1.CreateAccountCommand{}), n)
@@ -43,7 +43,7 @@ func TestCreateAccountCommandHandler_Name(t *testing.T) {
 func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
-	logger, repository, cache := createDepedencies(ctrl)
+	logger, repository, cache := createDependencies(ctrl)
 	hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
 	t.Run("it should return the correct response", func(t *testing.T) {
 		req := newCreateAccountRequest()

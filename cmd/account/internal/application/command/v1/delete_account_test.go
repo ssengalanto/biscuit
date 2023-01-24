@@ -25,7 +25,7 @@ func TestNewDeleteAccountCommand(t *testing.T) {
 func TestNewDeleteAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new delete account handler instance", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDependencies(ctrl)
 		hdlr := v1.NewDeleteAccountCommandHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
@@ -34,7 +34,7 @@ func TestNewDeleteAccountCommandHandler(t *testing.T) {
 func TestDeleteAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDependencies(ctrl)
 		hdlr := v1.NewDeleteAccountCommandHandler(logger, repository, cache)
 		n := hdlr.Name()
 		assert.Equal(t, fmt.Sprintf("%T", &v1.DeleteAccountCommand{}), n)
@@ -44,7 +44,7 @@ func TestDeleteAccountCommandHandler_Name(t *testing.T) {
 func TestDeleteAccountCommandHandler_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
-	logger, repository, cache := createDepedencies(ctrl)
+	logger, repository, cache := createDependencies(ctrl)
 	hdlr := v1.NewDeleteAccountCommandHandler(logger, repository, cache)
 
 	t.Run("it should return the correct response", func(t *testing.T) {

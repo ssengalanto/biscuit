@@ -6,7 +6,7 @@ import (
 	"github.com/ssengalanto/biscuit/pkg/mock"
 )
 
-func createDepedencies(ctrl *gomock.Controller) (*mock.MockLogger, *acctmock.MockRepository, *acctmock.MockCache) {
+func createDependencies(ctrl *gomock.Controller) (*mock.MockLogger, *acctmock.MockRepository, *acctmock.MockCache) {
 	logger := mock.NewMockLogger(ctrl)
 	repository := acctmock.NewMockRepository(ctrl)
 	cache := acctmock.NewMockCache(ctrl)
