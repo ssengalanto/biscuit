@@ -19,11 +19,11 @@ import (
 // DeleteAccountHandler - http handler struct for account deletion.
 type DeleteAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewDeleteAccountHandler creates a new http handler for handling account deletion.
-func NewDeleteAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *DeleteAccountHandler {
+func NewDeleteAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *DeleteAccountHandler {
 	return &DeleteAccountHandler{log: logger, mediator: mediator}
 }
 

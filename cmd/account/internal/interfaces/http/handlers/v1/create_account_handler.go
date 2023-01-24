@@ -19,11 +19,11 @@ import (
 // CreateAccountHandler - http handler struct for account creation.
 type CreateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewCreateAccountHandler creates a new http handler for handling account creation.
-func NewCreateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *CreateAccountHandler {
+func NewCreateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *CreateAccountHandler {
 	return &CreateAccountHandler{log: logger, mediator: mediator}
 }
 

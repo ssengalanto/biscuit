@@ -20,11 +20,11 @@ import (
 // UpdateAccountHandler - http handler struct for updating account.
 type UpdateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewUpdateAccountHandler creates a new http handler for handling account updates.
-func NewUpdateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *UpdateAccountHandler {
+func NewUpdateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *UpdateAccountHandler {
 	return &UpdateAccountHandler{log: logger, mediator: mediator}
 }
 

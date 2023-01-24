@@ -19,11 +19,11 @@ import (
 // DeactivateAccountHandler - http handler struct for account deactivation.
 type DeactivateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewDeactivateAccountHandler creates a new http handler for handling account deactivation.
-func NewDeactivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *DeactivateAccountHandler {
+func NewDeactivateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *DeactivateAccountHandler {
 	return &DeactivateAccountHandler{log: logger, mediator: mediator}
 }
 

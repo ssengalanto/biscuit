@@ -18,11 +18,11 @@ import (
 // GetAccountHandler - http handler struct for account retrieval.
 type GetAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewGetAccountHandler creates a new http handler for handling account retrieval.
-func NewGetAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *GetAccountHandler {
+func NewGetAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *GetAccountHandler {
 	return &GetAccountHandler{log: logger, mediator: mediator}
 }
 

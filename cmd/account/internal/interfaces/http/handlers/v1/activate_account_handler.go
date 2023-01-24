@@ -19,11 +19,11 @@ import (
 // ActivateAccountHandler - http handler struct for account activation.
 type ActivateAccountHandler struct {
 	log      interfaces.Logger
-	mediator *midt.Midt
+	mediator midt.Mediator
 }
 
 // NewActivateAccountHandler creates a new http handler for handling account activation.
-func NewActivateAccountHandler(logger interfaces.Logger, mediator *midt.Midt) *ActivateAccountHandler {
+func NewActivateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *ActivateAccountHandler {
 	return &ActivateAccountHandler{log: logger, mediator: mediator}
 }
 
