@@ -3,6 +3,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
@@ -74,8 +75,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	resource, ok := rr.(dto.CreateAccountResponse)
 	if !ok {
-		c.log.Error("invalid resource", map[string]any{"resource": resource})
-		json.MustEncodeError(w, errors.ErrInvalid)
+		panic(fmt.Sprintf("type assertion failed: type %T to %T", rr, dto.CreateAccountResponse{}))
 	}
 
 	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: resource.ID}) //nolint:gosimple //explicit
