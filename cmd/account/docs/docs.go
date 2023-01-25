@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/account": {
+        "/api/v1/accounts": {
             "post": {
                 "description": "Creates a new account in the database with the provided request body.",
                 "consumes": [
@@ -62,7 +62,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/account/{id}": {
+        "/api/v1/accounts/{id}": {
             "get": {
                 "description": "Retrieves an existing account record that matches the provided ID.",
                 "consumes": [
@@ -208,7 +208,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/account/{id}/activate": {
+        "/api/v1/accounts/{id}/activate": {
             "patch": {
                 "description": "Activate an existing account record that matches the provided ID.",
                 "consumes": [
@@ -253,7 +253,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/account/{id}/deactivate": {
+        "/api/v1/accounts/{id}/deactivate": {
             "patch": {
                 "description": "Deactivate an existing account record that matches the provided ID.",
                 "consumes": [
