@@ -58,10 +58,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	err = d.cache.Delete(ctx, command.ID)
-	if err != nil {
-		return empty, err
-	}
+	d.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
 
 	response := dto.DeleteAccountResponse{ID: command.ID}
 

@@ -70,10 +70,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	err = u.cache.Delete(ctx, command.ID)
-	if err != nil {
-		return empty, err
-	}
+	u.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
 
 	response := dto.UpdateAccountResponse{ID: command.ID}
 

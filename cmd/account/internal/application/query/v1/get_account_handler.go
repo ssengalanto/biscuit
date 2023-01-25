@@ -48,13 +48,9 @@ func (g *GetAccountQueryHandler) Handle(
 		return empty, errors.ErrInternal
 	}
 
-	cachedAccount, err := g.cache.Get(ctx, query.ID)
-	if err != nil {
-		return empty, err
-	}
-
+	cachedAccount, _ := g.cache.Get(ctx, query.ID) //nolint:errcheck,nolintlint //unnecessary
 	if cachedAccount != nil {
-		return transformResponse(*cachedAccount), err
+		return transformResponse(*cachedAccount), nil
 	}
 
 	id, err := uuid.Parse(query.ID)

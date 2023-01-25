@@ -65,10 +65,7 @@ func (a *ActivateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	err = a.cache.Delete(ctx, command.ID)
-	if err != nil {
-		return empty, err
-	}
+	a.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
 
 	response := dto.ActivateAccountResponse{ID: command.ID}
 
