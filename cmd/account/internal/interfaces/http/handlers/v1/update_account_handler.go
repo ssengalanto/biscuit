@@ -3,6 +3,7 @@ package v1
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -78,8 +79,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	resource, ok := rr.(dto.UpdateAccountResponse)
 	if !ok {
-		u.log.Error("invalid resource", map[string]any{"resource": resource})
-		json.MustEncodeError(w, errors.ErrInvalid)
+		panic(fmt.Sprintf("type assertion failed: type %T to %T", rr, dto.UpdateAccountResponse{}))
 	}
 
 	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: resource.ID}) //nolint:gosimple //explicit
