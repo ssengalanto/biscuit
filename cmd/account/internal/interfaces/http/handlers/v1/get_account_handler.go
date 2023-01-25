@@ -37,7 +37,7 @@ func NewGetAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *Get
 // @Failure 400 {object} HTTPError
 // @Failure 404 {object} HTTPError
 // @Failure 500 {object} HTTPError
-// @Router /api/v1/account/{id} [get]
+// @Router /api/v1/accounts/{id} [get]
 func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()

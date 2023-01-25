@@ -37,7 +37,7 @@ func NewActivateAccountHandler(logger interfaces.Logger, mediator midt.Mediator)
 // @Success 200 {object} GetAccountResponse
 // @Failure 400 {object} HTTPError
 // @Failure 500 {object} HTTPError
-// @Router /api/v1/account/{id}/activate [patch]
+// @Router /api/v1/accounts/{id}/activate [patch]
 func (a *ActivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()

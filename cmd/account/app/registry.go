@@ -24,22 +24,22 @@ func registerHTTPHandlers(logger interfaces.Logger, mediator *midt.Midt) *chi.Mu
 	r.Route("/api", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {
 			getAccountHandler := httphv1.NewGetAccountHandler(logger, mediator)
-			r.Get("/account/{id}", getAccountHandler.Handle)
+			r.Get("/accounts/{id}", getAccountHandler.Handle)
 
 			createAccountHandler := httphv1.NewCreateAccountHandler(logger, mediator)
-			r.Post("/account", createAccountHandler.Handle)
+			r.Post("/accounts", createAccountHandler.Handle)
 
 			updateAccountHandler := httphv1.NewUpdateAccountHandler(logger, mediator)
-			r.Patch("/account/{id}", updateAccountHandler.Handle)
+			r.Patch("/accounts/{id}", updateAccountHandler.Handle)
 
 			activateAccountHandler := httphv1.NewActivateAccountHandler(logger, mediator)
-			r.Patch("/account/{id}/activate", activateAccountHandler.Handle)
+			r.Patch("/accounts/{id}/activate", activateAccountHandler.Handle)
 
 			deactivateAccountHandler := httphv1.NewDeactivateAccountHandler(logger, mediator)
-			r.Patch("/account/{id}/deactivate", deactivateAccountHandler.Handle)
+			r.Patch("/accounts/{id}/deactivate", deactivateAccountHandler.Handle)
 
 			deleteAccountHandler := httphv1.NewDeleteAccountHandler(logger, mediator)
-			r.Delete("/account/{id}", deleteAccountHandler.Handle)
+			r.Delete("/accounts/{id}", deleteAccountHandler.Handle)
 		})
 	})
 

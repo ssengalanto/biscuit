@@ -31,11 +31,11 @@ func TestDeactivateAccountHandler_Handle(t *testing.T) {
 	assert.NotNil(t, hdlr)
 
 	mux := chi.NewRouter()
-	mux.Patch("/api/v1/account/{id}/deactivate", hdlr.Handle)
+	mux.Patch("/api/v1/accounts/{id}/deactivate", hdlr.Handle)
 
 	acct := acctmock.NewAccountEntity()
 	id := acct.ID.String()
-	url := fmt.Sprintf("/api/v1/account/%s/deactivate", id)
+	url := fmt.Sprintf("/api/v1/accounts/%s/deactivate", id)
 
 	t.Run("it should return success response", func(t *testing.T) {
 		mediator.EXPECT().Send(gomock.Any(), &cmdv1.DeactivateAccountCommand{ID: id}).Times(1)
@@ -52,7 +52,7 @@ func TestDeactivateAccountHandler_Handle(t *testing.T) {
 	t.Run("it should return an error due to an invalid uuid", func(t *testing.T) {
 		logger.EXPECT().Error(gomock.Any(), gomock.Any()).Times(1)
 
-		invalid := fmt.Sprintf("/api/v1/account/%s/deactivate", "invalid")
+		invalid := fmt.Sprintf("/api/v1/accounts/%s/deactivate", "invalid")
 		r, err := http.NewRequest(http.MethodPatch, invalid, nil)
 		require.NoError(t, err)
 

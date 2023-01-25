@@ -37,7 +37,7 @@ func NewDeactivateAccountHandler(logger interfaces.Logger, mediator midt.Mediato
 // @Success 200 {object} GetAccountResponse
 // @Failure 400 {object} HTTPError
 // @Failure 500 {object} HTTPError
-// @Router /api/v1/account/{id}/deactivate [patch]
+// @Router /api/v1/accounts/{id}/deactivate [patch]
 func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
 	defer cancel()
