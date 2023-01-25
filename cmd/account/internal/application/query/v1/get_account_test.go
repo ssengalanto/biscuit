@@ -24,8 +24,7 @@ func TestNewGetAccountCommand(t *testing.T) {
 
 func TestNewGetAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new get account handler instance", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDepedencies(t)
 		hdlr := v1.NewGetAccountQueryHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
@@ -33,8 +32,7 @@ func TestNewGetAccountCommandHandler(t *testing.T) {
 
 func TestGetAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDepedencies(ctrl)
+		logger, repository, cache := createDepedencies(t)
 		hdlr := v1.NewGetAccountQueryHandler(logger, repository, cache)
 		n := hdlr.Name()
 		assert.Equal(t, fmt.Sprintf("%T", &v1.GetAccountQuery{}), n)
@@ -43,8 +41,7 @@ func TestGetAccountCommandHandler_Name(t *testing.T) {
 
 func TestGetAccountCommandHandler_Handle(t *testing.T) {
 	ctx := context.Background()
-	ctrl := gomock.NewController(t)
-	logger, repository, cache := createDepedencies(ctrl)
+	logger, repository, cache := createDepedencies(t)
 	hdlr := v1.NewGetAccountQueryHandler(logger, repository, cache)
 
 	t.Run("it should return the correct response", func(t *testing.T) {

@@ -24,8 +24,7 @@ func TestNewDeactivateAccountCommand(t *testing.T) {
 
 func TestNewDeactivateAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new deactivate account handler instance", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDependencies(ctrl)
+		logger, repository, cache := createDependencies(t)
 		hdlr := v1.NewDeactivateAccountCommandHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
@@ -33,8 +32,7 @@ func TestNewDeactivateAccountCommandHandler(t *testing.T) {
 
 func TestDeactivateAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		logger, repository, cache := createDependencies(ctrl)
+		logger, repository, cache := createDependencies(t)
 		hdlr := v1.NewDeactivateAccountCommandHandler(logger, repository, cache)
 		n := hdlr.Name()
 		assert.Equal(t, fmt.Sprintf("%T", &v1.DeactivateAccountCommand{}), n)
@@ -43,8 +41,7 @@ func TestDeactivateAccountCommandHandler_Name(t *testing.T) {
 
 func TestDeactivateAccountCommandHandler_Handle(t *testing.T) {
 	ctx := context.Background()
-	ctrl := gomock.NewController(t)
-	logger, repository, cache := createDependencies(ctrl)
+	logger, repository, cache := createDependencies(t)
 	hdlr := v1.NewDeactivateAccountCommandHandler(logger, repository, cache)
 
 	t.Run("it should return the correct response", func(t *testing.T) {
