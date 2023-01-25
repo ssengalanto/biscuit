@@ -3,7 +3,6 @@ package v1
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -77,17 +76,14 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resource, ok := rr.(dto.UpdateAccountResponse)
-	if !ok {
-		panic(fmt.Sprintf("type assertion failed: type %T to %T", rr, dto.UpdateAccountResponse{}))
-	}
+	rsc := rr.(dto.UpdateAccountResponse) //nolint:errcheck //intentional panic
 
-	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: resource.ID}) //nolint:gosimple //explicit
-	response, err := u.mediator.Send(ctx, q)
+	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: rsc.ID}) //nolint:gosimple //explicit
+	res, err := u.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusOK, response)
+	json.MustEncodeResponse(w, http.StatusOK, res)
 }

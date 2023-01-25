@@ -44,12 +44,12 @@ func (a *ActivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) 
 
 	id := chi.URLParam(r, "id")
 
-	actreq := dto.ActivateAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, a.log, actreq) {
+	areq := dto.ActivateAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, a.log, areq) {
 		return
 	}
 
-	cmd := cmdv1.NewActivateAccountCommand(actreq)
+	cmd := cmdv1.NewActivateAccountCommand(areq)
 
 	_, err := a.mediator.Send(ctx, cmd)
 	if err != nil {
@@ -57,18 +57,18 @@ func (a *ActivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	getreq := dto.GetAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, a.log, getreq) {
+	greq := dto.GetAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, a.log, greq) {
 		return
 	}
 
-	q := qv1.NewGetAccountQuery(getreq)
+	q := qv1.NewGetAccountQuery(greq)
 
-	response, err := a.mediator.Send(ctx, q)
+	res, err := a.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusOK, response)
+	json.MustEncodeResponse(w, http.StatusOK, res)
 }

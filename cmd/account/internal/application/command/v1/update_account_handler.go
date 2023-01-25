@@ -43,16 +43,12 @@ func (u *UpdateAccountCommandHandler) Handle(
 ) (any, error) {
 	empty := dto.UpdateAccountResponse{}
 
-	command, ok := request.(*UpdateAccountCommand)
-	if !ok {
-		u.log.Error("invalid command", map[string]any{"command": command})
-		return empty, errors.ErrInternal
-	}
+	cmd := request.(*UpdateAccountCommand) //nolint:errcheck //intentional panic
 
-	id, err := uuid.Parse(command.ID)
+	id, err := uuid.Parse(cmd.ID)
 	if err != nil {
-		u.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
+		u.log.Error("invalid uuid", map[string]any{"cmd": cmd, "error": err})
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, cmd.ID)
 	}
 
 	acct, err := u.accountRepository.FindByID(ctx, id)
@@ -60,7 +56,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	err = u.updateAccount(&acct, command)
+	err = u.updateAccount(&acct, cmd)
 	if err != nil {
 		return empty, err
 	}
@@ -70,11 +66,11 @@ func (u *UpdateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	u.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
+	u.cache.Delete(ctx, cmd.ID) //nolint:errcheck //unnecessary
 
-	response := dto.UpdateAccountResponse{ID: command.ID}
+	res := dto.UpdateAccountResponse{ID: cmd.ID}
 
-	return response, err
+	return res, err
 }
 
 func (u *UpdateAccountCommandHandler) updateAccount(

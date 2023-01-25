@@ -9,7 +9,6 @@ import (
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
-	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
@@ -43,23 +42,19 @@ func (c *CreateAccountCommandHandler) Handle(
 ) (any, error) {
 	empty := dto.CreateAccountResponse{}
 
-	command, ok := request.(*CreateAccountCommand)
-	if !ok {
-		c.log.Error("invalid command", map[string]any{"command": command})
-		return empty, errors.ErrInternal
-	}
+	cmd := request.(*CreateAccountCommand) //nolint:errcheck //intentional panic
 
-	acct, err := c.createAccount(command)
+	acct, err := c.createAccount(cmd)
 	if err != nil {
 		return empty, err
 	}
 
-	pers, err := c.createPerson(acct.ID, command)
+	pers, err := c.createPerson(acct.ID, cmd)
 	if err != nil {
 		return empty, err
 	}
 
-	addrs, err := c.createAddresses(pers.ID, command)
+	addrs, err := c.createAddresses(pers.ID, cmd)
 	if err != nil {
 		return empty, err
 	}
@@ -71,8 +66,8 @@ func (c *CreateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	response := dto.CreateAccountResponse{ID: acct.ID.String()}
-	return response, err
+	res := dto.CreateAccountResponse{ID: acct.ID.String()}
+	return res, err
 }
 
 func (c *CreateAccountCommandHandler) createAccount(cmd *CreateAccountCommand) (account.Entity, error) {

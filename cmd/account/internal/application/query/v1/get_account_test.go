@@ -67,14 +67,10 @@ func TestGetAccountCommandHandler_Handle(t *testing.T) {
 		assert.True(t, ok)
 		assert.Equal(t, "", r.ID)
 	})
-	t.Run("it should return an error when an invalid command is provided", func(t *testing.T) {
-		req := struct{}{}
-		logger.EXPECT().Error(gomock.Any(), gomock.Any())
-		res, err := hdlr.Handle(ctx, &req)
-		require.Error(t, err)
-
-		r, ok := res.(dto.GetAccountResponse)
-		assert.True(t, ok)
-		assert.Equal(t, "", r.ID)
+	t.Run("it should panic when an invalid query is provided", func(t *testing.T) {
+		assert.Panics(t, func() {
+			req := struct{}{}
+			_, _ = hdlr.Handle(ctx, &req)
+		})
 	})
 }

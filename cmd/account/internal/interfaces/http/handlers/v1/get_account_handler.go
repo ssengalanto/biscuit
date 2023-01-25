@@ -44,18 +44,18 @@ func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	request := dto.GetAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, c.log, request) {
+	req := dto.GetAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, c.log, req) {
 		return
 	}
 
-	q := qv1.NewGetAccountQuery(request)
+	q := qv1.NewGetAccountQuery(req)
 
-	response, err := c.mediator.Send(ctx, q)
+	res, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusOK, response)
+	json.MustEncodeResponse(w, http.StatusOK, res)
 }

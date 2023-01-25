@@ -60,16 +60,6 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		_, ok := res.(dto.CreateAccountResponse)
 		assert.True(t, ok)
 	})
-	t.Run("it should return an error when an invalid command is provided", func(t *testing.T) {
-		req := struct{}{}
-		logger.EXPECT().Error(gomock.Any(), gomock.Any())
-		res, err := hdlr.Handle(ctx, &req)
-		require.Error(t, err)
-
-		r, ok := res.(dto.CreateAccountResponse)
-		assert.True(t, ok)
-		assert.Equal(t, "", r.ID)
-	})
 	t.Run("it should return an error when an invalid account is provided", func(t *testing.T) {
 		req := newCreateAccountRequest()
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
@@ -107,6 +97,12 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		r, ok := res.(dto.CreateAccountResponse)
 		assert.True(t, ok)
 		assert.Equal(t, "", r.ID)
+	})
+	t.Run("it should panic when an invalid command is provided", func(t *testing.T) {
+		assert.Panics(t, func() {
+			req := struct{}{}
+			_, _ = hdlr.Handle(ctx, &req)
+		})
 	})
 }
 

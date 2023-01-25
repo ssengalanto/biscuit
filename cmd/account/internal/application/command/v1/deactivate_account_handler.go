@@ -41,16 +41,12 @@ func (d *DeactivateAccountCommandHandler) Handle(
 ) (any, error) {
 	empty := dto.DeactivateAccountResponse{}
 
-	command, ok := request.(*DeactivateAccountCommand)
-	if !ok {
-		d.log.Error("invalid command", map[string]any{"command": command})
-		return empty, errors.ErrInternal
-	}
+	cmd := request.(*DeactivateAccountCommand) //nolint:errcheck //intentional panic
 
-	id, err := uuid.Parse(command.ID)
+	id, err := uuid.Parse(cmd.ID)
 	if err != nil {
-		d.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
+		d.log.Error("invalid uuid", map[string]any{"command": cmd, "error": err})
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, cmd.ID)
 	}
 
 	acct, err := d.accountRepository.FindByID(ctx, id)
@@ -65,9 +61,9 @@ func (d *DeactivateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	d.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
+	d.cache.Delete(ctx, cmd.ID) //nolint:errcheck //unnecessary
 
-	response := dto.DeactivateAccountResponse{ID: command.ID}
+	res := dto.DeactivateAccountResponse{ID: cmd.ID}
 
-	return response, err
+	return res, err
 }

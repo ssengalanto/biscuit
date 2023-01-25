@@ -39,34 +39,30 @@ func (g *GetAccountQueryHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	var result account.Entity
+	var res account.Entity
 	empty := dto.GetAccountResponse{}
 
-	query, ok := request.(*GetAccountQuery)
-	if !ok {
-		g.log.Error("invalid query", map[string]any{"query": query})
-		return empty, errors.ErrInternal
+	q := request.(*GetAccountQuery) //nolint:errcheck //intentional panic
+
+	cachedAcct, _ := g.cache.Get(ctx, q.ID) //nolint:errcheck,nolintlint //unnecessary
+	if cachedAcct != nil {
+		return transformResponse(*cachedAcct), nil
 	}
 
-	cachedAccount, _ := g.cache.Get(ctx, query.ID) //nolint:errcheck,nolintlint //unnecessary
-	if cachedAccount != nil {
-		return transformResponse(*cachedAccount), nil
-	}
-
-	id, err := uuid.Parse(query.ID)
+	id, err := uuid.Parse(q.ID)
 	if err != nil {
-		g.log.Error("invalid uuid", map[string]any{"query": query, "error": err})
-		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, query.ID)
+		g.log.Error("invalid uuid", map[string]any{"q": q, "error": err})
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, q.ID)
 	}
 
-	result, err = g.accountRepository.FindByID(ctx, id)
+	res, err = g.accountRepository.FindByID(ctx, id)
 	if err != nil {
 		return empty, err
 	}
 
-	g.cache.Set(ctx, result.ID.String(), result)
+	g.cache.Set(ctx, res.ID.String(), res)
 
-	return transformResponse(result), err
+	return transformResponse(res), err
 }
 
 func transformResponse(entity account.Entity) dto.GetAccountResponse {

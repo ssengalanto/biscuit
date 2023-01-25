@@ -41,16 +41,12 @@ func (a *ActivateAccountCommandHandler) Handle(
 ) (any, error) {
 	empty := dto.ActivateAccountResponse{}
 
-	command, ok := request.(*ActivateAccountCommand)
-	if !ok {
-		a.log.Error("invalid command", map[string]any{"command": command})
-		return empty, errors.ErrInternal
-	}
+	cmd := request.(*ActivateAccountCommand) //nolint:errcheck //intentional panic
 
-	id, err := uuid.Parse(command.ID)
+	id, err := uuid.Parse(cmd.ID)
 	if err != nil {
-		a.log.Error("invalid uuid", map[string]any{"command": command, "error": err})
-		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, command.ID)
+		a.log.Error("invalid uuid", map[string]any{"command": cmd, "error": err})
+		return empty, fmt.Errorf("%w: uuid `%s`", errors.ErrInvalid, cmd.ID)
 	}
 
 	acct, err := a.accountRepository.FindByID(ctx, id)
@@ -65,9 +61,9 @@ func (a *ActivateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	a.cache.Delete(ctx, command.ID) //nolint:errcheck //unnecessary
+	a.cache.Delete(ctx, cmd.ID) //nolint:errcheck //unnecessary
 
-	response := dto.ActivateAccountResponse{ID: command.ID}
+	response := dto.ActivateAccountResponse{ID: cmd.ID}
 
 	return response, err
 }

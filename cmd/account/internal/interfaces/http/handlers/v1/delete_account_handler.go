@@ -44,25 +44,25 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	getreq := dto.GetAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, c.log, getreq) {
+	greq := dto.GetAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, c.log, greq) {
 		return
 	}
 
-	q := qv1.NewGetAccountQuery(getreq)
+	q := qv1.NewGetAccountQuery(greq)
 
-	response, err := c.mediator.Send(ctx, q)
+	res, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	delreq := dto.DeleteAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, c.log, delreq) {
+	dreq := dto.DeleteAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, c.log, dreq) {
 		return
 	}
 
-	cmd := cmdv1.NewDeleteAccountCommand(delreq)
+	cmd := cmdv1.NewDeleteAccountCommand(dreq)
 
 	_, err = c.mediator.Send(ctx, cmd)
 	if err != nil {
@@ -70,5 +70,5 @@ func (c *DeleteAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusOK, response)
+	json.MustEncodeResponse(w, http.StatusOK, res)
 }

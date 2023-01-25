@@ -44,12 +44,12 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 
 	id := chi.URLParam(r, "id")
 
-	deactreq := dto.DeactivateAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, d.log, deactreq) {
+	dreq := dto.DeactivateAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, d.log, dreq) {
 		return
 	}
 
-	cmd := cmdv1.NewDeactivateAccountCommand(deactreq)
+	cmd := cmdv1.NewDeactivateAccountCommand(dreq)
 
 	_, err := d.mediator.Send(ctx, cmd)
 	if err != nil {
@@ -57,18 +57,18 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	getreq := dto.GetAccountRequest{ID: id}
-	if !apphttp.ValidateRequest(w, d.log, getreq) {
+	greq := dto.GetAccountRequest{ID: id}
+	if !apphttp.ValidateRequest(w, d.log, greq) {
 		return
 	}
 
-	q := qv1.NewGetAccountQuery(getreq)
+	q := qv1.NewGetAccountQuery(greq)
 
-	response, err := d.mediator.Send(ctx, q)
+	res, err := d.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)
 		return
 	}
 
-	json.MustEncodeResponse(w, http.StatusOK, response)
+	json.MustEncodeResponse(w, http.StatusOK, res)
 }
