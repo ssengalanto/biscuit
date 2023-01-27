@@ -5,11 +5,11 @@ import "time"
 // Constants for application configurations.
 const (
 	MaxHeaderBytes      = 1 << 20
-	IdleTimeout         = time.Minute
-	RequestTimeout      = time.Second * 60
 	RateLimit           = 120
+	IdleTimeout         = time.Minute
 	ReadTimeout         = 10 * time.Second
 	WriteTimeout        = 30 * time.Second
+	Timeout             = time.Second * 60
 	ShutdownGracePeriod = 15 * time.Second
 	Dev                 = "development"
 	Test                = "test"

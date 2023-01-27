@@ -2,7 +2,6 @@
 package v1
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -10,7 +9,6 @@ import (
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
 	apphttp "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
-	"github.com/ssengalanto/biscuit/pkg/constants"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
@@ -41,8 +39,7 @@ func NewUpdateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *
 // @Failure 500 {object} HTTPError
 // @Router /api/v1/accounts/{id} [patch]
 func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
-	ctx, cancel := context.WithTimeout(context.Background(), constants.RequestTimeout)
-	defer cancel()
+	ctx := r.Context()
 
 	id := chi.URLParam(r, "id")
 
