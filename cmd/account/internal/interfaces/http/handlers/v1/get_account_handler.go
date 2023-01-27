@@ -3,7 +3,6 @@ package v1
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
@@ -39,7 +38,6 @@ func NewGetAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *Get
 // @Router /api/v1/accounts/{id} [get]
 func (c *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	time.Sleep(5 * time.Second)
 
 	id := chi.URLParam(r, "id")
 
