@@ -29,6 +29,7 @@ const (
 	AppName            = "APP_NAME"
 	AppEnv             = "APP_ENV"
 	AccountServicePort = "ACCOUNT_SERVICE_PORT"
+	AuthServicePort    = "AUTH_SERVICE_PORT"
 	PgsqlUser          = "PGSQL_USER"
 	PgsqlPassword      = "PGSQL_PASSWORD"
 	PgsqlDB            = "PGSQL_DB"
