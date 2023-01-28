@@ -13,7 +13,6 @@ import (
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
 	apperr "github.com/ssengalanto/biscuit/pkg/errors"
-	"github.com/ssengalanto/biscuit/pkg/gg"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 	"github.com/ssengalanto/biscuit/pkg/pgsql"
 )
@@ -448,7 +447,7 @@ func handleRowsAffected(n int64, err error) error {
 		return err
 	}
 
-	if !gg.Itob(n) {
+	if n <= 0 {
 		return ErrExecFailed
 	}
 

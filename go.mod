@@ -15,13 +15,13 @@ require (
 	github.com/jackc/pgx/v5 v5.1.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/spf13/viper v1.14.0
+	github.com/ssengalanto/hex v0.0.0-20230128044048-7a128bf8eb31
 	github.com/ssengalanto/midt v1.1.0
 	github.com/stretchr/testify v1.8.1
 	github.com/swaggo/http-swagger v1.3.3
 	github.com/swaggo/swag v1.8.9
 	go.uber.org/zap v1.23.0
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
-	golang.org/x/exp v0.0.0-20221217163422-3c43f8badb15
 )
 
 require (

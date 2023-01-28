@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/biscuit/pkg/gg"
 	"github.com/ssengalanto/biscuit/pkg/validator"
+	"github.com/ssengalanto/hex"
 )
 
 // Entity - account entity struct.
@@ -108,7 +108,7 @@ func (e *Entity) UpdatePersonAddress(inputs []UpdateAddressInput) error {
 	addrs := *e.Person.Address
 
 	for _, input := range inputs {
-		idx := gg.FindIndexOf[address.Entity](addrs, func(addr address.Entity) bool {
+		idx := hex.FindIndex(addrs, func(addr address.Entity) bool {
 			return addr.ID.String() == input.ID
 		})
 
