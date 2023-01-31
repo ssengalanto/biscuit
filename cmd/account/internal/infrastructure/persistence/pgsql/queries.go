@@ -5,16 +5,16 @@ import "fmt"
 // List of valid keys for accountQueries map.
 const (
 	QueryExists                = "exists"
-	QueryCreateAccount         = "createAccount"
-	QueryCreatePerson          = "createPerson"
-	QueryCreateAddress         = "createAddress"
-	QueryFindAccountByID       = "findAccountById"
-	QueryFindPersonByAccountID = "findPersonByAccountID"
-	QueryFindAddressByPersonID = "findAddressByPersonID"
-	QueryUpdateAccountByID     = "updateAccountByID"
-	QueryUpdatePersonByID      = "updatePersonByID"
-	QueryUpdateAddressByID     = "updateAddressByID"
-	QueryDeleteAccountByID     = "deleteAccountByID"
+	QueryCreateAccount         = "create-account"
+	QueryCreatePerson          = "create-person"
+	QueryCreateAddress         = "create-address"
+	QueryFindAccountByID       = "find-account-by-id"
+	QueryFindPersonByAccountID = "find-person-by-account-id"
+	QueryFindAddressByPersonID = "find-address-by-person-id"
+	QueryUpdateAccountByID     = "update-account-by-id"
+	QueryUpdatePersonByID      = "update-person-by-id"
+	QueryUpdateAddressByID     = "update-address-by-id"
+	QueryDeleteAccountByID     = "delete-account-by-id"
 )
 
 // AccountQueries is a map holds all queries for account entity.
