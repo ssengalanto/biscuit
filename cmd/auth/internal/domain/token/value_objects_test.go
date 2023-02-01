@@ -1,6 +1,7 @@
 package token_test
 
 import (
+	"crypto/rsa"
 	"reflect"
 	"testing"
 
@@ -59,4 +60,116 @@ func TestGrantType_String(t *testing.T) {
 		kind := reflect.TypeOf(gt).String()
 		require.Equal(t, "string", kind)
 	})
+}
+
+func TestBase64RSAPrivateKey_Parse(t *testing.T) {
+	t.Parallel()
+	testCases := []struct {
+		name    string
+		payload string
+		assert  func(t *testing.T, key *rsa.PrivateKey, err error)
+	}{
+		{
+			name:    "it should parse RSA private key successfully",
+			payload: newBase64RSAPrivateKey(),
+			assert: func(t *testing.T, key *rsa.PrivateKey, err error) {
+				assert.NotNil(t, key)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name:    "it should fail to decode base64 RSA private key",
+			payload: "invalid-base64-rsa-private-key",
+			assert: func(t *testing.T, key *rsa.PrivateKey, err error) {
+				assert.Nil(t, key)
+				require.Error(t, err)
+			},
+		},
+		{
+			name:    "it should fail to parse RSA private key from PEM",
+			payload: newBase64RSAPublicKey(),
+			assert: func(t *testing.T, key *rsa.PrivateKey, err error) {
+				assert.Nil(t, key)
+				require.Error(t, err)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			pk := token.Base64RSAPrivateKey(tc.payload)
+			key, err := pk.Parse()
+			tc.assert(t, key, err)
+		})
+	}
+}
+
+func TestBase64RSAPrivateKey_String(t *testing.T) {
+	t.Parallel()
+	t.Run("it should convert base64 RSA public key to string", func(t *testing.T) {
+		t.Parallel()
+		pk := newBase64RSAPrivateKey()
+		kind := reflect.TypeOf(pk).String()
+		require.Equal(t, "string", kind)
+	})
+}
+
+func TestBase64RSAPublicKey_Parse(t *testing.T) {
+	t.Parallel()
+	testCases := []struct {
+		name    string
+		payload string
+		assert  func(t *testing.T, key *rsa.PublicKey, err error)
+	}{
+		{
+			name:    "it should parse RSA public key successfully",
+			payload: newBase64RSAPublicKey(),
+			assert: func(t *testing.T, key *rsa.PublicKey, err error) {
+				assert.NotNil(t, key)
+				require.NoError(t, err)
+			},
+		},
+		{
+			name:    "it should fail to decode base64 RSA public key",
+			payload: "invalid-base64-rsa-private-key",
+			assert: func(t *testing.T, key *rsa.PublicKey, err error) {
+				assert.Nil(t, key)
+				require.Error(t, err)
+			},
+		},
+		{
+			name:    "it should fail to parse RSA public key from PEM",
+			payload: newBase64RSAPrivateKey(),
+			assert: func(t *testing.T, key *rsa.PublicKey, err error) {
+				assert.Nil(t, key)
+				require.Error(t, err)
+			},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			pk := token.Base64RSAPublicKey(tc.payload)
+			key, err := pk.Parse()
+			tc.assert(t, key, err)
+		})
+	}
+}
+
+func TestBase64RSAPublicKey_String(t *testing.T) {
+	t.Parallel()
+	t.Run("it should convert base64 RSA private key to string", func(t *testing.T) {
+		t.Parallel()
+		pk := newBase64RSAPublicKey()
+		kind := reflect.TypeOf(pk).String()
+		require.Equal(t, "string", kind)
+	})
+}
+
+func newBase64RSAPrivateKey() string {
+	return "LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlDV3dJQkFBS0JnUUNBeC9mVmgyUmtkSDRiOVZscHpQWFpreGcxYnptQ0pQeVpNN0pTQldNRXAwbU1SZE1ICkJRZDdvUzZCSWlqR3htTWZzT3JBajhFWjg4d0MxbDVSdEg5VFpwcE9sYzZ5dHRYRHJSZjhVQlRSVG55dUNoalkKdHhUVTQ5cE1HTVhNVkw2OVVZR3BGeCtENWRGZDlmVWZVODY2TmNUWE8rT1hyTlhtWGxxL2pTTWxyd0lEQVFBQgpBb0dBZWdhQkZLaUUvUmJSQkFiNFlXTWZ0YmxHb0NNekY5bWFMRVNxL0VNMGJ3MWdpSFVGSDhxcEs0RXdBcFp1Cmt1TWF1OFcwdXgrNzlxNW5LbTBiMUVtMnR0dTlyazVSdWhoZ3ZDZHZsalJUTlZDcDV2TEVWN0psOVl2Z2d1aEUKQzFLMUF5cWtQREE0eXY5WFdlajY2M3JhSWZ0bHpLRmloaXg1a1JwWkxQQUdQaEVDUVFEbEQ5S2U4Q3hFQVpWTAp1UkhVWXhwcTZSZ0o0eEphL2FoMHo1c0xVNTE1TU1peWpraGpJY3lhU082MDV4ZEhXd2VvZ0ZIdGpiUkZGTmpzCmV1Y2ZveXYzQWtFQWorMFRtS1Y2SGl6T3VmaTFwRmtjc1lJcWczQlZFMnp1NE1XTDhYSlJFQWdya3hmR2lzM0QKUkI2TmRDMlNCaHJmS2F5ZTVzcVNhbWZxSHJIUUhzTzJDUUpBSUQ4TC9ZZitFMHpOd2EwNkQxWXNQK1MwbDUrNQowOGxsejV2eVRiUGx0VXZpMVJBbXJKM3plYnpPcmZUaVdBOCtrc0FOeUkxc1ZWVkwvRzZJM3ZGUG5RSkFWa3pnCjREbnhKS0RYZ0huYWFPYXFKdUlYSGVOQWtEcFVibURsemV3dklUN1U2Z2xxbXBaUXpNckpKTzJpVHBqVVVZZloKYkNmeGJXNUwyd1hoOW1DQ0NRSkFKRzNUemJKdkNRajBmczB5S1dlOEphblhjTUlMQ21nTWhpQU9RK3JSNGtnTgpVMk1EaUoydmxhMmV6dDBJK1l5ZGRoNWZCbmE1d1d2WGpDMVRPWnE2Ymc9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQ==" //nolint:lll //unnecessary
+}
+
+func newBase64RSAPublicKey() string {
+	return "LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlHZk1BMEdDU3FHU0liM0RRRUJBUVVBQTRHTkFEQ0JpUUtCZ1FDQXgvZlZoMlJrZEg0YjlWbHB6UFhaa3hnMQpiem1DSlB5Wk03SlNCV01FcDBtTVJkTUhCUWQ3b1M2Qklpakd4bU1mc09yQWo4RVo4OHdDMWw1UnRIOVRacHBPCmxjNnl0dFhEclJmOFVCVFJUbnl1Q2hqWXR4VFU0OXBNR01YTVZMNjlVWUdwRngrRDVkRmQ5ZlVmVTg2Nk5jVFgKTytPWHJOWG1YbHEvalNNbHJ3SURBUUFCCi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQ==" //nolint:lll //unnecessary
 }
