@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	TokenExpiry = 15 * time.Minute
+	tokenExpiry = 15 * time.Minute
 )
 
 // Entity - token entity struct.
@@ -15,10 +15,11 @@ type Entity struct {
 	ID        uuid.UUID `json:"id" validate:"required"`
 	AccountID string    `json:"account_id" validate:"required"`
 	ClientID  string    `json:"client_id" validate:"required"`
+	Token     JWT       `json:"token" validate:"required"`
 	ExpiresIn time.Time `json:"expires_in" validate:"required"`
 }
 
-// Subject struct contains required fields for token claims.
+// Subject contains required fields for token claims.
 type Subject struct {
 	AccountID string
 	Email     string
