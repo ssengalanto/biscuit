@@ -18,6 +18,11 @@ var grantTypes = map[string]string{ //nolint:gochecknoglobals //intended
 
 type Base64RSAPrivateKey string
 
+// NewBase64RSAPrivateKey creates a new Base64RSAPrivateKey.
+func NewBase64RSAPrivateKey(s string) Base64RSAPrivateKey {
+	return Base64RSAPrivateKey(s)
+}
+
 // Parse decodes the base64 RSA private key and parse it to PKCS1 or PKCS8.
 func (b Base64RSAPrivateKey) Parse() (*rsa.PrivateKey, error) {
 	pk, err := base64.StdEncoding.DecodeString(b.String())
@@ -39,6 +44,11 @@ func (b Base64RSAPrivateKey) String() string {
 }
 
 type Base64RSAPublicKey string
+
+// NewBase64RSAPublicKey creates a new NewBase64RSAPublicKey.
+func NewBase64RSAPublicKey(s string) Base64RSAPublicKey {
+	return Base64RSAPublicKey(s)
+}
 
 // Parse decodes the base64 RSA public key and parse it to PKCS1 or PKCS8.
 func (b Base64RSAPublicKey) Parse() (*rsa.PublicKey, error) {

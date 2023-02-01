@@ -2,6 +2,7 @@ package token_test
 
 import (
 	"crypto/rsa"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -62,6 +63,18 @@ func TestGrantType_String(t *testing.T) {
 	})
 }
 
+func TestNewBase64RSAPrivateKey(t *testing.T) {
+	t.Parallel()
+	t.Run("it should create a new instance", func(t *testing.T) {
+		t.Parallel()
+		pk := newBase64RSAPrivateKey()
+		key := token.NewBase64RSAPrivateKey(pk)
+		kind := reflect.TypeOf(key).String()
+		s := fmt.Sprintf("%T", key)
+		require.Equal(t, s, kind)
+	})
+}
+
 func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
@@ -111,6 +124,18 @@ func TestBase64RSAPrivateKey_String(t *testing.T) {
 		pk := newBase64RSAPrivateKey()
 		kind := reflect.TypeOf(pk).String()
 		require.Equal(t, "string", kind)
+	})
+}
+
+func TestNewBase64RSAPublicKey(t *testing.T) {
+	t.Parallel()
+	t.Run("it should create a new instance", func(t *testing.T) {
+		t.Parallel()
+		pk := newBase64RSAPublicKey()
+		key := token.NewBase64RSAPublicKey(pk)
+		kind := reflect.TypeOf(key).String()
+		s := fmt.Sprintf("%T", key)
+		require.Equal(t, s, kind)
 	})
 }
 
