@@ -2,14 +2,82 @@ package token_test
 
 import (
 	"crypto/rsa"
-	"fmt"
 	"reflect"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/ssengalanto/biscuit/cmd/auth/internal/domain/token"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestNewJWT(t *testing.T) {
+	t.Parallel()
+	sub := token.Subject{
+		AccountID: gofakeit.UUID(),
+		Email:     gofakeit.Email(),
+		ClientID:  gofakeit.UUID(),
+		Issuer:    gofakeit.Word(),
+	}
+	pk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
+
+	t.Run("it should create a new JWT token", func(t *testing.T) {
+		t.Parallel()
+		tk, err := token.NewJWT(sub, pk)
+		assert.NotEmpty(t, tk)
+		require.NoError(t, err)
+	})
+
+	t.Run("it should fail to create a new JWT Token", func(t *testing.T) {
+		t.Parallel()
+		ipk := token.NewBase64RSAPrivateKey(newBase64RSAPublicKey())
+		tk, err := token.NewJWT(sub, ipk)
+		assert.Empty(t, tk)
+		require.Error(t, err)
+	})
+}
+
+func TestJWT_Validate(t *testing.T) {
+	t.Parallel()
+	sub := token.Subject{
+		AccountID: gofakeit.UUID(),
+		Email:     gofakeit.Email(),
+		ClientID:  gofakeit.UUID(),
+		Issuer:    gofakeit.Word(),
+	}
+	pvk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
+	pbk := token.NewBase64RSAPublicKey(newBase64RSAPublicKey())
+
+	t.Run("it should validate the JWT token successfully", func(t *testing.T) {
+		t.Parallel()
+		tk, err := token.NewJWT(sub, pvk)
+		require.NoError(t, err)
+
+		res, err := tk.Validate(pbk)
+		assert.Equal(t, sub.AccountID, res)
+		require.NoError(t, err)
+	})
+
+	t.Run("it should fail to validate the JWT token", func(t *testing.T) {
+		t.Parallel()
+		tk, err := token.NewJWT(sub, pvk)
+		require.NoError(t, err)
+
+		res, err := tk.Validate("")
+		assert.Empty(t, res)
+		require.Error(t, err)
+	})
+}
+
+func TestJWT_String(t *testing.T) {
+	t.Parallel()
+	t.Run("it should convert JWT to string", func(t *testing.T) {
+		t.Parallel()
+		jwt := token.JWT("token").String()
+		kind := reflect.TypeOf(jwt).String()
+		require.Equal(t, "string", kind)
+	})
+}
 
 func TestGrantType_IsValid(t *testing.T) {
 	t.Parallel()
@@ -63,18 +131,6 @@ func TestGrantType_String(t *testing.T) {
 	})
 }
 
-func TestNewBase64RSAPrivateKey(t *testing.T) {
-	t.Parallel()
-	t.Run("it should create a new instance", func(t *testing.T) {
-		t.Parallel()
-		pk := newBase64RSAPrivateKey()
-		key := token.NewBase64RSAPrivateKey(pk)
-		kind := reflect.TypeOf(key).String()
-		s := fmt.Sprintf("%T", key)
-		require.Equal(t, s, kind)
-	})
-}
-
 func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 	t.Parallel()
 	testCases := []struct {
@@ -110,7 +166,7 @@ func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			pk := token.Base64RSAPrivateKey(tc.payload)
+			pk := token.NewBase64RSAPrivateKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
 		})
@@ -124,18 +180,6 @@ func TestBase64RSAPrivateKey_String(t *testing.T) {
 		pk := newBase64RSAPrivateKey()
 		kind := reflect.TypeOf(pk).String()
 		require.Equal(t, "string", kind)
-	})
-}
-
-func TestNewBase64RSAPublicKey(t *testing.T) {
-	t.Parallel()
-	t.Run("it should create a new instance", func(t *testing.T) {
-		t.Parallel()
-		pk := newBase64RSAPublicKey()
-		key := token.NewBase64RSAPublicKey(pk)
-		kind := reflect.TypeOf(key).String()
-		s := fmt.Sprintf("%T", key)
-		require.Equal(t, s, kind)
 	})
 }
 
@@ -174,7 +218,7 @@ func TestBase64RSAPublicKey_Parse(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			pk := token.Base64RSAPublicKey(tc.payload)
+			pk := token.NewBase64RSAPublicKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
 		})
