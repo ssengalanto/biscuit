@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/ssengalanto/biscuit/pkg/constants"
 )
 
 const (
@@ -22,6 +23,9 @@ const (
 
 // NewUniversalClient creates a new redis universal client.
 func NewUniversalClient(host string, db int, password string) (redis.UniversalClient, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), constants.ResourceTimeout)
+	defer cancel()
+
 	c := redis.NewUniversalClient(&redis.UniversalOptions{
 		Addrs:           []string{host},
 		Password:        password,
@@ -38,7 +42,7 @@ func NewUniversalClient(host string, db int, password string) (redis.UniversalCl
 		IdleTimeout:     idleTimeout,
 	})
 
-	_, err := c.Ping(context.Background()).Result()
+	_, err := c.Ping(ctx).Result()
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}

@@ -11,6 +11,7 @@ const (
 	ReadTimeout         = 10 * time.Second
 	WriteTimeout        = 30 * time.Second
 	Timeout             = time.Minute
+	ResourceTimeout     = 10 * time.Second
 	ShutdownGracePeriod = 15 * time.Second
 	Dev                 = "development"
 	Test                = "test"

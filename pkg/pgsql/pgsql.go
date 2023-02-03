@@ -9,7 +9,9 @@ import (
 
 // NewConnection initializes a new postgres database connection pool.
 func NewConnection(dsn string) (*sqlx.DB, error) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), constants.ResourceTimeout)
+	defer cancel()
+
 	db, err := sqlx.ConnectContext(ctx, constants.PgsqlDriver, dsn)
 	if err != nil {
 		return nil, ErrConnectionFailed
