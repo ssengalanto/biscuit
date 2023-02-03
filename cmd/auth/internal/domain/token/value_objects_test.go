@@ -14,7 +14,7 @@ import (
 
 func TestNewJWT(t *testing.T) {
 	p := newTokenPayload()
-	pk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
+	pk := token.Base64RSAPrivateKey(newBase64RSAPrivateKey())
 
 	t.Run("it should create a new JWT token", func(t *testing.T) {
 		tk, err := token.NewJWT(p, pk)
@@ -23,7 +23,7 @@ func TestNewJWT(t *testing.T) {
 	})
 
 	t.Run("it should fail to create a new JWT Token", func(t *testing.T) {
-		ipk := token.NewBase64RSAPrivateKey(newBase64RSAPublicKey())
+		ipk := token.Base64RSAPrivateKey(newBase64RSAPublicKey())
 		tk, err := token.NewJWT(p, ipk)
 		assert.Empty(t, tk)
 		require.Error(t, err)
@@ -32,8 +32,8 @@ func TestNewJWT(t *testing.T) {
 
 func TestJWT_Validate(t *testing.T) {
 	p := newTokenPayload()
-	pvk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
-	pbk := token.NewBase64RSAPublicKey(newBase64RSAPublicKey())
+	pvk := token.Base64RSAPrivateKey(newBase64RSAPrivateKey())
+	pbk := token.Base64RSAPublicKey(newBase64RSAPublicKey())
 
 	t.Run("it should validate the JWT token successfully", func(t *testing.T) {
 		tk, err := token.NewJWT(p, pvk)
@@ -143,7 +143,7 @@ func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			pk := token.NewBase64RSAPrivateKey(tc.payload)
+			pk := token.Base64RSAPrivateKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
 		})
@@ -191,7 +191,7 @@ func TestBase64RSAPublicKey_Parse(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			pk := token.NewBase64RSAPublicKey(tc.payload)
+			pk := token.Base64RSAPublicKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
 		})
