@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/ssengalanto/biscuit/cmd/auth/internal/domain/token"
@@ -12,55 +13,39 @@ import (
 )
 
 func TestNewJWT(t *testing.T) {
-	t.Parallel()
-	sub := token.Subject{
-		AccountID: gofakeit.UUID(),
-		Email:     gofakeit.Email(),
-		ClientID:  gofakeit.UUID(),
-		Issuer:    gofakeit.Word(),
-	}
+	p := newTokenPayload()
 	pk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
 
 	t.Run("it should create a new JWT token", func(t *testing.T) {
-		t.Parallel()
-		tk, err := token.NewJWT(sub, pk)
+		tk, err := token.NewJWT(p, pk)
 		assert.NotEmpty(t, tk)
 		require.NoError(t, err)
 	})
 
 	t.Run("it should fail to create a new JWT Token", func(t *testing.T) {
-		t.Parallel()
 		ipk := token.NewBase64RSAPrivateKey(newBase64RSAPublicKey())
-		tk, err := token.NewJWT(sub, ipk)
+		tk, err := token.NewJWT(p, ipk)
 		assert.Empty(t, tk)
 		require.Error(t, err)
 	})
 }
 
 func TestJWT_Validate(t *testing.T) {
-	t.Parallel()
-	sub := token.Subject{
-		AccountID: gofakeit.UUID(),
-		Email:     gofakeit.Email(),
-		ClientID:  gofakeit.UUID(),
-		Issuer:    gofakeit.Word(),
-	}
+	p := newTokenPayload()
 	pvk := token.NewBase64RSAPrivateKey(newBase64RSAPrivateKey())
 	pbk := token.NewBase64RSAPublicKey(newBase64RSAPublicKey())
 
 	t.Run("it should validate the JWT token successfully", func(t *testing.T) {
-		t.Parallel()
-		tk, err := token.NewJWT(sub, pvk)
+		tk, err := token.NewJWT(p, pvk)
 		require.NoError(t, err)
 
 		res, err := tk.Validate(pbk)
-		assert.Equal(t, sub.AccountID, res)
+		assert.Equal(t, p.AccountID, res)
 		require.NoError(t, err)
 	})
 
 	t.Run("it should fail to validate the JWT token", func(t *testing.T) {
-		t.Parallel()
-		tk, err := token.NewJWT(sub, pvk)
+		tk, err := token.NewJWT(p, pvk)
 		require.NoError(t, err)
 
 		res, err := tk.Validate("")
@@ -233,6 +218,16 @@ func TestBase64RSAPublicKey_String(t *testing.T) {
 		kind := reflect.TypeOf(pk).String()
 		require.Equal(t, "string", kind)
 	})
+}
+
+func newTokenPayload() token.Payload {
+	return token.Payload{
+		AccountID: gofakeit.UUID(),
+		Email:     gofakeit.Email(),
+		ClientID:  gofakeit.UUID(),
+		Issuer:    gofakeit.Word(),
+		Expiry:    15 * time.Minute,
+	}
 }
 
 func newBase64RSAPrivateKey() string {

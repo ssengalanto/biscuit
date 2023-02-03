@@ -6,29 +6,27 @@ import (
 	"github.com/google/uuid"
 )
 
-const (
-	tokenExpiry = 15 * time.Minute
-)
-
 // Entity - token entity struct.
 type Entity struct {
-	ID        uuid.UUID `json:"id" validate:"required"`
-	AccountID string    `json:"account_id" validate:"required"`
-	ClientID  string    `json:"client_id" validate:"required"`
-	Token     JWT       `json:"token" validate:"required"`
-	ExpiresIn time.Time `json:"expires_in" validate:"required"`
+	ID           uuid.UUID `json:"id" validate:"required"`
+	AccountID    uuid.UUID `json:"accountId" validate:"required"`
+	ClientID     string    `json:"clientId" validate:"required"`
+	AccessToken  JWT       `json:"accessToken" validate:"required"`
+	RefreshToken JWT       `json:"refreshToken" validate:"required"`
+	ExpiresIn    time.Time `json:"expiresIn" validate:"required"`
 }
 
-// Subject contains required fields for token claims.
-type Subject struct {
+// Payload contains required fields for token claims.
+type Payload struct {
 	AccountID string
 	Email     string
 	ClientID  string
 	Issuer    string
+	Expiry    time.Duration
 }
 
 // New creates a new token entity.
-func New(accountID, clientID string) Entity {
+func New(accountID uuid.UUID, clientID string) Entity {
 	return Entity{
 		ID:        uuid.New(),
 		AccountID: accountID,

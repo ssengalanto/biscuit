@@ -21,13 +21,13 @@ var grantTypes = map[string]string{ //nolint:gochecknoglobals //intended
 type JWT string
 
 // NewJWT creates a new JWT token.
-func NewJWT(sub Subject, pk Base64RSAPrivateKey) (JWT, error) {
+func NewJWT(p Payload, pk Base64RSAPrivateKey) (JWT, error) {
 	key, err := pk.Parse()
 	if err != nil {
 		return "", err
 	}
 
-	claims := createClaims(sub)
+	claims := createClaims(p)
 
 	token, err := jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString(key)
 	if err != nil {
@@ -38,18 +38,18 @@ func NewJWT(sub Subject, pk Base64RSAPrivateKey) (JWT, error) {
 }
 
 // createClaims creates claims for JWT token.
-func createClaims(sub Subject) jwt.Claims {
+func createClaims(p Payload) jwt.Claims {
 	now := time.Now().UTC()
 
 	c := make(jwt.MapClaims)
 
-	c["sub"] = sub.AccountID
-	c["email"] = sub.Email
-	c["iss"] = sub.Issuer
-	c["aud"] = sub.ClientID
+	c["sub"] = p.AccountID
+	c["email"] = p.Email
+	c["iss"] = p.Issuer
+	c["aud"] = p.ClientID
 	c["iat"] = now.Unix()
 	c["nbf"] = now.Unix()
-	c["exp"] = now.Add(tokenExpiry).Unix()
+	c["exp"] = now.Add(p.Expiry).Unix()
 
 	return c
 }
