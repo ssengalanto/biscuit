@@ -11,18 +11,14 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new address", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAddress()
 		assert.NotNil(t, entity)
 	})
 }
 
 func TestEntity_UpdateComponents(t *testing.T) {
-	t.Parallel()
 	t.Run("it should update the address successfully", func(t *testing.T) {
-		t.Parallel()
 		addr := gofakeit.Address()
 		payload := address.UpdateComponentsInput{
 			Street:     &addr.Address,
@@ -49,15 +45,12 @@ func TestEntity_UpdateComponents(t *testing.T) {
 }
 
 func Test_IsValid(t *testing.T) {
-	t.Parallel()
 	t.Run("it should be a valid address", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAddress()
 		err := entity.IsValid()
 		require.NoError(t, err)
 	})
 	t.Run("it should be an invalid address", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAddress()
 		entity.Components.Street = ""
 		err := entity.IsValid()

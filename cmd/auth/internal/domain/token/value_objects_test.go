@@ -55,9 +55,7 @@ func TestJWT_Validate(t *testing.T) {
 }
 
 func TestJWT_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert JWT to string", func(t *testing.T) {
-		t.Parallel()
 		jwt := token.JWT("token").String()
 		kind := reflect.TypeOf(jwt).String()
 		require.Equal(t, "string", kind)
@@ -65,7 +63,6 @@ func TestJWT_String(t *testing.T) {
 }
 
 func TestGrantType_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -98,7 +95,6 @@ func TestGrantType_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			gt := token.GrantType(tc.payload)
 			ok, err := gt.IsValid()
 			tc.assert(t, ok, err)
@@ -107,9 +103,7 @@ func TestGrantType_IsValid(t *testing.T) {
 }
 
 func TestGrantType_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert email to string", func(t *testing.T) {
-		t.Parallel()
 		gt := token.GrantType("password").String()
 		kind := reflect.TypeOf(gt).String()
 		require.Equal(t, "string", kind)
@@ -117,7 +111,6 @@ func TestGrantType_String(t *testing.T) {
 }
 
 func TestBase64RSAPrivateKey_Parse(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -150,7 +143,6 @@ func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			pk := token.NewBase64RSAPrivateKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
@@ -159,9 +151,7 @@ func TestBase64RSAPrivateKey_Parse(t *testing.T) {
 }
 
 func TestBase64RSAPrivateKey_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert base64 RSA public key to string", func(t *testing.T) {
-		t.Parallel()
 		pk := newBase64RSAPrivateKey()
 		kind := reflect.TypeOf(pk).String()
 		require.Equal(t, "string", kind)
@@ -169,7 +159,6 @@ func TestBase64RSAPrivateKey_String(t *testing.T) {
 }
 
 func TestBase64RSAPublicKey_Parse(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -202,7 +191,6 @@ func TestBase64RSAPublicKey_Parse(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			pk := token.NewBase64RSAPublicKey(tc.payload)
 			key, err := pk.Parse()
 			tc.assert(t, key, err)
@@ -211,9 +199,7 @@ func TestBase64RSAPublicKey_Parse(t *testing.T) {
 }
 
 func TestBase64RSAPublicKey_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert base64 RSA private key to string", func(t *testing.T) {
-		t.Parallel()
 		pk := newBase64RSAPublicKey()
 		kind := reflect.TypeOf(pk).String()
 		require.Equal(t, "string", kind)

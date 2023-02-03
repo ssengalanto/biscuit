@@ -11,7 +11,6 @@ import (
 )
 
 func TestDetails_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload person.Details
@@ -40,7 +39,6 @@ func TestDetails_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			details := tc.payload
 			err := details.IsValid()
 			tc.assert(t, err)
@@ -49,7 +47,6 @@ func TestDetails_IsValid(t *testing.T) {
 }
 
 func TestDetails_Update(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		current person.Details
@@ -83,7 +80,6 @@ func TestDetails_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			details := tc.current
 			newDetails, err := details.Update(tc.update)
 			tc.assert(t,
@@ -93,7 +89,6 @@ func TestDetails_Update(t *testing.T) {
 }
 
 func TestAvatar_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -118,7 +113,6 @@ func TestAvatar_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			avatar := person.Avatar(tc.payload)
 			ok, err := avatar.IsValid()
 			tc.assert(t, ok, err)
@@ -127,7 +121,6 @@ func TestAvatar_IsValid(t *testing.T) {
 }
 
 func TestAvatar_Update(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		current string
@@ -155,7 +148,6 @@ func TestAvatar_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			avatar := person.Avatar(tc.current)
 			newAvatar, err := avatar.Update(tc.update)
 			tc.assert(t, person.Avatar(tc.update), newAvatar, err)
@@ -164,9 +156,7 @@ func TestAvatar_Update(t *testing.T) {
 }
 
 func TestAvatar_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert avatar to string", func(t *testing.T) {
-		t.Parallel()
 		avatar := person.Avatar(gofakeit.URL()).String()
 		kind := reflect.TypeOf(avatar).String()
 		require.Equal(t, "string", kind)

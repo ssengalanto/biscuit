@@ -16,9 +16,7 @@ import (
 )
 
 func TestNewUpdateAccountCommand(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new update account command instance", func(t *testing.T) {
-		t.Parallel()
 		cmd := v1.NewUpdateAccountCommand(gofakeit.UUID(), dto.UpdateAccountRequest{})
 		assert.NotNil(t, cmd)
 	})

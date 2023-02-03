@@ -10,9 +10,7 @@ import (
 )
 
 func TestComponents_IsValid(t *testing.T) {
-	t.Parallel()
 	t.Run("it should be a valid address components", func(t *testing.T) {
-		t.Parallel()
 		addr := gofakeit.Address()
 		components := address.Components{
 			Street:     addr.Address,
@@ -27,7 +25,6 @@ func TestComponents_IsValid(t *testing.T) {
 		require.NoError(t, err)
 	})
 	t.Run("it should be an invalid address components", func(t *testing.T) {
-		t.Parallel()
 		components := address.Components{}
 		err := components.IsValid()
 		assert.NotNil(t, err)
@@ -36,10 +33,7 @@ func TestComponents_IsValid(t *testing.T) {
 }
 
 func TestAddress_Update(t *testing.T) {
-	t.Parallel()
 	t.Run("it should update the address components successfully", func(t *testing.T) {
-		t.Parallel()
-
 		current := gofakeit.Address()
 		components := address.Components{
 			Street:     current.Address,
@@ -67,8 +61,6 @@ func TestAddress_Update(t *testing.T) {
 		require.NoError(t, err)
 	})
 	t.Run("it should fail to update the address components", func(t *testing.T) {
-		t.Parallel()
-
 		current := gofakeit.Address()
 		components := address.Components{
 			Street:     current.Address,

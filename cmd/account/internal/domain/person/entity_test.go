@@ -12,16 +12,13 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new person", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewPerson()
 		assert.NotNil(t, entity)
 	})
 }
 
 func TestEntity_UpdateDetails(t *testing.T) {
-	t.Parallel()
 	update := person.Details{
 		FirstName:   gofakeit.FirstName(),
 		LastName:    gofakeit.LastName(),
@@ -92,7 +89,6 @@ func TestEntity_UpdateDetails(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			entity := tc.entity
 			err := entity.UpdateDetails(tc.details)
 			details := entity.Details
@@ -110,7 +106,6 @@ func TestEntity_UpdateDetails(t *testing.T) {
 }
 
 func TestEntity_UpdateAvatar(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -135,7 +130,6 @@ func TestEntity_UpdateAvatar(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			entity := mock.NewPerson()
 			err := entity.UpdateAvatar(tc.payload)
 			tc.assert(t, entity.Avatar, person.Avatar(tc.payload), err)
@@ -144,15 +138,12 @@ func TestEntity_UpdateAvatar(t *testing.T) {
 }
 
 func Test_IsValid(t *testing.T) {
-	t.Parallel()
 	t.Run("it should be a valid person", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewPerson()
 		err := entity.IsValid()
 		require.NoError(t, err)
 	})
 	t.Run("it should be an invalid person", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewPerson()
 		entity.Details.FirstName = ""
 		err := entity.IsValid()

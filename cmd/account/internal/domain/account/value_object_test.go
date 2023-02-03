@@ -11,7 +11,6 @@ import (
 )
 
 func TestEmail_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -36,7 +35,6 @@ func TestEmail_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			email := account.Email(tc.payload)
 			ok, err := email.IsValid()
 			tc.assert(t, ok, err)
@@ -45,7 +43,6 @@ func TestEmail_IsValid(t *testing.T) {
 }
 
 func TestEmail_Update(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		current string
@@ -73,7 +70,6 @@ func TestEmail_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			e := account.Email(tc.current)
 			ne, err := e.Update(tc.update)
 			tc.assert(t, account.Email(tc.update), ne, err)
@@ -82,9 +78,7 @@ func TestEmail_Update(t *testing.T) {
 }
 
 func TestEmail_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert email to string", func(t *testing.T) {
-		t.Parallel()
 		email := account.Email(gofakeit.Email()).String()
 		kind := reflect.TypeOf(email).String()
 		require.Equal(t, "string", kind)
@@ -92,7 +86,6 @@ func TestEmail_String(t *testing.T) {
 }
 
 func TestPassword_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -117,7 +110,6 @@ func TestPassword_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			password := account.Password(tc.payload)
 			ok, err := password.IsValid()
 			tc.assert(t, ok, err)
@@ -126,7 +118,6 @@ func TestPassword_IsValid(t *testing.T) {
 }
 
 func TestPassword_Update(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		current string
@@ -154,7 +145,6 @@ func TestPassword_Update(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			pw := account.Password(tc.current)
 			npw, err := pw.Update(tc.update)
 			tc.assert(t, account.Password(tc.update), npw, err)
@@ -163,9 +153,7 @@ func TestPassword_Update(t *testing.T) {
 }
 
 func TestPassword_Hash(t *testing.T) {
-	t.Parallel()
 	t.Run("it should hash the password", func(t *testing.T) {
-		t.Parallel()
 		pw := account.Password(createValidPassword())
 		hpw, err := pw.Hash()
 		assert.NotEqual(t, pw, hpw)
@@ -174,9 +162,7 @@ func TestPassword_Hash(t *testing.T) {
 }
 
 func TestPassword_Check(t *testing.T) {
-	t.Parallel()
 	t.Run("it should match the password", func(t *testing.T) {
-		t.Parallel()
 		pw := account.Password(createValidPassword())
 		hpw, err := pw.Hash()
 		require.NoError(t, err)
@@ -185,7 +171,6 @@ func TestPassword_Check(t *testing.T) {
 		require.NoError(t, err)
 	})
 	t.Run("it should fail the password check", func(t *testing.T) {
-		t.Parallel()
 		pw := account.Password(createValidPassword())
 		hpw, err := pw.Hash()
 		require.NoError(t, err)
@@ -196,9 +181,7 @@ func TestPassword_Check(t *testing.T) {
 }
 
 func TestPassword_String(t *testing.T) {
-	t.Parallel()
 	t.Run("it should convert password to string", func(t *testing.T) {
-		t.Parallel()
 		password := account.Password(createValidPassword()).String()
 		kind := reflect.TypeOf(password).String()
 		require.Equal(t, "string", kind)

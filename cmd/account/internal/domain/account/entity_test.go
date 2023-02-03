@@ -13,9 +13,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new account", func(t *testing.T) {
-		t.Parallel()
 		acct := account.New(
 			gofakeit.Email(),
 			gofakeit.Password(true, true, true, true, false, 10),
@@ -26,9 +24,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestEntity_IsActive(t *testing.T) {
-	t.Parallel()
 	t.Run("it should return the account active state correctly", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 
 		entity.Deactivate()
@@ -40,9 +36,7 @@ func TestEntity_IsActive(t *testing.T) {
 }
 
 func TestEntity_Activate(t *testing.T) {
-	t.Parallel()
 	t.Run("it should activate the account", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 		entity.Activate()
 		assert.True(t, entity.IsActive())
@@ -50,9 +44,7 @@ func TestEntity_Activate(t *testing.T) {
 }
 
 func TestEntity_Deactivate(t *testing.T) {
-	t.Parallel()
 	t.Run("it should deactivate the account", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 		entity.Deactivate()
 		assert.False(t, entity.IsActive())
@@ -60,9 +52,7 @@ func TestEntity_Deactivate(t *testing.T) {
 }
 
 func TestEntity_LoginTimestamp(t *testing.T) {
-	t.Parallel()
 	t.Run("it should set the last login at with current timestamp", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 		entity.LoginTimestamp()
 		assert.False(t, entity.LastLoginAt.IsZero())
@@ -70,7 +60,6 @@ func TestEntity_LoginTimestamp(t *testing.T) {
 }
 
 func TestEntity_UpdateEmail(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -95,7 +84,6 @@ func TestEntity_UpdateEmail(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			entity := mock.NewAccountEntity()
 			err := entity.UpdateEmail(tc.payload)
 			tc.assert(t, entity.Email, account.Email(tc.payload), err)
@@ -104,7 +92,6 @@ func TestEntity_UpdateEmail(t *testing.T) {
 }
 
 func TestEntity_UpdatePassword(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -129,7 +116,6 @@ func TestEntity_UpdatePassword(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			entity := mock.NewAccountEntity()
 			err := entity.UpdatePassword(tc.payload)
 			tc.assert(t, entity.Password, account.Password(tc.payload), err)
@@ -138,7 +124,6 @@ func TestEntity_UpdatePassword(t *testing.T) {
 }
 
 func TestEntity_UpdateDetails(t *testing.T) {
-	t.Parallel()
 	entity := mock.NewAccountEntity()
 	update := person.Details{
 		FirstName:   gofakeit.FirstName(),
@@ -188,7 +173,6 @@ func TestEntity_UpdateDetails(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			acct := tc.entity
 			err := acct.UpdatePersonDetails(tc.details)
 			details := acct.Person.Details
@@ -205,7 +189,6 @@ func TestEntity_UpdateDetails(t *testing.T) {
 }
 
 func TestEntity_UpdatePersonAvatar(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name    string
 		payload string
@@ -230,7 +213,6 @@ func TestEntity_UpdatePersonAvatar(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			entity := mock.NewAccountEntity()
 			err := entity.UpdatePersonAvatar(tc.payload)
 			tc.assert(t, entity.Person.Avatar, person.Avatar(tc.payload), err)
@@ -239,7 +221,6 @@ func TestEntity_UpdatePersonAvatar(t *testing.T) {
 }
 
 func TestEntity_UpdatePersonAddress(t *testing.T) {
-	t.Parallel()
 	entity := mock.NewAccountEntity()
 	addr := gofakeit.Address()
 	testCases := []struct {
@@ -273,7 +254,6 @@ func TestEntity_UpdatePersonAddress(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			var addrs []address.Entity
 			err := tc.entity.UpdatePersonAddress(tc.payload)
 			for _, item := range *entity.Person.Address {
@@ -294,9 +274,7 @@ func TestEntity_UpdatePersonAddress(t *testing.T) {
 }
 
 func TestEntity_HashPassword(t *testing.T) {
-	t.Parallel()
 	t.Run("it should hash the password", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 		err := entity.HashPassword()
 		require.NoError(t, err)
@@ -304,9 +282,7 @@ func TestEntity_HashPassword(t *testing.T) {
 }
 
 func TestEntity_CheckPassword(t *testing.T) {
-	t.Parallel()
 	t.Run("it should match the password", func(t *testing.T) {
-		t.Parallel()
 		entity := mock.NewAccountEntity()
 		pw := entity.Password.String()
 
@@ -320,7 +296,6 @@ func TestEntity_CheckPassword(t *testing.T) {
 }
 
 func TestEntity_IsValid(t *testing.T) {
-	t.Parallel()
 	testCases := []struct {
 		name   string
 		entity account.Entity
@@ -350,7 +325,6 @@ func TestEntity_IsValid(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
 			err := tc.entity.IsValid()
 			tc.assert(t, err)
 		})
@@ -358,10 +332,7 @@ func TestEntity_IsValid(t *testing.T) {
 }
 
 func TestAggregateAccount(t *testing.T) {
-	t.Parallel()
 	t.Run("it should aggregate account, person and addresses", func(t *testing.T) {
-		t.Parallel()
-
 		acct := mock.NewAccount()
 		pers := mock.NewPerson()
 		addrs := mock.NewAddresses()

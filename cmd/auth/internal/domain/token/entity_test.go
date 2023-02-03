@@ -10,9 +10,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Parallel()
 	t.Run("it should create a new token entity", func(t *testing.T) {
-		t.Parallel()
 		acct := token.New(uuid.New(), gofakeit.UUID())
 		assert.NotNil(t, acct)
 	})
