@@ -14,7 +14,7 @@ type Token struct {
 	ClientID     string    `json:"clientId" bson:"clientId"`
 	AccessToken  string    `json:"accessToken" bson:"accessToken"`
 	RefreshToken string    `json:"refreshToken" bson:"accessToken"`
-	ExpiresIn    time.Time `json:"expiresIn" bson:"expiresIn"`
+	ExpiredAt    time.Time `json:"expiredAt" bson:"expiredAt"`
 	UpdatedAt    time.Time `json:"updatedAt" bson:"updatedAt"`
 	CreatedAt    time.Time `json:"createdAt" bson:"createdAt"`
 }
@@ -27,6 +27,6 @@ func (t Token) ToEntity() token.Entity {
 		ClientID:     t.ClientID,
 		AccessToken:  token.JWT(t.AccessToken),
 		RefreshToken: token.JWT(t.RefreshToken),
-		ExpiresIn:    t.ExpiresIn,
+		ExpiredAt:    t.ExpiredAt,
 	}
 }

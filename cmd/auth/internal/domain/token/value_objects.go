@@ -44,12 +44,11 @@ func createClaims(p Payload) jwt.Claims {
 	c := make(jwt.MapClaims)
 
 	c["sub"] = p.AccountID
-	c["email"] = p.Email
 	c["iss"] = p.Issuer
 	c["aud"] = p.ClientID
 	c["iat"] = now.Unix()
 	c["nbf"] = now.Unix()
-	c["exp"] = now.Add(p.Expiry).Unix()
+	c["exp"] = now.Add(p.ExpiresIn).Unix()
 
 	return c
 }

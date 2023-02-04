@@ -209,10 +209,9 @@ func TestBase64RSAPublicKey_String(t *testing.T) {
 func newTokenPayload() token.Payload {
 	return token.Payload{
 		AccountID: gofakeit.UUID(),
-		Email:     gofakeit.Email(),
 		ClientID:  gofakeit.UUID(),
 		Issuer:    gofakeit.Word(),
-		Expiry:    15 * time.Minute,
+		ExpiresIn: 15 * time.Minute,
 	}
 }
 
