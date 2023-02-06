@@ -10,19 +10,21 @@ import (
 )
 
 // NewConnection initializes a new mongo database connection.
-func NewConnection(dsn string) (*mongo.Client, error) {
+func NewConnection(dsn, dbname string) (*mongo.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.ResourceTimeout)
 	defer cancel()
 
-	db, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
+	cl, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}
 
-	err = db.Ping(ctx, readpref.Primary())
+	err = cl.Ping(ctx, readpref.Primary())
 	if err != nil {
 		return nil, ErrConnectionFailed
 	}
+
+	db := cl.Database(dbname)
 
 	return db, nil
 }
