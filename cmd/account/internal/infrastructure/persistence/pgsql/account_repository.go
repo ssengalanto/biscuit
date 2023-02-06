@@ -23,7 +23,7 @@ type AccountRepository struct {
 	db  *sqlx.DB
 }
 
-// NewAccountRepository creates a new account repository.
+// NewAccountRepository creates a new account repository instance.
 func NewAccountRepository(log interfaces.Logger, db *sqlx.DB) *AccountRepository {
 	return &AccountRepository{log: log, db: db}
 }
