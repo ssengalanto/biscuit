@@ -1,4 +1,4 @@
-package token
+package mongo
 
 import (
 	"time"
@@ -9,7 +9,7 @@ import (
 
 // Token mongo model.
 type Token struct {
-	ID           uuid.UUID `json:"id" bson:"id"`
+	ID           uuid.UUID `json:"id" bson:"_id"`
 	AccountID    uuid.UUID `json:"accountId" bson:"accountId"`
 	ClientID     string    `json:"clientId" bson:"clientId"`
 	AccessToken  string    `json:"accessToken" bson:"accessToken"`
