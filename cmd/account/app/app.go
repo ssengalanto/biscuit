@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"log"
 
 	repository "github.com/ssengalanto/biscuit/cmd/account/internal/infrastructure/persistence/pgsql"
@@ -39,9 +38,10 @@ func Run() {
 	defer db.Close()
 
 	rdb, err := redis.NewUniversalClient(
-		fmt.Sprintf("%s:%d", cfg.GetString(constants.RedisHost), cfg.GetInt(constants.RedisPort)),
-		cfg.GetInt(constants.RedisDB),
+		cfg.GetString(constants.RedisHost),
+		cfg.GetString(constants.RedisPort),
 		cfg.GetString(constants.RedisPassword),
+		cfg.GetInt(constants.RedisDB),
 	)
 	if err != nil {
 		slog.Fatal(err.Error(), map[string]any{"err": err})
