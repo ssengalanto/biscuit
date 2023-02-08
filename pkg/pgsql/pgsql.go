@@ -3,9 +3,10 @@ package pgsql
 import (
 	"context"
 	"fmt"
+	"net"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/ssengalanto/biscuit/pkg/constants"
-	"net"
 )
 
 // NewConnection initializes a new postgres database connection pool.
