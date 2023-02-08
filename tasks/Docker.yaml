@@ -4,17 +4,17 @@ tasks:
   compose-dev:
     desc: Runs the application using docker compose configuration file.
     cmds:
-      - docker compose --env-file .env.development up
+      - docker compose -f docker-compose.dev.yaml --env-file .env.development up
 
   compose-test:
     desc: Runs the application using docker compose configuration file.
     cmds:
-      - docker compose --env-file .env.test up
+      - docker compose -f docker-compose.test.yaml --env-file .env.test up
 
   compose-prod:
     desc: Runs the application using docker compose configuration file.
     cmds:
-      - docker compose --env-file .env.production up
+      - docker compose -f docker-compose.prod.yaml --env-file .env.production up
 
   compose-down:
     desc: Stops and removes the containers provisioned by docker compose configuration file.
@@ -72,4 +72,4 @@ tasks:
       Example:
       `task docker:build BIN=<service-name>`
     cmds:
-      - docker build -f ./cmd/{{.BIN}}/Dockerfile --no-cache --build-arg BIN={{.BIN}} -t {{.APP_NAME}}-{{.BIN}} .
+      - docker build -f ./cmd/{{.BIN}}/Dockerfile --build-arg BIN={{.BIN}} -t {{.APP_NAME}}-{{.BIN}} .
