@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -44,7 +45,7 @@ func NewUniversalClient(host string, db int, password string) (redis.UniversalCl
 
 	_, err := c.Ping(ctx).Result()
 	if err != nil {
-		return nil, ErrConnectionFailed
+		return nil, fmt.Errorf("%w: %s", ErrConnectionFailed, err)
 	}
 
 	return c, nil

@@ -2,6 +2,8 @@ package mongo
 
 import (
 	"context"
+	"fmt"
+	"net"
 
 	"github.com/ssengalanto/biscuit/pkg/constants"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -10,18 +12,20 @@ import (
 )
 
 // NewConnection initializes a new mongo database connection.
-func NewConnection(dsn, dbname string) (*mongo.Database, error) {
+func NewConnection(user, pwd, host, port, dbname string, am string) (*mongo.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.ResourceTimeout)
 	defer cancel()
 
+	hp := net.JoinHostPort(host, port)
+	dsn := fmt.Sprintf("mongodb://%s:%s@%s/?authMechanism=%s", user, pwd, hp, am)
 	cl, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
-		return nil, ErrConnectionFailed
+		return nil, fmt.Errorf("%w: %s", ErrConnectionFailed, err)
 	}
 
 	err = cl.Ping(ctx, readpref.Primary())
 	if err != nil {
-		return nil, ErrConnectionFailed
+		return nil, fmt.Errorf("%w: %s", ErrConnectionFailed, err)
 	}
 
 	db := cl.Database(dbname)
