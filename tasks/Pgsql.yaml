@@ -12,7 +12,7 @@ tasks:
       Example:
       `task pg:run BIN=<service-name> -- -verbose up 1`
     cmds:
-      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database $PGSQL_DSN {{.CLI_ARGS}}
+      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database {{.PGSQL_DSN}} {{.CLI_ARGS}}
 
   version:
     desc: Checks the current migration version of the database.
@@ -25,7 +25,7 @@ tasks:
       Example:
       `task pg:version BIN=<service-name>`
     cmds:
-      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database $PGSQL_DSN version
+      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database {{.PGSQL_DSN}} version
 
   new:
     desc: Create a new database migration, use "-- <migration-name>" to provide the migration file name.
@@ -39,7 +39,7 @@ tasks:
       `task pg:new BIN=<service-name> -- <migration-name> `
     cmds:
       - echo 'Creating new database migration/s...'
-      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database $PGSQL_DSN create -ext sql -dir ./cmd/{{.BIN}}/migrations/pgsql -seq {{.CLI_ARGS}}
+      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database {{.PGSQL_DSN}} create -ext sql -dir ./cmd/{{.BIN}}/migrations/pgsql -seq {{.CLI_ARGS}}
 
   up:
     desc: Run new database migrations, use "-- <upshift>" to specify N up migrations.
@@ -53,7 +53,7 @@ tasks:
       `task pg:up BIN=<service-name> -- <upshift>`
     cmds:
       - echo 'Running new database migration/s...'
-      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database $PGSQL_DSN -verbose up {{.CLI_ARGS}}
+      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database {{.PGSQL_DSN}} -verbose up {{.CLI_ARGS}}
 
   down:
     desc: Revert database migrations, use "-- <downshift>" to specify N down migrations.
@@ -67,4 +67,4 @@ tasks:
       `task pg:down BIN=<service-name> --<downshift>`
     cmds:
       - echo 'Reverting database migration/s...'
-      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database $PGSQL_DSN -verbose down {{.CLI_ARGS}}
+      - migrate -path ./cmd/{{.BIN}}/migrations/pgsql -database {{.PGSQL_DSN}} -verbose down {{.CLI_ARGS}}

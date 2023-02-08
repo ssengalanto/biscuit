@@ -18,6 +18,7 @@ includes:
 vars:
   PACKAGES:
     sh: go list ./...
+  PGSQL_DSN: postgres://{{.PGSQL_USER}}:{{.PGSQL_PASSWORD}}@localhost:{{.PGSQL_PORT}}/{{.PGSQL_DB_NAME}}?sslmode={{.PGSQL_SSL_MODE}}
 
 tasks:
   default:
@@ -50,15 +51,14 @@ tasks:
     cmds:
       - swag init -g ./cmd/{{.BIN}}/main.go -o ./cmd/{{.BIN}}/docs
 
-  run:
-    desc: Run the application.
-    cmds:
-      - task docker:compose-up
-
-  run:account:
-    desc: Run the account service.
-    summary: |
-      Run the account service in a docker container on port {{.ACCOUNT_SERVICE_PORT}}.
+  build:images:
+    desc: Build images for all services.
     cmds:
       - task docker:build BIN=account
-      - task docker:run BIN=account PORT={{.ACCOUNT_SERVICE_PORT}}
+
+  run:
+    desc: Run the application in local environment.
+    deps:
+      - build:images
+    cmds:
+      - task docker:compose
