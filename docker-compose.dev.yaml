@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.0-alpine
+    ports:
+      - ${PGSQL_PORT}:${PGSQL_PORT}
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      POSTGRES_USER: ${PGSQL_USER}
+      POSTGRES_PASSWORD: ${PGSQL_PASSWORD}
+      POSTGRES_DB: ${PGSQL_DB_NAME}
+    volumes:
+      - ./volumes/postgres/:/var/lib/postgresql/data/
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - ./volumes/mongodb/:/var/lib/db/data/
+
+  redis:
+    container_name: redis
+    image: redislabs/rejson:latest
+    restart: always
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+
+  redisinsight:
+    container_name: redis-insight
+    image: redislabs/redisinsight:latest
+    restart: always
+    ports:
+      - ${REDIS_INSIGHT_PORT}:${REDIS_INSIGHT_PORT}
+
+  account:
+    container_name: account-service
+    image: ${APP_NAME}-account
+    build:
+      context: .
+      target: development
+    restart: always
+    ports:
+      - ${ACCOUNT_SERVICE_PORT}:${ACCOUNT_SERVICE_PORT}
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      APP_NAME: ${APP_NAME}
+      APP_ENV: ${APP_ENV}
+      LOG_TYPE: ${LOG_TYPE}
+      CONFIG_TYPE: ${CONFIG_TYPE}
+      ACCOUNT_SERVICE_PORT: ${ACCOUNT_SERVICE_PORT}
+      PGSQL_USER: ${PGSQL_USER}
+      PGSQL_PASSWORD: ${PGSQL_PASSWORD}
+      PGSQL_HOST: ${PGSQL_HOST}
+      PGSQL_PORT: ${PGSQL_PORT}
+      PGSQL_DB_NAME: ${PGSQL_DB_NAME}
+      PGSQL_SSL_MODE: ${PGSQL_SSL_MODE}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_URL: ${REDIS_URL}
+      REDIS_DB: ${REDIS_DB}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
