@@ -49,9 +49,6 @@ services:
   account:
     container_name: account-service
     image: ${APP_NAME}-account
-    build:
-      context: .
-      target: development
     restart: always
     ports:
       - ${ACCOUNT_SERVICE_PORT}:${ACCOUNT_SERVICE_PORT}
@@ -71,6 +68,6 @@ services:
       PGSQL_DB_NAME: ${PGSQL_DB_NAME}
       PGSQL_SSL_MODE: ${PGSQL_SSL_MODE}
       REDIS_PORT: ${REDIS_PORT}
-      REDIS_URL: ${REDIS_URL}
+      REDIS_HOST: ${REDIS_HOST}
       REDIS_DB: ${REDIS_DB}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
