@@ -30,7 +30,7 @@ func Run() {
 		cfg.GetString(constants.PgsqlHost),
 		cfg.GetString(constants.PgsqlPort),
 		cfg.GetString(constants.PgsqlDBName),
-		cfg.GetString(constants.PgsqlSslMode),
+		cfg.GetString(constants.PgsqlQueryParams),
 	)
 	if err != nil {
 		slog.Fatal(err.Error(), map[string]any{"err": err})

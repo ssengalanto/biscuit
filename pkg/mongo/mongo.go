@@ -12,12 +12,12 @@ import (
 )
 
 // NewConnection initializes a new mongo database connection.
-func NewConnection(user, pwd, host, port, dbname string, am string) (*mongo.Database, error) {
+func NewConnection(user, pwd, host, port, dbname string, qp string) (*mongo.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), constants.ResourceTimeout)
 	defer cancel()
 
 	hp := net.JoinHostPort(host, port)
-	dsn := fmt.Sprintf("mongodb://%s:%s@%s/?authMechanism=%s", user, pwd, hp, am)
+	dsn := fmt.Sprintf("mongodb://%s:%s@%s/?%s", user, pwd, hp, qp)
 	cl, err := mongo.Connect(ctx, options.Client().ApplyURI(dsn))
 	if err != nil {
 		return nil, fmt.Errorf("%w: %s", ErrConnectionFailed, err)
