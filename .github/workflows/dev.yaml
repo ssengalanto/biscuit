@@ -1,4 +1,4 @@
-name: development
+name: dev
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-test:
     environment: development
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +16,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.20
+          go-version: 1.19
 
       - name: build
         run: go build -v ./...
@@ -38,7 +38,7 @@ jobs:
       - name: setup go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.20
+          go-version: 1.19
 
       - name: lint
         uses: golangci/golangci-lint-action@v3
