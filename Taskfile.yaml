@@ -18,7 +18,7 @@ includes:
 vars:
   PACKAGES:
     sh: go list ./...
-  PGSQL_DSN: postgres://{{.PGSQL_USER}}:{{.PGSQL_PASSWORD}}@localhost:{{.PGSQL_PORT}}/{{.PGSQL_DB_NAME}}?sslmode={{.PGSQL_SSL_MODE}}
+  PGSQL_DSN: postgres://{{.PGSQL_USER}}:{{.PGSQL_PASSWORD}}@localhost:{{.PGSQL_PORT}}/{{.PGSQL_DB_NAME}}?{{.PGSQL_QUERY_PARAMS}}
 
 tasks:
   default:
@@ -34,6 +34,7 @@ tasks:
       - brew install golangci-lint
       - brew install golang-migrate
       - brew install pre-commit
+      - go install github.com/cosmtrek/air@latest
       - go install github.com/swaggo/swag/cmd/swag@latest
       - go install github.com/golang/mock/mockgen@v1.6.0
       - pre-commit install

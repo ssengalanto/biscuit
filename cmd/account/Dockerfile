@@ -24,5 +24,11 @@ RUN go mod verify
 COPY pkg pkg
 COPY cmd/"$BIN" cmd/"$BIN"
 
+# Install air for development
+RUN go install github.com/cosmtrek/air@latest
+
+# Expose port
+EXPOSE 8082
+
 # Start the application.
-CMD go run ./cmd/account/main.go
+CMD ["air", "-c", "./cmd/account/.air.toml"]

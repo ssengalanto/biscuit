@@ -55,6 +55,8 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    volumes:
+      - ./cmd/account:/app/cmd/account
     environment:
       APP_NAME: ${APP_NAME}
       APP_ENV: ${APP_ENV}
@@ -66,7 +68,7 @@ services:
       PGSQL_HOST: ${PGSQL_HOST}
       PGSQL_PORT: ${PGSQL_PORT}
       PGSQL_DB_NAME: ${PGSQL_DB_NAME}
-      PGSQL_SSL_MODE: ${PGSQL_SSL_MODE}
+      PGSQL_QUERY_PARAMS: ${PGSQL_QUERY_PARAMS}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_DB: ${REDIS_DB}
