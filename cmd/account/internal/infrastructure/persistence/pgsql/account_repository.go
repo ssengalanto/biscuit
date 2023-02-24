@@ -37,6 +37,7 @@ func (a *AccountRepository) Exists(ctx context.Context, id uuid.UUID) (bool, err
 	if err != nil {
 		return false, err
 	}
+	defer stmt.Close()
 
 	row := stmt.QueryRowxContext(ctx, id)
 
@@ -167,6 +168,7 @@ func (a *AccountRepository) DeleteByID(ctx context.Context, id uuid.UUID) error 
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
 	result, err := stmt.ExecContext(ctx, id)
 	if err != nil {
@@ -188,6 +190,7 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
 	result, err := stmt.ExecContext(
 		ctx,
@@ -204,7 +207,7 @@ func createAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 			return fmt.Errorf("%w: duplicate email key value", apperr.ErrInvalid)
 		}
 
-		return fmt.Errorf("%w: %s", apperr.ErrInternal, err.Error())
+		return err
 	}
 
 	err = handleRowsAffected(result.RowsAffected())
@@ -222,6 +225,7 @@ func createPerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error 
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
 	result, err := stmt.ExecContext(
 		ctx,
@@ -253,6 +257,7 @@ func createAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 	if preperr != nil {
 		return preperr
 	}
+	defer stmt.Close()
 
 	for _, entity := range entities {
 		result, err := stmt.ExecContext(
@@ -289,6 +294,7 @@ func findAccountByID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (account.En
 	if err != nil {
 		return acc.ToEntity(), err
 	}
+	defer stmt.Close()
 
 	row := stmt.QueryRowxContext(ctx, id)
 
@@ -309,6 +315,7 @@ func findPersonByAccountID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) (pers
 	if err != nil {
 		return p.ToEntity(), err
 	}
+	defer stmt.Close()
 
 	row := stmt.QueryRowxContext(ctx, id)
 
@@ -329,6 +336,7 @@ func findAddressByPersonID(ctx context.Context, tx *sqlx.Tx, id uuid.UUID) ([]ad
 	if err != nil {
 		return nil, err
 	}
+	defer stmt.Close()
 
 	rows, err := stmt.QueryxContext(ctx, id)
 	if err != nil {
@@ -356,6 +364,7 @@ func updateAccount(ctx context.Context, tx *sqlx.Tx, entity account.Entity) erro
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
 	result, err := stmt.ExecContext(
 		ctx,
@@ -384,6 +393,7 @@ func updatePerson(ctx context.Context, tx *sqlx.Tx, entity person.Entity) error 
 	if err != nil {
 		return err
 	}
+	defer stmt.Close()
 
 	result, err := stmt.ExecContext(
 		ctx,
@@ -414,6 +424,7 @@ func updateAddress(ctx context.Context, tx *sqlx.Tx, entities []address.Entity) 
 	if preperr != nil {
 		return preperr
 	}
+	defer stmt.Close()
 
 	for _, entity := range entities {
 		result, err := stmt.ExecContext(
