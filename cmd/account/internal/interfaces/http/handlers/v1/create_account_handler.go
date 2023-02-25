@@ -6,7 +6,7 @@ import (
 
 	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	apphttp "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
@@ -39,7 +39,7 @@ func NewCreateAccountHandler(logger interfaces.Logger, mediator midt.Mediator) *
 func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var request dto.CreateAccountRequest
+	var request dtov1.CreateAccountRequest
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
@@ -52,7 +52,7 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cmd := cmdv1.NewCreateAccountCommand(dto.CreateAccountRequest{
+	cmd := cmdv1.NewCreateAccountCommand(dtov1.CreateAccountRequest{
 		Email:       request.Email,
 		Password:    request.Password,
 		Active:      request.Active,
@@ -69,9 +69,9 @@ func (c *CreateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rsc := rr.(dto.CreateAccountResponse) //nolint:errcheck //intentional panic
+	rsc := rr.(dtov1.CreateAccountResponse) //nolint:errcheck //intentional panic
 
-	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: rsc.ID}) //nolint:gosimple //explicit
+	q := qv1.NewGetAccountQuery(dtov1.GetAccountRequest{ID: rsc.ID}) //nolint:gosimple //explicit
 	res, err := c.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)

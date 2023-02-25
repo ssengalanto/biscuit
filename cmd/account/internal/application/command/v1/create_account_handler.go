@@ -8,7 +8,7 @@ import (
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
 
@@ -40,7 +40,7 @@ func (c *CreateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.CreateAccountResponse{}
+	empty := dtov1.CreateAccountResponse{}
 
 	cmd := request.(*CreateAccountCommand) //nolint:errcheck //intentional panic
 
@@ -66,7 +66,7 @@ func (c *CreateAccountCommandHandler) Handle(
 		return empty, err
 	}
 
-	res := dto.CreateAccountResponse{ID: acct.ID.String()}
+	res := dtov1.CreateAccountResponse{ID: acct.ID.String()}
 	return res, err
 }
 

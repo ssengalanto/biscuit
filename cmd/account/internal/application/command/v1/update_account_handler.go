@@ -8,7 +8,7 @@ import (
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/address"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/person"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
@@ -41,7 +41,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.UpdateAccountResponse{}
+	empty := dtov1.UpdateAccountResponse{}
 
 	cmd := request.(*UpdateAccountCommand) //nolint:errcheck //intentional panic
 
@@ -68,7 +68,7 @@ func (u *UpdateAccountCommandHandler) Handle(
 
 	u.cache.Delete(ctx, cmd.ID) //nolint:errcheck //unnecessary
 
-	res := dto.UpdateAccountResponse{ID: cmd.ID}
+	res := dtov1.UpdateAccountResponse{ID: cmd.ID}
 
 	return res, err
 }
@@ -102,7 +102,7 @@ func (u *UpdateAccountCommandHandler) updateAccount(
 	return nil
 }
 
-func (u UpdateAccountCommandHandler) updateAddress(acct *account.Entity, addrs []dto.UpdateAddressRequest) error {
+func (u UpdateAccountCommandHandler) updateAddress(acct *account.Entity, addrs []dtov1.UpdateAddressRequest) error {
 	var addrInputs []account.UpdateAddressInput
 	for _, addr := range addrs {
 		input := account.UpdateAddressInput{

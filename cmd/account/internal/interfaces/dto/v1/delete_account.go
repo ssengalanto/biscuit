@@ -1,4 +1,4 @@
-package dto
+package v1
 
 // DeleteAccountRequest - delete account request dto.
 type DeleteAccountRequest struct {

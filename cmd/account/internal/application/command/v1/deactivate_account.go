@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 )
 
 // DeactivateAccountCommand contains required fields for account deactivation.
@@ -10,7 +10,7 @@ type DeactivateAccountCommand struct {
 }
 
 // NewDeactivateAccountCommand creates a new command for account deactivation.
-func NewDeactivateAccountCommand(input dto.DeactivateAccountRequest) *DeactivateAccountCommand {
+func NewDeactivateAccountCommand(input dtov1.DeactivateAccountRequest) *DeactivateAccountCommand {
 	return &DeactivateAccountCommand{
 		ID: input.ID,
 	}

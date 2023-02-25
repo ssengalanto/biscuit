@@ -13,7 +13,7 @@ import (
 	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,7 +29,7 @@ func TestUpdateAccountHandler_Handle(t *testing.T) {
 	t.Run("it should return success response", func(t *testing.T) {
 		s.mediator.EXPECT().Send(
 			gomock.Any(),
-			cmdv1.NewUpdateAccountCommand(id, payload)).Times(1).Return(dto.UpdateAccountResponse{ID: id}, nil)
+			cmdv1.NewUpdateAccountCommand(id, payload)).Times(1).Return(dtov1.UpdateAccountResponse{ID: id}, nil)
 		s.mediator.EXPECT().Send(gomock.Any(), &qv1.GetAccountQuery{ID: id}).Times(1).Return(acct, nil)
 
 		r, err := http.NewRequest(http.MethodPatch, url, parsePayload(payload))
@@ -67,7 +67,7 @@ func TestUpdateAccountHandler_Handle(t *testing.T) {
 	t.Run("it should return an error due to get account query failure", func(t *testing.T) {
 		s.mediator.EXPECT().Send(
 			gomock.Any(),
-			cmdv1.NewUpdateAccountCommand(id, payload)).Times(1).Return(dto.UpdateAccountResponse{ID: id}, nil)
+			cmdv1.NewUpdateAccountCommand(id, payload)).Times(1).Return(dtov1.UpdateAccountResponse{ID: id}, nil)
 		s.mediator.EXPECT().Send(
 			gomock.Any(),
 			&qv1.GetAccountQuery{ID: id}).Times(1).Return(nil, errors.New("error"))
@@ -82,8 +82,8 @@ func TestUpdateAccountHandler_Handle(t *testing.T) {
 	})
 }
 
-func newUpdateAccountRequest() (account.Entity, dto.UpdateAccountRequest) {
-	var loc []dto.UpdateAddressRequest
+func newUpdateAccountRequest() (account.Entity, dtov1.UpdateAccountRequest) {
+	var loc []dtov1.UpdateAddressRequest
 	entity := mock.NewAccountEntity()
 	fn := gofakeit.FirstName()
 	ln := gofakeit.LastName()
@@ -92,7 +92,7 @@ func newUpdateAccountRequest() (account.Entity, dto.UpdateAccountRequest) {
 
 	for _, addr := range *entity.Person.Address {
 		a := gofakeit.Address()
-		req := dto.UpdateAddressRequest{
+		req := dtov1.UpdateAddressRequest{
 			ID:         addr.ID.String(),
 			Street:     &a.Street,
 			Unit:       &a.Street,
@@ -105,7 +105,7 @@ func newUpdateAccountRequest() (account.Entity, dto.UpdateAccountRequest) {
 		loc = append(loc, req)
 	}
 
-	return entity, dto.UpdateAccountRequest{
+	return entity, dtov1.UpdateAccountRequest{
 		FirstName:   &fn,
 		LastName:    &ln,
 		Phone:       &phone,

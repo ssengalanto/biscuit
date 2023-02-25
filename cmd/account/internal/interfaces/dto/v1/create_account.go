@@ -1,4 +1,4 @@
-package dto
+package v1
 
 import "time"
 

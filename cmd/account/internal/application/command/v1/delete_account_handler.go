@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
@@ -39,7 +39,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 	ctx context.Context,
 	request any,
 ) (any, error) {
-	empty := dto.DeleteAccountResponse{}
+	empty := dtov1.DeleteAccountResponse{}
 
 	cmd := request.(*DeleteAccountCommand) //nolint:errcheck //intentional panic
 
@@ -56,7 +56,7 @@ func (d *DeleteAccountCommandHandler) Handle(
 
 	d.cache.Delete(ctx, cmd.ID) //nolint:errcheck //unnecessary
 
-	res := dto.DeleteAccountResponse{ID: cmd.ID}
+	res := dtov1.DeleteAccountResponse{ID: cmd.ID}
 
 	return res, err
 }

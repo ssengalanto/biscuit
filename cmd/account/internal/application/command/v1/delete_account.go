@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 )
 
 // DeleteAccountCommand contains required fields for account deletion.
@@ -10,7 +10,7 @@ type DeleteAccountCommand struct {
 }
 
 // NewDeleteAccountCommand creates a new command for account deletion.
-func NewDeleteAccountCommand(input dto.DeleteAccountRequest) *DeleteAccountCommand {
+func NewDeleteAccountCommand(input dtov1.DeleteAccountRequest) *DeleteAccountCommand {
 	return &DeleteAccountCommand{
 		ID: input.ID,
 	}

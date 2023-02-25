@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	apphttp "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
@@ -41,7 +41,7 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 
 	id := chi.URLParam(r, "id")
 
-	dreq := dto.DeactivateAccountRequest{ID: id}
+	dreq := dtov1.DeactivateAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, d.log, dreq) {
 		return
 	}
@@ -54,7 +54,7 @@ func (d *DeactivateAccountHandler) Handle(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	greq := dto.GetAccountRequest{ID: id}
+	greq := dtov1.GetAccountRequest{ID: id}
 	if !apphttp.ValidateRequest(w, d.log, greq) {
 		return
 	}

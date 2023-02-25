@@ -1,4 +1,4 @@
-package dto
+package v1
 
 // ActivateAccountRequest - activate account request dto.
 type ActivateAccountRequest struct {

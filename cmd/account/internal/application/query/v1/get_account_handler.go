@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/ssengalanto/biscuit/cmd/account/internal/domain/account"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/interfaces"
 )
@@ -40,7 +40,7 @@ func (g *GetAccountQueryHandler) Handle(
 	request any,
 ) (any, error) {
 	var res account.Entity
-	empty := dto.GetAccountResponse{}
+	empty := dtov1.GetAccountResponse{}
 
 	q := request.(*GetAccountQuery) //nolint:errcheck //intentional panic
 
@@ -65,12 +65,12 @@ func (g *GetAccountQueryHandler) Handle(
 	return transformResponse(res), err
 }
 
-func transformResponse(entity account.Entity) dto.GetAccountResponse {
-	var locations []dto.LocationResponse
+func transformResponse(entity account.Entity) dtov1.GetAccountResponse {
+	var locations []dtov1.LocationResponse
 
 	if entity.Person.Address != nil {
 		for _, addr := range *entity.Person.Address {
-			location := dto.LocationResponse{
+			location := dtov1.LocationResponse{
 				ID:         addr.ID.String(),
 				Street:     addr.Components.Street,
 				Unit:       addr.Components.Unit,
@@ -84,11 +84,11 @@ func transformResponse(entity account.Entity) dto.GetAccountResponse {
 		}
 	}
 
-	return dto.GetAccountResponse{
+	return dtov1.GetAccountResponse{
 		ID:     entity.ID.String(),
 		Email:  entity.Email.String(),
 		Active: entity.Active,
-		Person: dto.PersonResponse{
+		Person: dtov1.PersonResponse{
 			ID:          entity.Person.ID.String(),
 			FirstName:   entity.Person.Details.FirstName,
 			LastName:    entity.Person.Details.LastName,

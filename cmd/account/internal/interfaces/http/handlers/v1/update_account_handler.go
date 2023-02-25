@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
 	qv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/query/v1"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	apphttp "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/http"
 	"github.com/ssengalanto/biscuit/pkg/errors"
 	"github.com/ssengalanto/biscuit/pkg/http/response/json"
@@ -43,7 +43,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	var request dto.UpdateAccountRequest
+	var request dtov1.UpdateAccountRequest
 
 	err := json.DecodeRequest(w, r, &request)
 	if err != nil {
@@ -58,7 +58,7 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 
 	cmd := cmdv1.NewUpdateAccountCommand(
 		id,
-		dto.UpdateAccountRequest{
+		dtov1.UpdateAccountRequest{
 			FirstName:   request.FirstName,
 			LastName:    request.LastName,
 			Phone:       request.Phone,
@@ -73,9 +73,9 @@ func (u *UpdateAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rsc := rr.(dto.UpdateAccountResponse) //nolint:errcheck //intentional panic
+	rsc := rr.(dtov1.UpdateAccountResponse) //nolint:errcheck //intentional panic
 
-	q := qv1.NewGetAccountQuery(dto.GetAccountRequest{ID: rsc.ID}) //nolint:gosimple //explicit
+	q := qv1.NewGetAccountQuery(dtov1.GetAccountRequest{ID: rsc.ID}) //nolint:gosimple //explicit
 	res, err := u.mediator.Send(ctx, q)
 	if err != nil {
 		json.MustEncodeError(w, err)

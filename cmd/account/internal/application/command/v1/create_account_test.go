@@ -7,8 +7,8 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/golang/mock/gomock"
-	v1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
-	"github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto"
+	cmdv1 "github.com/ssengalanto/biscuit/cmd/account/internal/application/command/v1"
+	dtov1 "github.com/ssengalanto/biscuit/cmd/account/internal/interfaces/dto/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +16,7 @@ import (
 func TestNewCreateAccountCommand(t *testing.T) {
 	t.Run("it should create a new create account command instance", func(t *testing.T) {
 		input := newCreateAccountRequest()
-		cmd := v1.NewCreateAccountCommand(input)
+		cmd := cmdv1.NewCreateAccountCommand(input)
 		assert.NotNil(t, cmd)
 	})
 }
@@ -24,7 +24,7 @@ func TestNewCreateAccountCommand(t *testing.T) {
 func TestNewCreateAccountCommandHandler(t *testing.T) {
 	t.Run("it should create a new create account handler instance", func(t *testing.T) {
 		logger, repository, cache := createDependencies(t)
-		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
+		hdlr := cmdv1.NewCreateAccountCommandHandler(logger, repository, cache)
 		assert.NotNil(t, hdlr)
 	})
 }
@@ -32,20 +32,20 @@ func TestNewCreateAccountCommandHandler(t *testing.T) {
 func TestCreateAccountCommandHandler_Name(t *testing.T) {
 	t.Run("it should return the correct handler name", func(t *testing.T) {
 		logger, repository, cache := createDependencies(t)
-		hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
+		hdlr := cmdv1.NewCreateAccountCommandHandler(logger, repository, cache)
 		n := hdlr.Name()
-		assert.Equal(t, fmt.Sprintf("%T", &v1.CreateAccountCommand{}), n)
+		assert.Equal(t, fmt.Sprintf("%T", &cmdv1.CreateAccountCommand{}), n)
 	})
 }
 
 func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 	ctx := context.Background()
 	logger, repository, cache := createDependencies(t)
-	hdlr := v1.NewCreateAccountCommandHandler(logger, repository, cache)
+	hdlr := cmdv1.NewCreateAccountCommandHandler(logger, repository, cache)
 	t.Run("it should return the correct response", func(t *testing.T) {
 		req := newCreateAccountRequest()
 		repository.EXPECT().Create(ctx, gomock.Any())
-		res, err := hdlr.Handle(ctx, &v1.CreateAccountCommand{
+		res, err := hdlr.Handle(ctx, &cmdv1.CreateAccountCommand{
 			Email:       req.Email,
 			Password:    req.Password,
 			Active:      req.Active,
@@ -57,13 +57,13 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		_, ok := res.(dto.CreateAccountResponse)
+		_, ok := res.(dtov1.CreateAccountResponse)
 		assert.True(t, ok)
 	})
 	t.Run("it should return an error when an invalid account is provided", func(t *testing.T) {
 		req := newCreateAccountRequest()
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
-		res, err := hdlr.Handle(ctx, &v1.CreateAccountCommand{
+		res, err := hdlr.Handle(ctx, &cmdv1.CreateAccountCommand{
 			Email:       "",
 			Password:    req.Password,
 			Active:      req.Active,
@@ -75,14 +75,14 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		})
 		require.Error(t, err)
 
-		r, ok := res.(dto.CreateAccountResponse)
+		r, ok := res.(dtov1.CreateAccountResponse)
 		assert.True(t, ok)
 		assert.Equal(t, "", r.ID)
 	})
 	t.Run("it should return an error when an invalid person is provided", func(t *testing.T) {
 		req := newCreateAccountRequest()
 		logger.EXPECT().Error(gomock.Any(), gomock.Any())
-		res, err := hdlr.Handle(ctx, &v1.CreateAccountCommand{
+		res, err := hdlr.Handle(ctx, &cmdv1.CreateAccountCommand{
 			Email:       req.Email,
 			Password:    req.Password,
 			Active:      req.Active,
@@ -94,7 +94,7 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 		})
 		require.Error(t, err)
 
-		r, ok := res.(dto.CreateAccountResponse)
+		r, ok := res.(dtov1.CreateAccountResponse)
 		assert.True(t, ok)
 		assert.Equal(t, "", r.ID)
 	})
@@ -106,9 +106,9 @@ func TestCreateAccountCommandHandler_Handle(t *testing.T) {
 	})
 }
 
-func newCreateAccountRequest() dto.CreateAccountRequest {
+func newCreateAccountRequest() dtov1.CreateAccountRequest {
 	addr := gofakeit.Address()
-	return dto.CreateAccountRequest{
+	return dtov1.CreateAccountRequest{
 		Email:       gofakeit.Email(),
 		Password:    gofakeit.Password(true, true, true, true, false, 10),
 		Active:      true,
@@ -116,7 +116,7 @@ func newCreateAccountRequest() dto.CreateAccountRequest {
 		LastName:    gofakeit.LastName(),
 		Phone:       gofakeit.Phone(),
 		DateOfBirth: gofakeit.Date(),
-		Locations: []dto.CreateAddressRequest{{
+		Locations: []dtov1.CreateAddressRequest{{
 			Street:     addr.Street,
 			Unit:       addr.Street,
 			City:       addr.City,

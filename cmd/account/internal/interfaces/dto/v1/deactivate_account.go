@@ -1,4 +1,4 @@
-package dto
+package v1
 
 // DeactivateAccountRequest - deactivate account request dto.
 type DeactivateAccountRequest struct {
