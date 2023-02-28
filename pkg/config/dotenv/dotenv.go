@@ -11,7 +11,7 @@ import (
 type Config struct{}
 
 func New(env string) (*Config, error) {
-	godotenv.Load(fmt.Sprintf(".env.%s", env))
+	godotenv.Load(fmt.Sprintf(".env.%s", env)) //nolint:errcheck //env vars are stored remotely
 	return &Config{}, nil
 }
 
