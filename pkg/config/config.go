@@ -35,8 +35,8 @@ func buildConfig(env, configType string) (interfaces.Config, error) {
 
 		if outOfScope {
 			return nil,
-				fmt.Errorf("%w: invalid config type with value of `%s`, must be one of the ff: `viper`",
-					ErrConfigInitializationFailed, env)
+				fmt.Errorf("%w: invalid config type with value of `%s`, must be one of the ff: viper, dotenv",
+					ErrConfigInitializationFailed, configType)
 		}
 
 		if !matched {
