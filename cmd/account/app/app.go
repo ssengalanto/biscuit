@@ -16,7 +16,7 @@ import (
 //nolint:gochecknoglobals //intentional for flag vars
 var (
 	flEnv = flag.String("env", constants.Dev, "The environment in which the application operates.")
-	flCfg = flag.String("cfg", constants.ViperConfigType, "The config module that is set as the application's default.")
+	flCfg = flag.String("cfg", constants.DotEnvConfigType, "The config module that is set as the application's default.")
 )
 
 // Run bootstrap and runs the application.

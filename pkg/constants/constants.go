@@ -20,10 +20,11 @@ const (
 
 // Constants for internal packages.
 const (
-	ZapLogType      = "zap"
-	ViperConfigType = "viper"
-	PgsqlDriver     = "pgx"
-	SlqMockDriver   = "sqlmock"
+	ZapLogType       = "zap"
+	ViperConfigType  = "viper"
+	DotEnvConfigType = "dotenv"
+	PgsqlDriver      = "pgx"
+	SlqMockDriver    = "sqlmock"
 )
 
 // Constants for environment variable keys.
