@@ -13,9 +13,6 @@ RUN mkdir -p /app
 # doesn't change, we won't need to do this again in future builds.
 COPY go.* /app/
 
-# TODO: update viper config to look for a yaml file instead of .env
-COPY .env.development /app/
-
 WORKDIR /app
 RUN go mod download
 RUN go mod verify
